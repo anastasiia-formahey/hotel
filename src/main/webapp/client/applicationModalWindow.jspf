@@ -1,0 +1,74 @@
+<div class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
+    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#createApplication" data-bs-whatever="@mdo"><fmt:message key="button.addApplication"/> </button>
+    <div class="modal fade" id="createApplication" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header align-content-center">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><fmt:message key="button.addApplication"/></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form class="needs-validation" novalidate action="${pageContext.request.contextPath}/client/"  method="post">
+                    <div class="modal-body">
+                        <input type="hidden" name="command" value="addApplication">
+                        <div class="form-floating mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon6"><fmt:message key="form.numberOfPerson"/></span>
+                                <select name="numberOfPerson" class="form-select" id="numberOfPersonApp" required>
+                                    <c:forEach items="${sessionScope.capacity}" var="capacity" varStatus="loop">
+                                        <option>
+                                                ${capacity}
+                                        </option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon2"><fmt:message key="form.classOfRoom"/></span>
+                                <select name="classOfRoom" class="form-select" id="classOfRoom" required>
+                                    <c:forEach items="${sessionScope.classOfRoom}" var="classOfRoom" varStatus="loop">
+                                        <option>${classOfRoom}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon3"><fmt:message key="form.lengthOfStay"/></span>
+                                <input type="number" name="lengthOfStay" class="form-control" id="lengthOfStay" placeholder="100"required>
+                            </div>
+                        </div>
+
+<%--                        <script>--%>
+<%--                            const options={--%>
+<%--                                year: 'numeric',--%>
+<%--                                month: 'numeric',--%>
+<%--                                day: 'numeric',--%>
+<%--                            }--%>
+<%--                            const checkIn1 = new Date()--%>
+<%--                            checkIn1.setDate(checkIn1.getDate()+1)--%>
+<%--                            const minCheckIn = checkIn1.toLocaleString("ru",options).split('.').reverse().join('-')--%>
+<%--                            document.getElementById("checkInDateApp").setAttribute("min",minCheckIn)--%>
+<%--                            const getCheckIn = document.getElementById("checkInDateApp")--%>
+<%--                            getCheckIn.addEventListener('input', getN)--%>
+<%--                            function getN(){--%>
+<%--                                const checkOut = document.getElementById("checkInDateApp").value--%>
+<%--                                const checkOut2 = new Date(Date.parse(checkOut))--%>
+<%--                                checkOut2.setDate(checkOut2.getDate()+1)--%>
+<%--                                const minCheckOut = checkOut2.toLocaleString("ru",options).split('.').reverse().join('-')--%>
+<%--                                document.getElementById("checkOutDateApp").setAttribute("min",minCheckOut)--%>
+<%--                            }--%>
+
+<%--                        </script>--%>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><fmt:message key="close"/></button>
+                        <button class="btn btn-warning" type="submit"><fmt:message key="form.send"/></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
