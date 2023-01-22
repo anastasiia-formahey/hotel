@@ -49,10 +49,15 @@
     <div class="container marketing" style="height: 100%">
         <hr class="feature-divider">
         <div class="h-100 card mb-3 p-4 text-center">
+            <c:if test="${requestSent eq true}">
+                <div class="alert alert-success" role="alert">
+                    <fmt:message key="message.requestSent"/>
+                </div>
+            </c:if>
             <div class="row g-0">
                 <div class="table-responsive-sm">
                     <div class="card-text p-2 pb-4 border-bottom-0">
-                        <h1 class="fw-bold mb-0 fs-2">Applications</h1>
+                        <h1 class="fw-bold mb-0 fs-2"><fmt:message key="applications"/></h1>
                     </div>
                     <table class="table table-hover">
                         <thead>
@@ -62,6 +67,7 @@
                             <th scope="col"><fmt:message key="form.classOfRoom"/></th>
                             <th scope="col"><fmt:message key="form.lengthOfStay"/></th>
                             <th scope="col"><fmt:message key="form.client"/></th>
+                            <th scope="col"><fmt:message key="form.status"/></th>
                             <th scope="col"></th>
                         </tr>
                         </thead>
@@ -74,12 +80,20 @@
                                 <th scope="row"><a href="#">${application.getId()}</a></th>
                                 <td>${application.getNumberOfGuests()}</td>
                                 <td>${application.getClassOfRoom()}</td>
-                                <td>${application.getLengthOfStay()}</td>
+                                <td>${application.getLengthOfStay()} day(s)</td>
                                 <td><p>${application.getUserDTO().getFirstName()}
                                         ${application.getUserDTO().getLastName()}
                                     ${application.getUserDTO().getEmail()}</p>
                                 </td>
-                                <td><button type="submit" class="btn btn-outline-dark" value="${application}">Review</button></td>
+                                <td><span
+                                        <c:if test="${application.getStatus() == 'NEW'}">class="badge bg-primary" </c:if>
+                                        <c:if test="${application.getStatus() == 'CONFIRMED'}">class="badge bg-success" </c:if>
+                                        <c:if test="${application.getStatus() == 'NOT_CONFIRMED'}">class="badge bg-warning" </c:if>
+                                        <c:if test="${application.getStatus() == 'REVIEWED'}">class="badge bg-secondary" </c:if>
+                                >${application.getStatus()}</span></td>
+                                <td><c:if test="${application.getStatus() == 'NEW'}">
+                                    <button type="submit" class="btn btn-outline-dark" value="${application}">Review</button></td>
+                                </c:if>
                             </tr>
                             </form>
                         </c:forEach>

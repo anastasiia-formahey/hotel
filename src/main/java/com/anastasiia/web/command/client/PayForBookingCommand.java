@@ -1,7 +1,6 @@
 package com.anastasiia.web.command.client;
 
 import com.anastasiia.dto.BookingDTO;
-import com.anastasiia.entity.Booking;
 import com.anastasiia.services.BookingService;
 import com.anastasiia.utils.Status;
 import com.anastasiia.web.command.Command;
@@ -13,17 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PayForBookingCommand implements Command {
-
+    BookingService bookingService = new BookingService();
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         List<BookingDTO> bookingDTOList = (ArrayList) request.getSession().getAttribute("bookings");
-        int id = Integer.parseInt(request.getParameter("booking"));
-        BookingDTO bookingDTO =
-                bookingDTOList.stream().filter(bookingDTO1 -> id == (bookingDTO1.getId()))
-                        .findAny().orElse(new BookingDTO());
-        Booking booking = bookingDTO.dtoToEntity();
-        booking.setStatusOfBooking(Status.PAID);
-        BookingService.updateStatus(booking);
+        int bookingId = Integer.parseInt(request.getParameter("booking"));
+        int roomId = Integer.parseInt(request.getParameter("roomId"));
+        bookingService.updateStatus(bookingId, roomId, Status.PAID);
         return new CommandResult(request.getHeader("referer"), true);
     }
 }

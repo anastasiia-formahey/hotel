@@ -30,6 +30,9 @@ public interface SqlQuery {
             = "INSERT INTO `hotel`.`application` VALUES (DEFAULT, ?, ?, ?, ?)";
     String SQL_SELECT_ALL_APPLICATIONS = "SELECT * FROM application";
     String SQL_SELECT_ALL_APPLICATIONS_BY_USER_ID = "SELECT * FROM application WHERE client_id=?";
+    String SQL_UPDATE_APPLICATION_STATUS = "UPDATE application SET status=? WHERE id=?";
+
+    String SQL_UPDATE_REQUEST_STATUS = "UPDATE request SET status=? WHERE application_id=?";
 
     //booking
     String SQL_INSERT_BOOKING
@@ -44,4 +47,14 @@ public interface SqlQuery {
     String SQL_SELECT_ROOM_FEATURES
             = "SELECT id, name FROM features left outer join room_features on hotel.features.id=hotel.room_features.feature_id WHERE room_id=?";
     String SQL_DELETE_FEATURES    = "DELETE FROM room_features WHERE room_id=?";
+    String SQL_INSERT_REQUEST = "INSERT INTO request VALUES (?,?,?,?,DEFAULT)";
+    String SQL_SELECT_REQUEST_BY_APPLICATION_ID = "SELECT * FROM request WHERE application_id=?";
+
+    String SQL_INSERT_OCCUPANCY_OF_ROOM
+            = "INSERT INTO hotel.occupancy_of_room VALUES ( ?, ?, ?, ?, ?)";
+    String SQL_UPDATE_OCCUPANCY_OF_ROOM_STATUS
+            = "UPDATE hotel.occupancy_of_room SET status=? WHERE room_id=?";
+    String SQL_SELECT_OCCUPANCY_OF_ROOM
+            = "SELECT * FROM occupancy_of_room where room_id=? " +
+            "AND client_id=? AND check_in_date=? AND check_out_date=?";
 }

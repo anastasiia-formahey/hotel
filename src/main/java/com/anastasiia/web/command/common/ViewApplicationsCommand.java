@@ -1,11 +1,8 @@
-package com.anastasiia.web.command.general;
+package com.anastasiia.web.command.common;
 
-import com.anastasiia.dao.BookingDAO;
-import com.anastasiia.dao.RoomDAO;
-import com.anastasiia.dto.BookingDTO;
+import com.anastasiia.dto.ApplicationDTO;
 import com.anastasiia.dto.UserDTO;
-import com.anastasiia.entity.User;
-import com.anastasiia.services.BookingService;
+import com.anastasiia.services.ApplicationService;
 import com.anastasiia.services.Pagination;
 import com.anastasiia.utils.Fields;
 import com.anastasiia.utils.JspAttributes;
@@ -18,37 +15,38 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-public class ViewBookingCommand implements Command {
+public class ViewApplicationsCommand implements Command {
+    ApplicationService applicationService = new ApplicationService();
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-        List<BookingDTO> bookingDTOList;
-        String page = Pages.INDEX;
+        List<ApplicationDTO> applicationList;
+        String page;
         int currentPage = Pagination.getCurrentPage(request.getParameter(JspAttributes.CURRENT_PAGE));
         String orderBy = request.getParameter(JspAttributes.ORDER_BY);
+        UserDTO userDTO = (UserDTO) request.getSession().getAttribute(JspAttributes.USER);
         int rows = request.getSession().getAttribute(JspAttributes.ROLE).equals(Role.MANAGER)
-                ? BookingService.selectAllBooking().size()
-                : BookingService.selectAllBooking((Integer) request.getSession().getAttribute(JspAttributes.USER)).size();
+                ? applicationService.selectAll().size()
+                : applicationService.selectAll(userDTO.getId()).size();
         request.getSession().setAttribute("rows", rows);
         if (orderBy == null){
             orderBy= Fields.ID;
         }
         Pagination.setPagination(request);
         switch ((Role)request.getSession().getAttribute(JspAttributes.ROLE)){
-            case CLIENT : { bookingDTOList = BookingService.selectAllBooking(
-                    currentPage, Pagination.RECORDS_PER_PAGE, orderBy,
-                    (Integer) request.getSession().getAttribute(JspAttributes.USER));
-                page = Pages.CLIENT_VIEW_BOOKINGS;
+            case CLIENT : { applicationList = applicationService.selectAll(
+                    currentPage, Pagination.RECORDS_PER_PAGE, orderBy,userDTO.getId());
+                page = Pages.CLIENT_VIEW_APPLICATIONS;
                 break;
             }
             case MANAGER:{
-                bookingDTOList = BookingService.selectAllBooking(currentPage, Pagination.RECORDS_PER_PAGE, orderBy);
-                page = Pages.MANAGER_VIEW_BOOKINGS;
+                applicationList = applicationService.selectAll(currentPage, Pagination.RECORDS_PER_PAGE, orderBy);
+                page = Pages.MANAGER_VIEW_APPLICATIONS;
                 break;
             }
             default:
                 throw new IllegalStateException("Unexpected value: " + (Role) request.getSession().getAttribute(JspAttributes.ROLE));
         }
-        request.getSession().setAttribute(JspAttributes.BOOKINGS, bookingDTOList);
-        return new CommandResult(page, false);
+        request.getSession().setAttribute(JspAttributes.APPLICATIONS, applicationList);
+       return new CommandResult(page, false);
     }
 }

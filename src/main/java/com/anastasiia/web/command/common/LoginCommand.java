@@ -1,4 +1,4 @@
-package com.anastasiia.web.command.general;
+package com.anastasiia.web.command.common;
 
 import com.anastasiia.dto.UserDTO;
 import com.anastasiia.services.UserService;

@@ -3,14 +3,18 @@ package com.anastasiia.dto;
 import com.anastasiia.entity.User;
 import com.anastasiia.services.UserService;
 import com.anastasiia.utils.Role;
+import org.apache.log4j.Logger;
 
 public class UserDTO extends User {
+
+    private static final Logger log = Logger.getLogger(UserDTO.class);
     private int id;
     private String firstName;
     private String lastName;
     private String email;
     private Role role;
 
+    public UserDTO(){}
     @Override
     public int getId() {
         return id;
@@ -60,15 +64,27 @@ public class UserDTO extends User {
         this.role = role;
     }
     public UserDTO entityToDTO(User user){
-        this.setId(user.getId());
-        this.setFirstName(user.getFirstName());
-        this.setLastName(user.getLastName());
-        this.setEmail(user.getEmail());
-        this.setRole(user.getRole());
-        return this;
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setRole(user.getRole());
+        log.debug(userDTO);
+        return userDTO;
     }
     public User dtoToEntity(){
        return new UserService().getUser(this.getEmail());
     }
 
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", role=" + role +
+                '}';
+    }
 }

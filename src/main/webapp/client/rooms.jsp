@@ -56,7 +56,7 @@
   <div class="container d-flex flex-wrap justify-content-center">
     <%@ include file="applicationModalWindow.jspf" %>
     <div class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
-      <form class="row g-3 needs-validation" action="${pageContext.request.contextPath}/client/" method="post" novalidate>
+      <form class="row g-3 needs-validation" action="${pageContext.request.contextPath}/client/" method="get" novalidate>
       <div class="form-floating ">
         <div class="input-group">
               <span class="input-group-text" id="basic-addon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
@@ -84,10 +84,9 @@
               const checkOut1 = document.getElementById("checkInDate").value
               const checkOut21 = new Date(Date.parse(checkOut1))
               checkOut21.setDate(checkOut21.getDate()+1)
-              const minCheckOut1 = checkOut21.toLocaleString("ru",options).split('.').reverse().join('-')
+              const minCheckOut1 = checkOut21.toLocaleString("ru",options1).split('.').reverse().join('-')
               document.getElementById("checkOutDate").setAttribute("min",minCheckOut1)
             }
-
           </script>
 
         <button type="submit" name="command" value="findRoomForBooking" class="btn btn-warning">

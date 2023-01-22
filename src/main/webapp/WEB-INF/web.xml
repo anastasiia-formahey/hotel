@@ -30,6 +30,9 @@
         <param-name>locales</param-name>
         <param-value>en ua</param-value>
     </context-param>
+    <session-config>
+        <session-timeout>1</session-timeout>
+    </session-config>
 
     <filter>
         <filter-name>EncodingFilter</filter-name>
@@ -43,9 +46,60 @@
         <filter-name>EncodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+    <filter>
+        <filter-name>SecurityURIFilter</filter-name>
+        <filter-class>com.anastasiia.web.filter.SecurityURIFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>SecurityURIFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
+    <!--    Security Command filter-->
+    <filter>
+        <filter-name>SecurityCommandFilter</filter-name>
+        <filter-class>com.anastasiia.web.filter.SecurityCommandFilter</filter-class>
+        <init-param>
+            <param-name>manager</param-name>
+            <param-value>addRoomPage addRoom editRoomPage editRoom reviewApplication insertRoomInReview deleteRoomFromReview sendRequest logout findRoomForBooking viewBooking viewApplications getRequest</param-value>
+        </init-param>
+        <init-param>
+            <param-name>client</param-name>
+            <param-value>bookRoomPage bookRoom payForBooking addApplication logout findRoomForBooking viewBooking viewApplications getRequest</param-value>
+        </init-param>
+        <init-param>
+            <param-name>unregistered</param-name>
+            <param-value>rooms viewRoom home</param-value>
+        </init-param>
+        <init-param>
+            <param-name>common</param-name>
+            <param-value>rooms viewRoom home</param-value>
+        </init-param>
+        <init-param>
+            <param-name>outOfControl</param-name>
+            <param-value>locale loginPage login signUpPage signUp about</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>SecurityCommandFilter</filter-name>
+        <servlet-name>Controller</servlet-name>
+    </filter-mapping>
+
+    <!--    -->
     <listener>
         <listener-class>com.anastasiia.web.listener.ContextListener</listener-class>
     </listener>
+    
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/errorPage.jsp</location>
+    </error-page>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/errorPage404.jsp</location>
+    </error-page>
+    
+
 
 </web-app>

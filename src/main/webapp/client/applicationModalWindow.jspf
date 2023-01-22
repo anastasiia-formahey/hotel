@@ -36,31 +36,9 @@
                         <div class="form-floating mb-3">
                             <div class="input-group">
                                 <span class="input-group-text" id="basic-addon3"><fmt:message key="form.lengthOfStay"/></span>
-                                <input type="number" name="lengthOfStay" class="form-control" id="lengthOfStay" placeholder="100"required>
+                                <input type="number" name="lengthOfStay" class="form-control" id="lengthOfStay" placeholder="1"required>
                             </div>
                         </div>
-
-<%--                        <script>--%>
-<%--                            const options={--%>
-<%--                                year: 'numeric',--%>
-<%--                                month: 'numeric',--%>
-<%--                                day: 'numeric',--%>
-<%--                            }--%>
-<%--                            const checkIn1 = new Date()--%>
-<%--                            checkIn1.setDate(checkIn1.getDate()+1)--%>
-<%--                            const minCheckIn = checkIn1.toLocaleString("ru",options).split('.').reverse().join('-')--%>
-<%--                            document.getElementById("checkInDateApp").setAttribute("min",minCheckIn)--%>
-<%--                            const getCheckIn = document.getElementById("checkInDateApp")--%>
-<%--                            getCheckIn.addEventListener('input', getN)--%>
-<%--                            function getN(){--%>
-<%--                                const checkOut = document.getElementById("checkInDateApp").value--%>
-<%--                                const checkOut2 = new Date(Date.parse(checkOut))--%>
-<%--                                checkOut2.setDate(checkOut2.getDate()+1)--%>
-<%--                                const minCheckOut = checkOut2.toLocaleString("ru",options).split('.').reverse().join('-')--%>
-<%--                                document.getElementById("checkOutDateApp").setAttribute("min",minCheckOut)--%>
-<%--                            }--%>
-
-<%--                        </script>--%>
 
                     </div>
                     <div class="modal-footer">

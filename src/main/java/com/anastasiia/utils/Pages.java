@@ -20,7 +20,7 @@ public interface Pages {
     String CLIENT_VIEW_BOOKINGS = "/client/viewBooking.jsp";
     String CLIENT_ROOMS_FOR_BOOKING = "/client/roomsForBooking.jsp";
     String BOOK_ROOM = "/client/?command=viewBooking";
-
+    String CLIENT_VIEW_REQUEST = "/client/viewRequest.jsp";
     //manager
     String MANAGER_HOME = "/manager/home.jsp";
     String MANAGER_ROOMS = "/manager/rooms.jsp";
@@ -29,6 +29,7 @@ public interface Pages {
     String MANAGER_EDIT_ROOM =  "/manager/editRoom.jsp";
     String EDIT_ROOM = "/manager/?command=rooms";
     String MANAGER_VIEW_BOOKINGS = "/manager/viewBooking.jsp";
+
     String MANAGER_VIEW_APPLICATIONS = "/manager/viewApplications.jsp";
     String MANAGER_REVIEW_APPLICATIONS = "/manager/reviewApplications.jsp";
 
@@ -38,4 +39,5 @@ public interface Pages {
 
     String ERROR = "/errorPage.jsp";
 
+    String EDIT_ROOM_PAGE = "/manager/editRoom.jsp";
 }

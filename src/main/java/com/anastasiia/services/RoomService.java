@@ -1,19 +1,15 @@
 package com.anastasiia.services;
 
-import com.anastasiia.dao.BookingDAO;
 import com.anastasiia.dao.RoomDAO;
-import com.anastasiia.dto.RoomDTO;
-import com.anastasiia.entity.Booking;
 import com.anastasiia.entity.Room;
 import com.anastasiia.utils.ClassOfRoom;
+import com.anastasiia.utils.Fields;
 import com.anastasiia.utils.JspAttributes;
-import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class RoomService {
     private static final Logger log = Logger.getLogger(RoomService.class);
@@ -54,14 +50,13 @@ public class RoomService {
     }
 
     public List<Room> findRoomForBooking(HttpServletRequest request){
+        log.debug("number of person = " + request.getParameter(JspAttributes.NUMBER_OF_PERSONS));
+        log.debug("in  = " + request.getParameter(JspAttributes.CHECK_IN_DATE));
+        log.debug("out  = " + request.getParameter(JspAttributes.CHECK_OUT_DATE));
         return RoomDAO.getInstance().selectRoomsForBooking(
                 Integer.parseInt(request.getParameter(JspAttributes.NUMBER_OF_PERSONS)),
                 Date.valueOf(request.getParameter(JspAttributes.CHECK_IN_DATE)),
                 Date.valueOf(request.getParameter(JspAttributes.CHECK_OUT_DATE)));
-    }
-    private boolean isDateInRange(Date date, Booking booking) {
-        return date.before(booking.getCheckInDate())
-                && date.after(booking.getCheckOutDate());
     }
 
     public Room findRoomById(int id){

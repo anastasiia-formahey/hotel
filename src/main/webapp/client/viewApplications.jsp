@@ -47,7 +47,7 @@
     </div>
   </div>
 </header>
-<main style="height: 68%">
+<main>
   <div class="container marketing" style="height: 100%">
     <hr class="feature-divider">
     <div class="h-100 card mb-3 p-4 text-center">
@@ -63,53 +63,67 @@
         <th scope="col"><fmt:message key="form.numberOfPerson"/></th>
         <th scope="col"><fmt:message key="form.classOfRoom"/></th>
         <th scope="col"><fmt:message key="form.lengthOfStay"/></th>
+        <th scope="col"><fmt:message key="form.status"/></th>
+        <th scope="col"></th>
       </tr>
       </thead>
       <tbody>
         <c:forEach items="${sessionScope.applications}" var="application" varStatus="loop">
-
+        <form class="needs-validation" novalidate action="${pageContext.request.contextPath}/client/"  method="post">
+          <input type="hidden" name="command" value="getRequest">
+          <input type="hidden" name="applicationId" value="${application.getId()}">
       <tr>
-        <th scope="row"><a href="${pageContext.request.contextPath}/client/?command=applicationFormPage">${application.getId()}</a></th>
+        <th scope="row">${application.getId()}</th>
         <td>${application.getNumberOfGuests()}</td>
         <td>${application.getClassOfRoom()}</td>
-        <td>${application.getLengthOfStay()}</td>
+        <td>${application.getLengthOfStay()} day(s)</td>
+        <td>${application.getStatus()}</td>
+        <td>
+            <button type="submit" class="btn btn-outline-dark"
+                    <c:if test="${application.getStatus() != 'REVIEWED'}">
+                      disabled</c:if>>
+              Get request
+            </button>
+</td>
       </tr>
-
+        </form>
         </c:forEach>
       </tbody>
     </table>
-    </div>
-  </div>
       <nav aria-label="Navigation for responses">
-        <ul class="pagination justify-content-center">
-          <c:if test="${requestScope.currentPage != 1}">
-            <li class="page-item"><a class="page-link"
-                                     href="${pageContext.request.contextPath}/client/?command=viewApplications&currentPage=${requestScope.currentPage-1}&recordsPerPage=${requestScope.recordsPerPage}&orderBy=${requestScope.orderBy}"><</a>
-            </li>
-          </c:if>
+      <ul class="pagination justify-content-center">
+        <c:if test="${requestScope.currentPage != 1}">
+          <li class="page-item"><a class="page-link"
+                                   href="${pageContext.request.contextPath}/client/?command=viewApplications&currentPage=${requestScope.currentPage-1}&recordsPerPage=${requestScope.recordsPerPage}&orderBy=${requestScope.orderBy}"><</a>
+          </li>
+        </c:if>
 
-          <c:forEach begin="1" end="${requestScope.noOfPages}" var="i">
-            <c:choose>
-              <c:when test="${requestScope.currentPage eq i}">
-                <li class="page-item active"><a class="page-link">
-                    ${i} <span class="sr-only"></span></a>
-                </li>
-              </c:when>
-              <c:otherwise>
-                <li class="page-item"><a class="page-link"
-                                         href="${pageContext.request.contextPath}/client/?command=viewApplications&currentPage=${i}&recordsPerPage=${requestScope.recordsPerPage}&orderBy=${requestScope.orderBy}">${i}</a>
-                </li>
-              </c:otherwise>
-            </c:choose>
-          </c:forEach>
+        <c:forEach begin="1" end="${requestScope.noOfPages}" var="i">
+          <c:choose>
+            <c:when test="${requestScope.currentPage eq i}">
+              <li class="page-item active"><a class="page-link">
+                  ${i} <span class="sr-only"></span></a>
+              </li>
+            </c:when>
+            <c:otherwise>
+              <li class="page-item"><a class="page-link"
+                                       href="${pageContext.request.contextPath}/client/?command=viewApplications&currentPage=${i}&recordsPerPage=${requestScope.recordsPerPage}&orderBy=${requestScope.orderBy}">${i}</a>
+              </li>
+            </c:otherwise>
+          </c:choose>
+        </c:forEach>
 
-          <c:if test="${requestScope.currentPage lt requestScope.noOfPages}">
-            <li class="page-item"><a class="page-link"
-                                     href="${pageContext.request.contextPath}/client/?command=viewApplications&currentPage=${requestScope.currentPage+1}&recordsPerPage=${requestScope.recordsPerPage}&orderBy=${requestScope.orderBy}">></a>
-            </li>
-          </c:if>
-        </ul>
-      </nav>
+        <c:if test="${requestScope.currentPage lt requestScope.noOfPages}">
+          <li class="page-item"><a class="page-link"
+                                   href="${pageContext.request.contextPath}/client/?command=viewApplications&currentPage=${requestScope.currentPage+1}&recordsPerPage=${requestScope.recordsPerPage}&orderBy=${requestScope.orderBy}">></a>
+          </li>
+        </c:if>
+      </ul>
+    </nav>
+    </div>
+
+  </div>
+
     </div>
   </div>
 </main>

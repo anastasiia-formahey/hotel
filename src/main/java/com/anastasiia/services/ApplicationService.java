@@ -33,6 +33,7 @@ public class ApplicationService {
                 .stream().map(new ApplicationDTO()::entityToDTO).collect(Collectors.toList());
     }
     public ApplicationDTO get(List<ApplicationDTO> applicationDTOList, int id){
+        applicationDTOList.forEach(log::debug);
         return applicationDTOList.stream()
                 .filter(applicationDTO -> id==(applicationDTO.getId()))
                 .findAny().orElse(new ApplicationDTO());

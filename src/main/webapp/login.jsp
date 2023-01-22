@@ -61,6 +61,11 @@
                         <fmt:message key="message.error"/>
                     </div>
                     </c:if>
+                    <c:if test="${sessionTimedOut eq true}">
+                        <div class="alert alert-danger" role="alert">
+                            <fmt:message key="message.sessionTimedOut"/>
+                        </div>
+                    </c:if>
 
                     <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit"><fmt:message key="header.login"/></button>
                 </form>

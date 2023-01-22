@@ -1,6 +1,7 @@
 package com.anastasiia.entity;
 
 import com.anastasiia.utils.ClassOfRoom;
+import com.anastasiia.utils.Status;
 
 import java.time.LocalDate;
 import java.sql.Date;
@@ -11,6 +12,7 @@ public class Application extends Entity {
     private int numberOfGuests;
     private ClassOfRoom classOfRoom;
     private int lengthOfStay;
+    private Status status;
 
     public Application(){}
 
@@ -61,6 +63,14 @@ public class Application extends Entity {
 
     public void setLengthOfStay(int lengthOfStay) {
         this.lengthOfStay = lengthOfStay;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     @Override

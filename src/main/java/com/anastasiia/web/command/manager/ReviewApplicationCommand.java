@@ -1,6 +1,8 @@
 package com.anastasiia.web.command.manager;
 
 import com.anastasiia.dto.ApplicationDTO;
+import com.anastasiia.dto.RequestDTO;
+import com.anastasiia.entity.Room;
 import com.anastasiia.services.ApplicationService;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Pages;
@@ -18,9 +20,16 @@ public class ReviewApplicationCommand implements Command {
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         List<ApplicationDTO> applicationDTOList = (ArrayList<ApplicationDTO>)request.getSession().getAttribute(JspAttributes.APPLICATIONS);
+        ArrayList<Integer> addedRooms = new ArrayList<>();
+        RequestDTO requestDTO = new RequestDTO();
         ApplicationDTO applicationDTO = new ApplicationService()
                 .get(applicationDTOList, Integer.parseInt(request.getParameter("applicationToReview")));
         request.getSession().setAttribute("app", applicationDTO);
-        return new CommandResult(Pages.MANAGER_REVIEW_APPLICATIONS, false);
+        log.debug(applicationDTO);
+        request.getSession().setAttribute("listOfRoomInReview", new ArrayList<Room>());
+        request.getSession().setAttribute("addedRooms", addedRooms);
+        request.getSession().setAttribute("requestDTO", requestDTO);
+
+        return new CommandResult(Pages.MANAGER_REVIEW_APPLICATIONS, true);
     }
 }

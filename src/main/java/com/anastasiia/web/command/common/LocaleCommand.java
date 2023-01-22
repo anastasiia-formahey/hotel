@@ -1,4 +1,4 @@
-package com.anastasiia.web.command.general;
+package com.anastasiia.web.command.common;
 
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.web.command.Command;

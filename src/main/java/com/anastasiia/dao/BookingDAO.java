@@ -29,31 +29,27 @@ public class BookingDAO {
         return instance;
     }
 
-    public void insertBooking(Booking booking){
+    public void insertBooking(List<Booking> bookings){
         log.debug("Method starts");
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        ResultSet resultSet;
 
         try {
             connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_BOOKING, Statement.RETURN_GENERATED_KEYS);
-
-            preparedStatement.setInt(1,booking.getRoomId());
-            preparedStatement.setInt(2,booking.getClientId());
-            preparedStatement.setDate(3,booking.getCheckInDate());
-            preparedStatement.setDate(4,booking.getCheckOutDate());
-            preparedStatement.setDouble(5,booking.getPrice());
-            preparedStatement.setDate(6,booking.getDateOfBooking());
-            preparedStatement.setString(7,booking.getStatusOfBooking().name());
-            preparedStatement.executeUpdate();
-            log.trace("Query execution => " + preparedStatement);
-            resultSet = preparedStatement.getGeneratedKeys();
-            if(resultSet.next()){
-                booking.setId(resultSet.getInt(1));
+            connection.setAutoCommit(false);
+            connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+            for(Booking booking: bookings) {
+                preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_BOOKING, Statement.RETURN_GENERATED_KEYS);
+                preparedStatement.setInt(1, booking.getRoomId());
+                preparedStatement.setInt(2, booking.getClientId());
+                preparedStatement.setDate(3, booking.getCheckInDate());
+                preparedStatement.setDate(4, booking.getCheckOutDate());
+                preparedStatement.setDouble(5, booking.getPrice());
+                preparedStatement.setDate(6, booking.getDateOfBooking());
+                preparedStatement.setString(7, booking.getStatusOfBooking().name());
+                preparedStatement.executeUpdate();
             }
-            resultSet.close();
         }catch (SQLException ex){
             DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
@@ -72,7 +68,7 @@ public class BookingDAO {
     }
 
 
-    public void updateStatus(Booking booking) {
+    public void updateStatus(int bookingId, Status status) {
         log.debug("Method starts");
 
         Connection connection = null;
@@ -82,8 +78,8 @@ public class BookingDAO {
             connection = DBManager.getInstance().getConnection();
             preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_BOOKING_STATUS);
 
-            preparedStatement.setString(1,booking.getStatusOfBooking().name());
-            preparedStatement.setInt(2,booking.getId());
+            preparedStatement.setString(1,status.name());
+            preparedStatement.setInt(2,bookingId);
 
             preparedStatement.executeUpdate();
             log.trace("Query execution => " + preparedStatement);

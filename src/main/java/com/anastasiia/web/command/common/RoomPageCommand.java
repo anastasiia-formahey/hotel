@@ -1,4 +1,4 @@
-package com.anastasiia.web.command.general;
+package com.anastasiia.web.command.common;
 
 import com.anastasiia.dao.RoomDAO;
 import com.anastasiia.services.BookingService;
@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 public class RoomPageCommand implements Command {
     private static final Logger log = Logger.getLogger(RoomPageCommand.class);
     RoomService roomService = new RoomService();
+    BookingService bookingService = new BookingService();
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         Object roleParameter = request.getSession().getAttribute(JspAttributes.ROLE);
@@ -47,7 +48,7 @@ public class RoomPageCommand implements Command {
             }
             case CLIENT:{
                 pageRoom = Pages.CLIENT_ROOMS;
-                request.getSession().setAttribute("currentDate", BookingService.getCurrentDate());
+                request.getSession().setAttribute("currentDate", bookingService.getCurrentDate());
                 request.getSession().setAttribute(JspAttributes.ROOMS,
                         roomService.selectAllRooms(currentPage, Pagination.RECORDS_PER_PAGE, orderBy));
                 break;

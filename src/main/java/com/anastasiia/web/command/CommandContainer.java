@@ -1,7 +1,7 @@
 package com.anastasiia.web.command;
 
 import com.anastasiia.web.command.client.*;
-import com.anastasiia.web.command.general.*;
+import com.anastasiia.web.command.common.*;
 import com.anastasiia.web.command.manager.*;
 import org.apache.log4j.Logger;
 
@@ -37,6 +37,10 @@ public class CommandContainer {
         commandMap.put("addApplication", new AddApplicationCommand());
         commandMap.put("viewApplications", new ViewApplicationsCommand());
         commandMap.put("reviewApplication", new ReviewApplicationCommand());
+        commandMap.put("insertRoomInReview", new InsertRoomInReviewCommand());
+        commandMap.put("deleteRoomFromReview", new DeleteRoomFromReviewCommand());
+        commandMap.put("sendRequest", new SendRequestCommand());
+        commandMap.put("getRequest", new GetRequestCommand());
     }
 
     /**

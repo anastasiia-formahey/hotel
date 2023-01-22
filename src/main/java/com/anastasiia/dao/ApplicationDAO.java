@@ -2,9 +2,9 @@ package com.anastasiia.dao;
 
 import com.anastasiia.entity.Application;
 import com.anastasiia.entity.EntityMapper;
-import com.anastasiia.entity.Room;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.SqlQuery;
+import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -198,6 +198,34 @@ public class ApplicationDAO {
         return listOfApplications;
     }
 
+    public void updateStatus(int applicationId, Status status) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = DBManager.getInstance().getConnection();
+            log.trace("Get connection with database by DBManager");
+            preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_APPLICATION_STATUS);
+            preparedStatement.setString(1, status.name());
+            preparedStatement.setInt(2, applicationId);
+            preparedStatement.executeUpdate();
+            log.trace("Query execution => " + preparedStatement);
+        } catch (SQLException e) {
+            DBManager.getInstance().rollbackAndClose(connection);
+            log.error("Cannot execute the query ==> " + e);
+            log.trace("Close connection with DBManager");
+        }finally {
+            try {
+                assert preparedStatement != null;
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            DBManager.getInstance().commitAndClose(connection);
+            log.trace("Close connection with DBManager");
+        }
+        log.debug("Method finished");
+    }
+
     private static class ApplicationMapper implements EntityMapper<Application>{
         public Application mapRow(ResultSet resultSet){
             try {
@@ -207,6 +235,7 @@ public class ApplicationDAO {
                 application.setNumberOfGuests(resultSet.getInt("number_of_guests"));
                 application.setClassOfRoom(ClassOfRoom.valueOf(resultSet.getString("apartment_class")));
                 application.setLengthOfStay(Integer.parseInt(resultSet.getString("length_of_stay")));
+                application.setStatus(Status.valueOf(resultSet.getString("status")));
                 return application;
             } catch (SQLException e) {
                 throw new IllegalStateException(e);

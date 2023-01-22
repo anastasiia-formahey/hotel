@@ -16,7 +16,7 @@
             min-height: 100vh;
         }
     </style>
-        </head>
+</head>
 <body>
 
 <div class="page-wrap d-flex flex-row align-items-center">
@@ -27,9 +27,7 @@
 
                 <span class="display-1 d-block"> Oops!</span>
                 <br>
-                <div class="mb-4 lead">Something went wrong</div>
-                <br>
-                <div class="mb-4 lead">Cause : ${error}</div>
+                <div class="mb-4 lead">Page not found</div>
                 <a class="text-decoration-none" href="${pageContext.request.contextPath}/?command=home">Back to Home</a>
             </div>
         </div>

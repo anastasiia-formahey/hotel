@@ -49,7 +49,7 @@ public class Controller extends HttpServlet{
                 response.sendRedirect(request.getContextPath() + commandResult.getPage());
             }else{
                 log.debug("Controller finished. Go to forward address " + commandResult.getPage());
-                RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher(commandResult.getPage());
+                RequestDispatcher requestDispatcher = request.getRequestDispatcher(commandResult.getPage());
                 requestDispatcher.forward(request, response);
                 }
         }

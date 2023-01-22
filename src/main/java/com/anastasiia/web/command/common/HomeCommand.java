@@ -1,4 +1,4 @@
-package com.anastasiia.web.command.general;
+package com.anastasiia.web.command.common;
 
 import com.anastasiia.dto.UserDTO;
 import com.anastasiia.utils.JspAttributes;
@@ -9,15 +9,22 @@ import com.anastasiia.web.command.CommandResult;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class HomeCommand implements Command {
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-        UserDTO userDTO = (UserDTO) request.getSession().getAttribute(JspAttributes.USER);
-        Role roleInSession = userDTO.getRole();
-        request.getSession().removeAttribute(JspAttributes.ERROR);
-        request.getSession().removeAttribute(JspAttributes.EMAIL_EXISTS);
+        Role roleInSession;
+        HttpSession session = request.getSession();
+        UserDTO userDTO = (UserDTO) session.getAttribute(JspAttributes.USER);
+        if(userDTO == null){
+            roleInSession = Role.UNREGISTERED;
+        }else {
+            roleInSession = userDTO.getRole();
+        }
+        session.removeAttribute(JspAttributes.ERROR);
+        session.removeAttribute(JspAttributes.EMAIL_EXISTS);
         String homePage;
         switch (roleInSession){
             case CLIENT: {

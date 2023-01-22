@@ -1,6 +1,5 @@
-package com.anastasiia.web.command.general;
+package com.anastasiia.web.command.common;
 
-import com.anastasiia.dao.UserDAO;
 import com.anastasiia.entity.User;
 import com.anastasiia.services.PasswordEncoder;
 import com.anastasiia.services.UserService;

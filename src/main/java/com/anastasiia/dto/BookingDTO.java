@@ -1,6 +1,7 @@
 package com.anastasiia.dto;
 
 import com.anastasiia.entity.Booking;
+import com.anastasiia.entity.Room;
 import com.anastasiia.services.RoomService;
 import com.anastasiia.services.UserService;
 import com.anastasiia.utils.Status;
@@ -10,6 +11,7 @@ import java.sql.Date;
 public class BookingDTO {
     private int id;
     private int roomId;
+    private Room room;
     private int numberOfPerson;
     private UserDTO userDTO;
     private Date checkInDate;
@@ -18,6 +20,17 @@ public class BookingDTO {
     private Date dateOfBooking;
     private Status statusOfBooking;
     private Date bookingExpirationDate;
+
+    public BookingDTO(){
+    }
+    public BookingDTO(Room room, UserDTO userDTO, Date checkInDate, Date checkOutDate, Double price, Date dateOfBooking) {
+        this.room = room;
+        this.userDTO = userDTO;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+        this.price = price;
+        this.dateOfBooking = dateOfBooking;
+    }
 
     public int getId() {
         return id;
@@ -33,6 +46,14 @@ public class BookingDTO {
 
     public void setRoomId(int roomId) {
         this.roomId = roomId;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
     }
 
     public int getNumberOfPerson() {
@@ -92,13 +113,28 @@ public class BookingDTO {
     }
 
     public Date getBookingExpirationDate() {
+        if(bookingExpirationDate == null){
+            setBookingExpirationDate();
+        }
         return bookingExpirationDate;
+    }
+
+    public void setBookingExpirationDate() {
+        //todo move method to service
+        Date date = this.getDateOfBooking();
+        Date expirationDate = Date.valueOf(date.toLocalDate().plusDays(2));
+        if(this.checkInDate.before(expirationDate)){
+            this.bookingExpirationDate = checkInDate;
+        }else {
+            this.bookingExpirationDate = expirationDate;
+        }
     }
 
     public void setBookingExpirationDate(Date bookingExpirationDate) {
         this.bookingExpirationDate = bookingExpirationDate;
     }
     public BookingDTO entityToDTO(Booking booking){
+        //todo move method to service
         BookingDTO bookingDTO = new BookingDTO();
         bookingDTO.setId(booking.getId());
         bookingDTO.setRoomId(booking.getRoomId());
@@ -115,9 +151,10 @@ public class BookingDTO {
         return bookingDTO;
     }
     public Booking dtoToEntity(){
+        //todo move method to service
         Booking booking = new Booking();
         booking.setId(this.getId());
-        booking.setRoomId(this.getRoomId());
+        booking.setRoomId(this.getRoom().getId());
         booking.setClientId(this.getUser().dtoToEntity().getId());
         booking.setCheckInDate(this.getCheckInDate());
         booking.setCheckOutDate(this.getCheckOutDate());
@@ -126,5 +163,15 @@ public class BookingDTO {
         booking.setStatusOfBooking(this.getStatusOfBooking());
         booking.setBookingExpirationDate();
         return booking;
+    }
+
+    @Override
+    public String toString() {
+        return "BookingDTO{" +
+                "room=" + room +
+                ", userDTO=" + userDTO +
+                ", checkInDate=" + checkInDate +
+                ", checkOutDate=" + checkOutDate +
+                '}';
     }
 }
