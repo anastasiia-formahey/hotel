@@ -40,6 +40,7 @@ public class ApplicationDAO {
             preparedStatement.setInt(2, application.getNumberOfGuests());
             preparedStatement.setString(3, application.getClassOfRoom().name());
             preparedStatement.setInt(4, application.getLengthOfStay());
+            preparedStatement.setString(5, application.getStatus().name());
 
 
             preparedStatement.executeUpdate();

@@ -30,9 +30,6 @@
         <param-name>locales</param-name>
         <param-value>en ua</param-value>
     </context-param>
-    <session-config>
-        <session-timeout>1</session-timeout>
-    </session-config>
 
     <filter>
         <filter-name>EncodingFilter</filter-name>
@@ -90,10 +87,10 @@
         <listener-class>com.anastasiia.web.listener.ContextListener</listener-class>
     </listener>
     
-    <error-page>
-        <exception-type>java.lang.Throwable</exception-type>
-        <location>/errorPage.jsp</location>
-    </error-page>
+<!--    <error-page>-->
+<!--        <exception-type>java.lang.Throwable</exception-type>-->
+<!--        <location>/errorPage.jsp</location>-->
+<!--    </error-page>-->
 
     <error-page>
         <error-code>404</error-code>

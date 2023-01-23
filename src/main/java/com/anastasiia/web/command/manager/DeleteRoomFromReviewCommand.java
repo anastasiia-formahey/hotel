@@ -1,8 +1,7 @@
 package com.anastasiia.web.command.manager;
 
-import com.anastasiia.dto.BookingDTO;
 import com.anastasiia.dto.RequestDTO;
-import com.anastasiia.entity.Room;
+import com.anastasiia.dto.RoomDTO;
 import com.anastasiia.services.RoomService;
 import com.anastasiia.utils.Pages;
 import com.anastasiia.web.command.Command;
@@ -12,16 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class DeleteRoomFromReviewCommand implements Command {
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         RequestDTO requestDTO = (RequestDTO) request.getSession().getAttribute("requestDTO");
-        List<Room> roomList = (ArrayList) request.getSession().getAttribute("listOfRoomInReview");
+        List<RoomDTO> roomList = (ArrayList) request.getSession().getAttribute("listOfRoomInReview");
         List<Integer> addedRooms = (ArrayList) request.getSession().getAttribute("addedRooms");
-        Room room = new RoomService().findRoomById(Integer.parseInt(request.getParameter("numberOfRoom")));
+        RoomDTO room = new RoomService().findRoomById(Integer.parseInt(request.getParameter("numberOfRoom")));
         RequestDTO.RequestElement requestElement = requestDTO.getRequestElements()
                 .stream().filter(element -> room.getId() == element.getRoom().getId())
                         .findAny().orElse(new RequestDTO.RequestElement());

@@ -1,3 +1,4 @@
+<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -69,7 +70,7 @@
       </thead>
       <tbody>
         <c:forEach items="${sessionScope.applications}" var="application" varStatus="loop">
-        <form class="needs-validation" novalidate action="${pageContext.request.contextPath}/client/"  method="post">
+        <form class="needs-validation" novalidate action="${pageContext.request.contextPath}/client/"  method="get">
           <input type="hidden" name="command" value="getRequest">
           <input type="hidden" name="applicationId" value="${application.getId()}">
       <tr>
@@ -77,7 +78,7 @@
         <td>${application.getNumberOfGuests()}</td>
         <td>${application.getClassOfRoom()}</td>
         <td>${application.getLengthOfStay()} day(s)</td>
-        <td>${application.getStatus()}</td>
+        <td><tags:status value="${application.getStatus()}"/></td>
         <td>
             <button type="submit" class="btn btn-outline-dark"
                     <c:if test="${application.getStatus() != 'REVIEWED'}">

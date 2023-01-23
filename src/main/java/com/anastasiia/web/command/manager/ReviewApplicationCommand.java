@@ -2,7 +2,7 @@ package com.anastasiia.web.command.manager;
 
 import com.anastasiia.dto.ApplicationDTO;
 import com.anastasiia.dto.RequestDTO;
-import com.anastasiia.entity.Room;
+import com.anastasiia.dto.RoomDTO;
 import com.anastasiia.services.ApplicationService;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Pages;
@@ -26,7 +26,7 @@ public class ReviewApplicationCommand implements Command {
                 .get(applicationDTOList, Integer.parseInt(request.getParameter("applicationToReview")));
         request.getSession().setAttribute("app", applicationDTO);
         log.debug(applicationDTO);
-        request.getSession().setAttribute("listOfRoomInReview", new ArrayList<Room>());
+        request.getSession().setAttribute("listOfRoomInReview", new ArrayList<RoomDTO>());
         request.getSession().setAttribute("addedRooms", addedRooms);
         request.getSession().setAttribute("requestDTO", requestDTO);
 

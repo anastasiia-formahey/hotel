@@ -30,7 +30,7 @@ public class RequestDTO {
     public void setRequestElements(List<RequestElement> requestElements) {
         this.requestElements = requestElements;
     }
-    public void setRequestElements(Room room, Date checkInDate, Date checkOutDate) {
+    public void setRequestElements(RoomDTO room, Date checkInDate, Date checkOutDate) {
         this.requestElements.add(new RequestElement(checkInDate, checkOutDate, room));
     }
     public void removeRequestElement(RequestElement requestElement) {
@@ -57,10 +57,10 @@ public class RequestDTO {
     public static class RequestElement{
         private Date checkInDate;
         private Date checkOutDate;
-        private Room room;
+        private RoomDTO room;
 
         public RequestElement(){}
-        public RequestElement(Date checkInDate, Date checkOutDate, Room room) {
+        public RequestElement(Date checkInDate, Date checkOutDate, RoomDTO room) {
             this.checkInDate = checkInDate;
             this.checkOutDate = checkOutDate;
             this.room = room;
@@ -74,7 +74,7 @@ public class RequestDTO {
             return checkOutDate;
         }
 
-        public Room getRoom() {
+        public RoomDTO getRoom() {
             return room;
         }
 

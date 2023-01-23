@@ -1,3 +1,4 @@
+<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -74,8 +75,8 @@
                         <tbody>
                         <c:forEach items="${sessionScope.applications}" var="application" varStatus="loop">
                             <form class="needs-validation" novalidate action="${pageContext.request.contextPath}/manager/" method="get">
-                            <input type="hidden" name="command" value="reviewApplication">
-                            <input type="hidden" name="applicationToReview" value="${application.getId()}">
+
+
                             <tr>
                                 <th scope="row"><a href="#">${application.getId()}</a></th>
                                 <td>${application.getNumberOfGuests()}</td>
@@ -85,15 +86,20 @@
                                         ${application.getUserDTO().getLastName()}
                                     ${application.getUserDTO().getEmail()}</p>
                                 </td>
-                                <td><span
-                                        <c:if test="${application.getStatus() == 'NEW'}">class="badge bg-primary" </c:if>
-                                        <c:if test="${application.getStatus() == 'CONFIRMED'}">class="badge bg-success" </c:if>
-                                        <c:if test="${application.getStatus() == 'NOT_CONFIRMED'}">class="badge bg-warning" </c:if>
-                                        <c:if test="${application.getStatus() == 'REVIEWED'}">class="badge bg-secondary" </c:if>
-                                >${application.getStatus()}</span></td>
-                                <td><c:if test="${application.getStatus() == 'NEW'}">
-                                    <button type="submit" class="btn btn-outline-dark" value="${application}">Review</button></td>
-                                </c:if>
+                                <td><tags:status value="${application.getStatus()}"/></td>
+                                <td>
+                                    <c:if test="${application.getStatus() == 'NEW'}">
+                                        <input type="hidden" name="command" value="reviewApplication">
+                                        <input type="hidden" name="applicationToReview" value="${application.getId()}">
+                                        <button type="submit" class="btn btn-outline-dark" value="${application}">Review</button>
+                                    </c:if>
+                                    <c:if test="${application.getStatus() != 'NEW'}">
+                                        <input type="hidden" name="command" value="getRequest">
+                                        <input type="hidden" name="applicationId" value="${application.getId()}">
+                                        <button type="submit" class="btn btn-outline-dark" value="${application}">Get Request</button>
+                                    </c:if>
+                                </td>
+
                             </tr>
                             </form>
                         </c:forEach>

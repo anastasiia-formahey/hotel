@@ -45,10 +45,10 @@
         </div>
     </div>
 </header>
-<main>
-    <div class="container marketing">
+<main style="height: 68%">
+    <div class="container marketing" style="height: 100%">
         <hr class="feature-divider">
-        <div class="card mb-3 p-4">
+        <div class="card mb-3 p-4" style="height: 100%">
             <div class="row g-0">
                 <div class="col-md-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor" class="bi bi-person-check" viewBox="0 0 16 16">

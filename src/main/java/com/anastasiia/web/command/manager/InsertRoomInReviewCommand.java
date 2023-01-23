@@ -1,11 +1,9 @@
 package com.anastasiia.web.command.manager;
 
 import com.anastasiia.dto.ApplicationDTO;
-import com.anastasiia.dto.BookingDTO;
 import com.anastasiia.dto.RequestDTO;
-import com.anastasiia.entity.Room;
+import com.anastasiia.dto.RoomDTO;
 import com.anastasiia.services.RoomService;
-import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Pages;
 import com.anastasiia.web.command.Command;
 import com.anastasiia.web.command.CommandResult;
@@ -16,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class InsertRoomInReviewCommand implements Command {
 
@@ -24,11 +21,11 @@ public class InsertRoomInReviewCommand implements Command {
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         RequestDTO requestDTO = (RequestDTO) request.getSession().getAttribute("requestDTO");
-        List<Room> roomList = (ArrayList) request.getSession().getAttribute("listOfRoomInReview");
+        List<RoomDTO> roomList = (ArrayList) request.getSession().getAttribute("listOfRoomInReview");
         List<Integer> addedRooms = (ArrayList) request.getSession().getAttribute("addedRooms");
         ApplicationDTO applicationDTO = (ApplicationDTO) request.getSession().getAttribute("app");
         log.debug(applicationDTO.toString());
-        Room room = new RoomService().findRoomById(Integer.parseInt(request.getParameter("numberOfRoom")));
+        RoomDTO room = new RoomService().findRoomById(Integer.parseInt(request.getParameter("numberOfRoom")));
         requestDTO.setRequestElements(
                         room,
                         Date.valueOf(request.getSession().getAttribute("checkIn").toString()),

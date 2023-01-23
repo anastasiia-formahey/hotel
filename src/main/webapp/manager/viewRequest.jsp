@@ -4,7 +4,7 @@
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="resources"/>
 <!DOCTYPE html>
-<html lang=${sessionScope.locale}>
+<html class="h-100" lang=${sessionScope.locale}>
 <head>
     <title><fmt:message key="header.login"/></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
@@ -14,24 +14,23 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
 </head>
 
-<body>
+<body class="h-100">
 <header class="p-3 text-bg-dark">
-    <input type="hidden" name="role" value="CLIENT">
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
                 <img src="${pageContext.request.contextPath}/images/—Pngtree—watermelon%20logo_6945475.png" height="50px">
             </a>
 
-            <div class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <a href="${pageContext.request.contextPath}/client/?command=home" class="nav-link px-2 text-secondary"><fmt:message key="header.home"/></a>
-                <li><a href="${pageContext.request.contextPath}/client/?command=rooms" class="nav-link px-2 text-white"><fmt:message key="header.rooms"/></a></li>
-                <li><a href="${pageContext.request.contextPath}/client/?command=viewApplications" class="nav-link px-2 text-white"><fmt:message key="header.applications"/></a></li>
-                <li><a href="${pageContext.request.contextPath}/client/?command=viewBooking" class="nav-link px-2 text-white"><fmt:message key="header.booking"/></a></li>
-            </div>
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="${pageContext.request.contextPath}/manager/?command=home" class="nav-link px-2 text-secondary"><fmt:message key="header.home"/></a></li>
+                <li><a href="${pageContext.request.contextPath}/manager/?command=rooms" class="nav-link px-2 text-white"><fmt:message key="header.rooms"/></a></li>
+                <li><a href="${pageContext.request.contextPath}/manager/?command=viewApplications" class="nav-link px-2 text-white"><fmt:message key="header.applications"/></a></li>
+                <li><a href="${pageContext.request.contextPath}/manager/?command=viewBooking" class="nav-link px-2 text-white"><fmt:message key="header.booking"/></a></li>
+            </ul>
 
             <div class="text-end d-flex" style="padding-right: 10px">
-                <a href="${pageContext.request.contextPath}/client/?command=logout" class="btn btn-outline-warning me-2"><fmt:message key="header.logout"/></a>
+                <a href="${pageContext.request.contextPath}/manager/?command=logout" class="btn btn-outline-warning me-2"><fmt:message key="header.logout"/></a>
             </div>
             <div class="locale">
                 <form action="${pageContext.request.contextPath}/locale/" method="get">
@@ -52,19 +51,33 @@
         <div class="card mb-3 p-4">
             <div class="row g-0">
                 <div class="modal-header align-content-center">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel1"><fmt:message key="request"/>${application.getId()}</h1>
+                    <h1 class="fs-2"><fmt:message key="request"/> ${application.getId()}</h1>
                 </div>
-                <form action="${pageContext.request.contextPath}/client/" method="post">
-                <input type="hidden" name="command" value="bookRoom">
-                <input type="hidden" name="applicationId" value="${application.getId()}">
-                <c:forEach items="${sessionScope.bookingDTOS}" var="booking" varStatus="loop">
 
-                    <div class="card mb-3 p-2">
-                        <div class="row g-2">
-                            <div class="col-md-5">
-                                <img class="bd-placeholder-img card-img-top form-control-lg" width="100%" height="100%" src="${pageContext.request.contextPath}/images/${booking.getRoom().getImage()}" role="img"></div>
-                            <div class="col-md-5">
+                    <input type="hidden" name="applicationId" value="${application.getId()}">
+                    <c:forEach items="${sessionScope.bookingDTOS}" var="booking" varStatus="loop">
+
+                        <div class="card mb-3 p-2">
+                            <div class="row g-2">
+                                <div class="col-md-5">
+                                    <img class="bd-placeholder-img card-img-top form-control-lg" width="100%" height="100%" src="${pageContext.request.contextPath}/images/${booking.getRoom().getImage()}" role="img"></div>
+                                <div class="col-md-5">
                                     <h3 class="featurette-heading fw-normal lh-1"><fmt:message key="room.number"/>${booking.getRoom().getId()}</h3>
+                                    <div class="form-floating mb-2">
+                                        <p class="card-text"> <fmt:message key="form.status"/>
+                                            <span
+                                                    <c:if test="${application.getStatus() == 'NEW'}">class="badge bg-primary" </c:if>
+                                                    <c:if test="${application.getStatus() == 'CONFIRMED'}">class="badge bg-success" </c:if>
+                                                    <c:if test="${application.getStatus() == 'NOT_CONFIRMED'}">class="badge bg-secondary" </c:if>
+                                                    <c:if test="${application.getStatus() == 'REVIEWED'}">class="badge bg-warning" </c:if>
+                                            >${application.getStatus()}</span></p>
+
+                                    </div>
+                                    <div class="form-floating mb-2">
+                                        <input type="text" name="client" class="form-control" id="client"
+                                               value="${application.getUserDTO().getFirstName()} ${application.getUserDTO().getLastName()}" readonly>
+                                        <label for="client"><fmt:message key="form.client"/></label>
+                                    </div>
                                     <div class="form-floating mb-2">
                                         <input type="text" name="classOfRoom" class="form-control" id="numberOfPersonModal1"
                                                value="${booking.getRoom().getNumberOfPerson()}" readonly>
@@ -94,20 +107,19 @@
                                                value="${booking.getPrice()}" readonly>
                                         <label for="price"><fmt:message key="form.price"/>/<fmt:message key="uah"/></label>
                                     </div>
+                                </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                </c:forEach>
-                <div class="col-12">
-                     <button class="w-100 mb-2 btn btn-lg rounded-3 btn-warning" type="submit"><fmt:message key="confirm"/></button>
-                </div>
-                </form>
+                    </c:forEach>
 
 
             </div>
         </div>
     </div>
 </main>
+<%@ include file="/jspf/footer.jspf" %>
 </body>
 </html>

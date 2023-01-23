@@ -40,4 +40,5 @@ public interface Pages {
     String ERROR = "/errorPage.jsp";
 
     String EDIT_ROOM_PAGE = "/manager/editRoom.jsp";
+    String MANAGER_VIEW_REQUEST = "/manager/viewRequest.jsp";;
 }

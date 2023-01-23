@@ -1,13 +1,9 @@
 package com.anastasiia.web.command.client;
 
 import com.anastasiia.dto.BookingDTO;
-import com.anastasiia.dto.UserDTO;
-import com.anastasiia.entity.Booking;
-import com.anastasiia.entity.User;
 import com.anastasiia.services.ApplicationService;
 import com.anastasiia.services.BookingService;
 import com.anastasiia.services.RequestService;
-import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Pages;
 import com.anastasiia.utils.Status;
 import com.anastasiia.web.command.Command;
@@ -16,7 +12,6 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 

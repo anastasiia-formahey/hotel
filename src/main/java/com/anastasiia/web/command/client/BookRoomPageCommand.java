@@ -1,11 +1,9 @@
 package com.anastasiia.web.command.client;
 
 import com.anastasiia.dto.BookingDTO;
+import com.anastasiia.dto.RoomDTO;
 import com.anastasiia.dto.UserDTO;
-import com.anastasiia.entity.Booking;
-import com.anastasiia.entity.Room;
 import com.anastasiia.services.BookingService;
-import com.anastasiia.services.FeatureService;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Pages;
 import com.anastasiia.utils.Status;
@@ -26,9 +24,9 @@ public class BookRoomPageCommand implements Command {
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         List<BookingDTO> bookingDTOS = new ArrayList<>();
-        ArrayList<Room> listOfRooms = (ArrayList)request.getSession().getAttribute(JspAttributes.ROOMS);
-        Room room = new Room();
-        for (Room room1:listOfRooms){
+        ArrayList<RoomDTO> listOfRooms = (ArrayList)request.getSession().getAttribute(JspAttributes.ROOMS);
+        RoomDTO room = new RoomDTO();
+        for (RoomDTO room1:listOfRooms){
             if (room1.getId() == Integer.parseInt(request.getParameter(JspAttributes.NUMBER_OF_ROOM))){
                 room = room1;
             }

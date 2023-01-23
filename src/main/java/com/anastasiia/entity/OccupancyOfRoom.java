@@ -61,4 +61,15 @@ public class OccupancyOfRoom {
     public void setStatus(Status status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "OccupancyOfRoom{" +
+                "roomId=" + roomId +
+                ", clientId=" + clientId +
+                ", checkInDate=" + checkInDate +
+                ", checkOutDate=" + checkOutDate +
+                ", status=" + status +
+                '}';
+    }
 }

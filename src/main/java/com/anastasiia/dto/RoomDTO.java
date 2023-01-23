@@ -2,6 +2,7 @@ package com.anastasiia.dto;
 
 import com.anastasiia.entity.Feature;
 import com.anastasiia.entity.Room;
+import com.anastasiia.services.RoomService;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.Status;
 
@@ -17,6 +18,7 @@ public class RoomDTO {
     private Status status;
 
     public RoomDTO(){}
+
 
     public int getId() {
         return id;
@@ -73,5 +75,6 @@ public class RoomDTO {
     public void setStatus(Status status) {
         this.status = status;
     }
+
 
 }

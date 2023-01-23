@@ -29,7 +29,7 @@
                 <br>
                 <div class="mb-4 lead">Something went wrong</div>
                 <br>
-                <div class="mb-4 lead">Cause : ${error}</div>
+                <div class="mb-4 lead">${error}</div>
                 <a class="text-decoration-none" href="${pageContext.request.contextPath}/?command=home">Back to Home</a>
             </div>
         </div>

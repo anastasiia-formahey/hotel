@@ -1,7 +1,7 @@
 package com.anastasiia.dao;
 
-import com.anastasiia.entity.Booking;
 import com.anastasiia.entity.OccupancyOfRoom;
+import com.anastasiia.entity.Room;
 import com.anastasiia.utils.SqlQuery;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
@@ -122,4 +122,48 @@ public class OccupancyOfRoomDAO {
     }
 
 
+    public Status getStatus(Room room, Date currentDate) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet;
+        OccupancyOfRoom occupancyOfRoom = null;
+
+        try {
+            connection = DBManager.getInstance().getConnection();
+            preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_STATUS_FROM_OCCUPANCY_OF_ROOM);
+            preparedStatement.setInt(1, room.getId());
+            preparedStatement.setDate(2, currentDate);
+            preparedStatement.setInt(3, room.getId());
+            preparedStatement.setDate(4, currentDate);
+            log.debug(preparedStatement.executeQuery());
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()){
+                occupancyOfRoom = new OccupancyOfRoom(
+                        resultSet.getInt("room_id"),
+                        resultSet.getInt("client_id"),
+                        resultSet.getDate("check_in_date"),
+                        resultSet.getDate("check_out_date"),
+                        Status.valueOf(resultSet.getString("status"))
+                );
+            }
+            resultSet.close();
+
+        }catch (SQLException ex){
+            DBManager.getInstance().rollbackAndClose(connection);
+            log.error("Cannot execute the query ==> " + ex);
+            log.trace("Close connection with DBManager");
+        }finally {
+            try {
+                assert preparedStatement != null;
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            DBManager.getInstance().commitAndClose(connection);
+            log.trace("Close connection with DBManager");
+        }
+
+        return occupancyOfRoom != null ? occupancyOfRoom.getStatus() : Status.FREE;
+    }
 }

@@ -4,10 +4,10 @@ import com.anastasiia.dto.ApplicationDTO;
 import com.anastasiia.dto.RequestDTO;
 import com.anastasiia.services.ApplicationService;
 import com.anastasiia.services.RequestService;
+import com.anastasiia.utils.Pages;
 import com.anastasiia.utils.Status;
 import com.anastasiia.web.command.Command;
 import com.anastasiia.web.command.CommandResult;
-import com.anastasiia.web.command.common.ViewApplicationsCommand;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +25,6 @@ public class SendRequestCommand implements Command {
         log.debug(requestDTO.toString());
         requestService.insertRequest(requestDTO, applicationDTO);
         request.setAttribute("requestSent", true);
-        return new ViewApplicationsCommand().execute(request, response);
+        return new CommandResult(Pages.MANAGER_VIEW_APPLICATIONS, true);
     }
 }

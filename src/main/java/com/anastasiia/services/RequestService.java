@@ -14,8 +14,6 @@ import java.util.List;
 
 public class RequestService {
     private static final Logger log = Logger.getLogger(RequestService.class);
-    RoomService roomService = new RoomService();
-    ApplicationService applicationService = new ApplicationService();
 
     public void insertRequest(RequestDTO requestDTO, ApplicationDTO applicationDTO){
         log.debug(requestDTO.toString());
@@ -39,7 +37,7 @@ public class RequestService {
         RequestDTO requestDTO = new RequestDTO();
         requestDTO.setApplicationId(requests.get(0).getApplicationId());
         for (Request request: requests) {
-            requestDTO.setRequestElements(roomService.findRoomById(request.getRoomId()),
+            requestDTO.setRequestElements(new RoomService().findRoomById(request.getRoomId()),
                     request.getCheckInDate(),
                     request.getCheckOutDate());
         }

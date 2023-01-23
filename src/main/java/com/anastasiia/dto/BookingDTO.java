@@ -11,7 +11,7 @@ import java.sql.Date;
 public class BookingDTO {
     private int id;
     private int roomId;
-    private Room room;
+    private RoomDTO room;
     private int numberOfPerson;
     private UserDTO userDTO;
     private Date checkInDate;
@@ -23,7 +23,7 @@ public class BookingDTO {
 
     public BookingDTO(){
     }
-    public BookingDTO(Room room, UserDTO userDTO, Date checkInDate, Date checkOutDate, Double price, Date dateOfBooking) {
+    public BookingDTO(RoomDTO room, UserDTO userDTO, Date checkInDate, Date checkOutDate, Double price, Date dateOfBooking) {
         this.room = room;
         this.userDTO = userDTO;
         this.checkInDate = checkInDate;
@@ -48,11 +48,11 @@ public class BookingDTO {
         this.roomId = roomId;
     }
 
-    public Room getRoom() {
+    public RoomDTO getRoom() {
         return room;
     }
 
-    public void setRoom(Room room) {
+    public void setRoom(RoomDTO room) {
         this.room = room;
     }
 

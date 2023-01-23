@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 
 public class BookingService {
     private static final Logger log = Logger.getLogger(BookingService.class);
-    OccupancyOfRoomService occupancyOfRoomService = new OccupancyOfRoomService();
     private void checkBooking(){
         List<Booking> bookings = BookingDAO.getInstance().selectAll();
         for (Booking booking:bookings) {
@@ -36,7 +35,7 @@ public class BookingService {
                 .collect(Collectors.toList());
         BookingDAO.getInstance().insertBooking(bookings);
         for (Booking booking: bookings){
-            occupancyOfRoomService.insertOccupancyOfRoom(
+            new OccupancyOfRoomService().insertOccupancyOfRoom(
                     booking.getRoomId(),
                     booking.getClientId(),
                     booking.getCheckInDate(),

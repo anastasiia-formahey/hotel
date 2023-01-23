@@ -27,7 +27,7 @@ public interface SqlQuery {
 
     //application
     String SQL_INSERT_APPLICATION
-            = "INSERT INTO `hotel`.`application` VALUES (DEFAULT, ?, ?, ?, ?)";
+            = "INSERT INTO `hotel`.`application` VALUES (DEFAULT, ?, ?, ?, ?, ?)";
     String SQL_SELECT_ALL_APPLICATIONS = "SELECT * FROM application";
     String SQL_SELECT_ALL_APPLICATIONS_BY_USER_ID = "SELECT * FROM application WHERE client_id=?";
     String SQL_UPDATE_APPLICATION_STATUS = "UPDATE application SET status=? WHERE id=?";
@@ -57,4 +57,8 @@ public interface SqlQuery {
     String SQL_SELECT_OCCUPANCY_OF_ROOM
             = "SELECT * FROM occupancy_of_room where room_id=? " +
             "AND client_id=? AND check_in_date=? AND check_out_date=?";
+
+    String SQL_SELECT_STATUS_FROM_OCCUPANCY_OF_ROOM
+            = "SELECT * FROM occupancy_of_room where room_id=? " +
+            "AND check_in_date=? OR room_id=? AND check_out_date=?";
 }

@@ -1,10 +1,9 @@
 package com.anastasiia.web.command.manager;
 
-import com.anastasiia.dao.FeaturesDAO;
-import com.anastasiia.dao.RoomDAO;
+import com.anastasiia.dto.RoomDTO;
 import com.anastasiia.entity.Feature;
-import com.anastasiia.entity.Room;
 import com.anastasiia.services.FeatureService;
+import com.anastasiia.services.RoomService;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.web.command.Command;
@@ -17,20 +16,21 @@ import java.util.List;
 
 public class AddRoomCommand implements Command {
     private static final Logger log = Logger.getLogger(AddRoomCommand.class);
+    RoomService roomService = new RoomService();
+    FeatureService featureService = new FeatureService();
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-        Room room = new Room(
-                Integer.parseInt(request.getParameter(JspAttributes.NUMBER_OF_PERSONS)),
-                Integer.parseInt(request.getParameter(JspAttributes.PRICE)),
-                ClassOfRoom.valueOf(request.getParameter(JspAttributes.CLASS_OF_ROOM)),
-                request.getParameter(JspAttributes.IMAGE)
-        );
-        List<Feature> features = FeatureService.getFeaturesForRoom(request);
-        boolean flag = RoomDAO.getInstance().insertRoom(room);
-        FeatureService.insertRoomFeatures(room, features);
-        if(flag){
-            request.getSession().setAttribute(JspAttributes.MESSAGE_SUCCESS, "Room was added");
-        }
+        RoomDTO room = new RoomDTO();
+
+               room.setId(Integer.parseInt(request.getParameter(JspAttributes.NUMBER_OF_PERSONS)));
+               room.setPrice(Integer.parseInt(request.getParameter(JspAttributes.PRICE)));
+               room.setClassOfRoom(ClassOfRoom.valueOf(request.getParameter(JspAttributes.CLASS_OF_ROOM)));
+               room.setImage(request.getParameter(JspAttributes.IMAGE));
+
+        List<Feature> features = featureService.getFeaturesForRoom(request);
+        roomService.insertRoom(room);
+        featureService.insertRoomFeatures(room, features);
+
         return new CommandResult(request.getHeader("referer"), true);
     }
 }

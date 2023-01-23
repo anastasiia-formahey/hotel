@@ -1,3 +1,4 @@
+<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -85,7 +86,7 @@
                         <td>${booking.getCheckOutDate()}</td>
                         <td>${booking.getPrice()}</td>
                         <td>${booking.getDateOfBooking()}</td>
-                        <td>${booking.getStatusOfBooking()}</td>
+                        <td><tags:status value="${booking.getStatusOfBooking()}"/></td>
                         <c:if test="${booking.getStatusOfBooking() eq 'PAID'}">
                         <td>-</td>
                         </c:if>
