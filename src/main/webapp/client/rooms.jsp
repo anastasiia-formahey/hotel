@@ -57,17 +57,21 @@
     <%@ include file="applicationModalWindow.jspf" %>
     <div class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
       <form class="row g-3 needs-validation" action="${pageContext.request.contextPath}/client/" method="get" novalidate>
-      <div class="form-floating ">
         <div class="input-group">
-              <span class="input-group-text" id="basic-addon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
-            <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"></path>
-        </svg></span>
-          <input type="number" name="numberOfPerson" class="form-control" id="numberOfPerson" required>
-
+          <div class="form-floating">
+          <input type="number" name="numberOfPerson" class="form-control" id="numberOfPerson" min="1" required>
+            <label for="numberOfPerson"><fmt:message key="form.numberOfPerson"/></label>
+          </div>
+          <div class="form-floating">
             <input type="date" class=" form-control" name="checkInDate" id="checkInDate"
                       required>
+            <label for="checkInDate"><fmt:message key="form.checkInDate"/></label>
+          </div>
+          <div class="form-floating">
             <input type="date" class=" form-control" name="checkOutDate" id="checkOutDate"
                     required>
+            <label for="checkOutDate"><fmt:message key="form.checkOutDate"/></label>
+          </div>
           <script>
             const options1={
               year: 'numeric',
@@ -94,7 +98,6 @@
             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
           </svg>
         </button>
-      </div>
       </div>
       </form>
     </div>

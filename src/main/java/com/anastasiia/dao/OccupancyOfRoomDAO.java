@@ -133,8 +133,6 @@ public class OccupancyOfRoomDAO {
             preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_STATUS_FROM_OCCUPANCY_OF_ROOM);
             preparedStatement.setInt(1, room.getId());
             preparedStatement.setDate(2, currentDate);
-            preparedStatement.setInt(3, room.getId());
-            preparedStatement.setDate(4, currentDate);
             log.debug(preparedStatement.executeQuery());
             resultSet = preparedStatement.executeQuery();
 

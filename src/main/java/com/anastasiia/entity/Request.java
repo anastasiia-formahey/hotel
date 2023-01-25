@@ -19,6 +19,9 @@ public class Request {
         this.status = status;
     }
 
+    public Request() {
+    }
+
     public int getApplicationId() {
         return applicationId;
     }

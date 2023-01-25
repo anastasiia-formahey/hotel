@@ -2,6 +2,7 @@ package com.anastasiia.services;
 
 import com.anastasiia.dao.BookingDAO;
 import com.anastasiia.dao.OccupancyOfRoomDAO;
+import com.anastasiia.dao.RoomDAO;
 import com.anastasiia.dto.BookingDTO;
 import com.anastasiia.dto.RequestDTO;
 import com.anastasiia.dto.UserDTO;
@@ -29,20 +30,27 @@ public class BookingService {
             }
         }
     }
-    public void insertBooking(List <BookingDTO> bookingDTOS){
+    public boolean insertBooking(List <BookingDTO> bookingDTOS, boolean isConfirm){
+        boolean isSuccess = false;
         List<Booking> bookings = bookingDTOS.stream()
                 .map(BookingDTO::dtoToEntity)
                 .collect(Collectors.toList());
-        BookingDAO.getInstance().insertBooking(bookings);
-        for (Booking booking: bookings){
-            new OccupancyOfRoomService().insertOccupancyOfRoom(
-                    booking.getRoomId(),
-                    booking.getClientId(),
-                    booking.getCheckInDate(),
-                    booking.getCheckOutDate(),
-                    Status.BOOKED
-            );
+
+        isSuccess = isConfirm
+                ? BookingDAO.getInstance().insertBooking(bookings, true)
+                : BookingDAO.getInstance().insertBooking(bookings);
+        if (isSuccess){
+            for (Booking booking: bookings){
+                new OccupancyOfRoomService().insertOccupancyOfRoom(
+                        booking.getRoomId(),
+                        booking.getClientId(),
+                        booking.getCheckInDate(),
+                        booking.getCheckOutDate(),
+                        Status.BOOKED
+                );
+            }
         }
+        return isSuccess;
     }
 
     public List<BookingDTO> selectAllBooking(){

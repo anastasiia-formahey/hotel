@@ -234,12 +234,8 @@ public class RoomDAO {
             preparedStatement = connection.prepareStatement(
                     SqlQuery.SQL_SELECT_ROOMS_FOR_BOOKING+ " ORDER BY "+ orderBy + " LIMIT "+ startPage +"," + amount);
             preparedStatement.setInt(1, numberOfPerson);
-            preparedStatement.setInt(2, numberOfPerson);
-            preparedStatement.setDate(3, checkInDate);
-            preparedStatement.setDate(4, checkOutDate);
-            preparedStatement.setDate(5, checkInDate);
-            preparedStatement.setDate(6, checkOutDate);
-            preparedStatement.setInt(7, numberOfPerson);
+            preparedStatement.setDate(2, checkInDate);
+            preparedStatement.setDate(3, checkOutDate);
             log.debug(preparedStatement.executeQuery());
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
@@ -281,12 +277,8 @@ public class RoomDAO {
             preparedStatement = connection.prepareStatement(
                     SqlQuery.SQL_SELECT_ROOMS_FOR_BOOKING);
             preparedStatement.setInt(1, numberOfPerson);
-            preparedStatement.setInt(2, numberOfPerson);
-            preparedStatement.setDate(3, checkInDate);
-            preparedStatement.setDate(4, checkOutDate);
-            preparedStatement.setDate(5, checkInDate);
-            preparedStatement.setDate(6, checkOutDate);
-            preparedStatement.setInt(7, numberOfPerson);
+            preparedStatement.setDate(2, checkInDate);
+            preparedStatement.setDate(3, checkOutDate);
             log.debug(preparedStatement.executeQuery());
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){

@@ -4,10 +4,7 @@ import com.anastasiia.entity.Booking;
 import com.anastasiia.entity.EntityMapper;
 import com.anastasiia.entity.Room;
 import com.anastasiia.entity.User;
-import com.anastasiia.utils.Fields;
-import com.anastasiia.utils.Role;
-import com.anastasiia.utils.SqlQuery;
-import com.anastasiia.utils.Status;
+import com.anastasiia.utils.*;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -29,26 +26,52 @@ public class BookingDAO {
         return instance;
     }
 
-    public void insertBooking(List<Booking> bookings){
+    public boolean insertBooking(List<Booking> bookings){
         log.debug("Method starts");
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
+        ResultSet resultSet;
+        Room room = null;
+        boolean isSuccess = false;
 
         try {
             connection = DBManager.getInstance().getConnection();
             connection.setAutoCommit(false);
             connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
             for(Booking booking: bookings) {
-                preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_BOOKING, Statement.RETURN_GENERATED_KEYS);
+                preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ROOM_FROM_OCCUPANCY_OF_ROOM);
+
                 preparedStatement.setInt(1, booking.getRoomId());
-                preparedStatement.setInt(2, booking.getClientId());
-                preparedStatement.setDate(3, booking.getCheckInDate());
+                preparedStatement.setDate(2, booking.getCheckInDate());
+                preparedStatement.setInt(3, booking.getRoomId());
                 preparedStatement.setDate(4, booking.getCheckOutDate());
-                preparedStatement.setDouble(5, booking.getPrice());
-                preparedStatement.setDate(6, booking.getDateOfBooking());
-                preparedStatement.setString(7, booking.getStatusOfBooking().name());
-                preparedStatement.executeUpdate();
+                resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()){
+                    room = new Room();
+                    room.setId(resultSet.getInt("id"));
+                    room.setNumberOfPerson(resultSet.getInt("number_of_person"));
+                    room.setPrice(resultSet.getDouble("price"));
+                    room.setClassOfRoom(ClassOfRoom.valueOf(resultSet.getString("class_of_room")));
+                    room.setImage(resultSet.getString("image"));
+                    log.trace(room.toString());
+                }
+                if (room == null) {
+                    preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_BOOKING, Statement.RETURN_GENERATED_KEYS);
+                    preparedStatement.setInt(1, booking.getRoomId());
+                    preparedStatement.setInt(2, booking.getClientId());
+                    preparedStatement.setDate(3, booking.getCheckInDate());
+                    preparedStatement.setDate(4, booking.getCheckOutDate());
+                    preparedStatement.setDouble(5, booking.getPrice());
+                    preparedStatement.setDate(6, booking.getDateOfBooking());
+                    preparedStatement.setString(7, booking.getStatusOfBooking().name());
+                    preparedStatement.executeUpdate();
+                    isSuccess = true;
+                }else {
+                    log.trace(room.toString());
+                    log.trace("Booking already exists");
+                    isSuccess = false;
+                }
             }
         }catch (SQLException ex){
             DBManager.getInstance().rollbackAndClose(connection);
@@ -65,8 +88,51 @@ public class BookingDAO {
             log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
+        return isSuccess;
     }
 
+    public boolean insertBooking(List<Booking> bookings, boolean isConfirm){
+        log.debug("Method starts");
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet;
+        Room room = null;
+        boolean isSuccess = false;
+
+        try {
+            connection = DBManager.getInstance().getConnection();
+            connection.setAutoCommit(false);
+            connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+            for(Booking booking: bookings) {
+                    preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_BOOKING, Statement.RETURN_GENERATED_KEYS);
+                    preparedStatement.setInt(1, booking.getRoomId());
+                    preparedStatement.setInt(2, booking.getClientId());
+                    preparedStatement.setDate(3, booking.getCheckInDate());
+                    preparedStatement.setDate(4, booking.getCheckOutDate());
+                    preparedStatement.setDouble(5, booking.getPrice());
+                    preparedStatement.setDate(6, booking.getDateOfBooking());
+                    preparedStatement.setString(7, booking.getStatusOfBooking().name());
+                    preparedStatement.executeUpdate();
+            }
+            isSuccess = true;
+        }catch (SQLException ex){
+            DBManager.getInstance().rollbackAndClose(connection);
+            log.error("Cannot execute the query ==> " + ex);
+            log.trace("Close connection with DBManager");
+        }finally {
+            try {
+                assert preparedStatement != null;
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            DBManager.getInstance().commitAndClose(connection);
+            log.trace("Close connection with DBManager");
+        }
+        log.debug("Method finished");
+        return isSuccess;
+    }
 
     public void updateStatus(int bookingId, Status status) {
         log.debug("Method starts");

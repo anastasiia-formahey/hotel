@@ -36,6 +36,8 @@ public class ViewBookingCommand implements Command {
             case CLIENT : { bookingDTOList = bookingService.selectAllBooking(
                     currentPage, Pagination.RECORDS_PER_PAGE, orderBy, userDTO.getId());
                 page = Pages.CLIENT_VIEW_BOOKINGS;
+                request.setAttribute("isSuccess", request.getSession().getAttribute("isSuccess"));
+                request.getSession().removeAttribute("isSuccess");
                 break;
             }
             case MANAGER:{

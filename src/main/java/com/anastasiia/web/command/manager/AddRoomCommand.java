@@ -22,7 +22,7 @@ public class AddRoomCommand implements Command {
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         RoomDTO room = new RoomDTO();
 
-               room.setId(Integer.parseInt(request.getParameter(JspAttributes.NUMBER_OF_PERSONS)));
+               room.setNumberOfPerson(Integer.parseInt(request.getParameter(JspAttributes.NUMBER_OF_PERSONS)));
                room.setPrice(Integer.parseInt(request.getParameter(JspAttributes.PRICE)));
                room.setClassOfRoom(ClassOfRoom.valueOf(request.getParameter(JspAttributes.CLASS_OF_ROOM)));
                room.setImage(request.getParameter(JspAttributes.IMAGE));

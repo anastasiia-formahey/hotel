@@ -31,7 +31,7 @@ public class SecurityURIFilter implements Filter {
         if(role == null){
             httpRequest.getSession().setAttribute(JspAttributes.ROLE, Role.UNREGISTERED);
         }
-        if(httpRequest.getRequestURI().contains("/user")){
+        if(httpRequest.getRequestURI().contains(Role.UNREGISTERED.getUrl())){
             log.trace("Request uri --> contains /user + role=> " + role);
             if(role != Role.UNREGISTERED){
                 String errorMessages = "You do not have permission to access the user resource";
@@ -43,7 +43,7 @@ public class SecurityURIFilter implements Filter {
                 request.getRequestDispatcher(Pages.ERROR).forward(request, response);
             }
         }
-        if(httpRequest.getRequestURI().contains("/manager")){
+        if(httpRequest.getRequestURI().contains(Role.MANAGER.getUrl())){
             log.trace("Request uri --> contains /manager + role=> " + role);
             if(role != Role.MANAGER){
                 String errorMessages = "You do not have permission to access the manager resource";
@@ -55,7 +55,7 @@ public class SecurityURIFilter implements Filter {
                 request.getRequestDispatcher(Pages.ERROR).forward(request, response);
             }
         }
-        if(httpRequest.getRequestURI().contains("/client")){
+        if(httpRequest.getRequestURI().contains(Role.CLIENT.getUrl())){
             log.trace("Request uri --> contains /client + role=> " + role);
             if(role != Role.CLIENT){
                 String errorMessages = "You do not have permission to access the client resource";

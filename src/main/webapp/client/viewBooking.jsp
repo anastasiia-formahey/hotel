@@ -56,6 +56,16 @@
                     <div class="card-text p-2 pb-4 border-bottom-0">
                         <h1 class="fw-bold mb-0 fs-2">Bookings</h1>
                     </div>
+                    <c:if test="${isSuccess eq true}">
+                        <div class="alert alert-success" role="alert">
+                            Booking was added
+                        </div>
+                    </c:if>
+                    <c:if test="${isSuccess eq false}">
+                        <div class="alert alert-danger" role="alert">
+                            Booking already exists
+                        </div>
+                    </c:if>
                     <table class="table table-hover table-responsive align-middle">
                         <thead>
                 <tr>

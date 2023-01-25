@@ -24,14 +24,22 @@ public class BookRoomCommand implements Command {
     List<BookingDTO> bookingDTOS = new ArrayList<>();
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
+        boolean isSuccess;
+        boolean isConfirm;
          bookingDTOS = (List<BookingDTO>) request.getSession().getAttribute("bookingDTOS");
         for(BookingDTO bookingDTO: bookingDTOS){
             bookingDTO.setStatusOfBooking(Status.BOOKED);
         }
-        bookingService.insertBooking(bookingDTOS);
-        if(request.getParameter("applicationId") != null){
-            int applicationId = Integer.parseInt(request.getParameter("applicationId"));
-            requestService.updateStatus(applicationId);
+        isConfirm = request.getParameter("confirm") != null;
+        isSuccess = bookingService.insertBooking(bookingDTOS, isConfirm);
+        if(isSuccess) {
+            if (request.getParameter("applicationId") != null) {
+                int applicationId = Integer.parseInt(request.getParameter("applicationId"));
+                requestService.updateStatus(applicationId);
+            }
+            request.getSession().setAttribute("isSuccess", true);
+        }else {
+            request.getSession().setAttribute("isSuccess", false);
         }
         return new CommandResult(Pages.BOOK_ROOM, true);
     }

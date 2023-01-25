@@ -2,6 +2,7 @@ package com.anastasiia.services;
 
 import com.anastasiia.dao.OccupancyOfRoomDAO;
 import com.anastasiia.dao.RoomDAO;
+import com.anastasiia.dto.BookingDTO;
 import com.anastasiia.dto.RoomDTO;
 import com.anastasiia.entity.Room;
 import com.anastasiia.utils.ClassOfRoom;
@@ -62,9 +63,6 @@ public class RoomService {
     }
 
     public List<RoomDTO> findRoomForBooking(HttpServletRequest request){
-        log.debug("number of person = " + request.getParameter(JspAttributes.NUMBER_OF_PERSONS));
-        log.debug("in  = " + request.getParameter(JspAttributes.CHECK_IN_DATE));
-        log.debug("out  = " + request.getParameter(JspAttributes.CHECK_OUT_DATE));
         return RoomDAO.getInstance().selectRoomsForBooking(
                 Integer.parseInt(request.getParameter(JspAttributes.NUMBER_OF_PERSONS)),
                 Date.valueOf(request.getParameter(JspAttributes.CHECK_IN_DATE)),
@@ -103,12 +101,13 @@ public class RoomService {
         if (status.equals(Status.PAID)){
             status = Status.BUSY;
         }
-//        else if(status.equals(Status.NOT_CONFIRMED)){
-//            status = Status.BOOKED;
-//        }
+        else if(status.equals(Status.NOT_CONFIRMED) || status.equals(Status.CANCELED)){
+            status = Status.FREE;
+        }
         log.debug(status);
         log.debug(room.getId());
         return status;
     }
+
 
 }

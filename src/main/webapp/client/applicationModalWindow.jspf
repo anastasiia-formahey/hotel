@@ -13,13 +13,8 @@
                         <div class="form-floating mb-3">
                             <div class="input-group">
                                 <span class="input-group-text" id="basic-addon6"><fmt:message key="form.numberOfPerson"/></span>
-                                <select name="numberOfPerson" class="form-select" id="numberOfPersonApp" required>
-                                    <c:forEach items="${sessionScope.capacity}" var="capacity" varStatus="loop">
-                                        <option>
-                                                ${capacity}
-                                        </option>
-                                    </c:forEach>
-                                </select>
+                                <input type="number" name="numberOfPerson" class="form-control" id="numberOfPerson" placeholder="1" min="1" required>
+
                             </div>
                         </div>
                         <div class="form-floating mb-3">

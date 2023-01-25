@@ -19,6 +19,7 @@ public class ReviewApplicationCommand implements Command {
     private static final Logger log = Logger.getLogger(ReviewApplicationCommand.class);
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
+        request.getSession().removeAttribute("rooms");
         List<ApplicationDTO> applicationDTOList = (ArrayList<ApplicationDTO>)request.getSession().getAttribute(JspAttributes.APPLICATIONS);
         ArrayList<Integer> addedRooms = new ArrayList<>();
         RequestDTO requestDTO = new RequestDTO();

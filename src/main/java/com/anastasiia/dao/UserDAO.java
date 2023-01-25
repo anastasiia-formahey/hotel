@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import java.sql.*;
 
 public class UserDAO {
-
     private static final Logger log = Logger.getLogger(UserDAO.class);
 
     private static UserDAO instance = null;
@@ -102,7 +101,7 @@ public class UserDAO {
     }
 
     public static User findUserByEmail(String email) {
-        log.debug("Method starts");
+        //log.debug("Method starts");
         User user = null;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -111,7 +110,7 @@ public class UserDAO {
             connection = DBManager.getInstance().getConnection();
             preparedStatement = connection.prepareStatement(SqlQuery.SQL_FIND_USER_BY_EMAIL);
             preparedStatement.setString(1, email);
-            log.debug(preparedStatement.executeQuery());
+            //log.debug(preparedStatement.executeQuery());
             resultSet = preparedStatement.executeQuery();
             if(resultSet.next()) {
                 user = new UserMapper().mapRow(resultSet);
@@ -120,8 +119,8 @@ public class UserDAO {
 
         }catch (SQLException ex){
             DBManager.getInstance().rollbackAndClose(connection);
-            log.error("Cannot execute the query ==> " + ex);
-            log.trace("Close connection with DBManager");
+            //log.error("Cannot execute the query ==> " + ex);
+            //log.trace("Close connection with DBManager");
         }finally {
             try {
                 assert preparedStatement != null;
@@ -130,9 +129,9 @@ public class UserDAO {
                 e.printStackTrace();
             }
             DBManager.getInstance().commitAndClose(connection);
-            log.trace("Close connection with DBManager");
+           // log.trace("Close connection with DBManager");
         }
-        log.debug("Method finished");
+        //log.debug("Method finished");
         return user;
     }
 

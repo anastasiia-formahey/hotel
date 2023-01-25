@@ -56,6 +56,7 @@
                 </div>
                 <form action="${pageContext.request.contextPath}/client/" method="post">
                 <input type="hidden" name="command" value="bookRoom">
+                <input type="hidden" name="confirm" value="true">
                 <input type="hidden" name="applicationId" value="${application.getId()}">
                 <c:forEach items="${sessionScope.bookingDTOS}" var="booking" varStatus="loop">
 

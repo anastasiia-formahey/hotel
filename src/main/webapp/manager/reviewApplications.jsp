@@ -188,7 +188,7 @@
                 </div></div>
               <%--              request part--%>
               <div class="modal-header align-content-center">
-                <h1 class="modal-title fs-5" id="exampleModalLabel1"><fmt:message key="request"/></h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel1"><fmt:message key="request"/>${sessionScope.app.getId()}</h1>
               </div>
 
               <c:forEach items="${sessionScope.requestDTO.getRequestElements()}" var="requestElement" varStatus="loop">

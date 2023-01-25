@@ -13,14 +13,10 @@ public interface SqlQuery {
             = "INSERT INTO `hotel`.`room` VALUES (DEFAULT, ?, ?, ?, ?)";
     String SQL_SELECT_ALL_ROOMS = "SELECT * FROM room";
 
-    String SQL_SELECT_ROOMS_FOR_BOOKING = "SELECT DISTINCT room.id, room.number_of_person, room.price, room.class_of_room, room.image " +
-            "FROM room LEFT JOIN booking ON booking.room_id = room.id " +
-            " where room.number_of_person = ? AND booking.room_id is null " +
-            " OR room.number_of_person = ? " +
-            " AND booking.date_of_booking >= '2023-01-01' " +
-            "AND DATE (check_in_date) not between ? AND ? " +
-            "AND DATE(check_out_date) not between ? AND ? " +
-            "OR room.number_of_person = ? AND  booking.status = 'CANCELED'";
+    String SQL_SELECT_ROOMS_FOR_BOOKING = "SELECT * FROM room  where number_of_person = ? and room.id not in" +
+            " (select room_id from occupancy_of_room where" +
+            " DATE (?) between check_in_date and check_out_date  OR  " +
+            "DATE (?) between check_in_date and check_out_date)";
     String SQL_SELECT_ROOM_BY_ID = "SELECT * FROM room WHERE id=?";
     String SQL_UPDATE_ROOM_BY_ID
             = "UPDATE room SET number_of_person=? ,price=? ,class_of_room=? ,image=? WHERE id=?";
@@ -60,5 +56,12 @@ public interface SqlQuery {
 
     String SQL_SELECT_STATUS_FROM_OCCUPANCY_OF_ROOM
             = "SELECT * FROM occupancy_of_room where room_id=? " +
-            "AND check_in_date=? OR room_id=? AND check_out_date=?";
+            "            AND DATE(?) between check_in_date  AND check_out_date";
+    String SQL_SELECT_ROOM_FROM_OCCUPANCY_OF_ROOM
+            = "SELECT DISTINCT room.id, room.number_of_person, room.price, room.class_of_room, room.image " +
+            "FROM room LEFT JOIN occupancy_of_room ON occupancy_of_room.room_id = room.id " +
+            "            where occupancy_of_room.room_id =?" +
+            " AND DATE (?) between check_in_date AND check_out_date" +
+            " OR occupancy_of_room.room_id =?" +
+            " AND DATE (?) between check_in_date AND check_out_date";
 }

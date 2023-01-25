@@ -31,6 +31,7 @@ public interface Pages {
     String MANAGER_VIEW_BOOKINGS = "/manager/viewBooking.jsp";
 
     String MANAGER_VIEW_APPLICATIONS = "/manager/viewApplications.jsp";
+    String MANAGER_VIEW_APPLICATIONS_COMMAND = "/manager/?command=viewApplications";
     String MANAGER_REVIEW_APPLICATIONS = "/manager/reviewApplications.jsp";
 
     //admin

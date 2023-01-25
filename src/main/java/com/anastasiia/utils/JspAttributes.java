@@ -42,4 +42,5 @@ public interface JspAttributes {
     String USER = "user";
     String FEATURES = "features";
     String LENGTH_OF_STAY = "lengthOfStay";
+    String LOGIN = "login";
 }
