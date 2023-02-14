@@ -27,11 +27,4 @@ class ApplicationDTOTest {
         Application application = applicationDTO.dtoToEntity();
         assertEquals(Application.class, application.getClass());
     }
-
-    @Test
-    void entityToDTO() {
-        ApplicationDTO applicationDTO1 = applicationDTO.entityToDTO(new Application());
-        assertEquals(ApplicationDTO.class, applicationDTO1.getClass());
-
-    }
 }

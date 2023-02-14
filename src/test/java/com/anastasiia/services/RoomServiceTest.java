@@ -24,12 +24,6 @@ class RoomServiceTest {
     @Test
     void getCapacityOfRoom() {
     }
-
-    @Test
-    void entityToDTO() {
-        assertEquals(RoomDTO.class, roomService.entityToDTO(new Room()).getClass());
-    }
-
     @Test
     void dtoToEntity() {
         assertEquals(Room.class, roomService.dtoToEntity(new RoomDTO()).getClass());

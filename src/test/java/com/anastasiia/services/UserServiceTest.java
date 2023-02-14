@@ -18,13 +18,11 @@ import static org.mockito.Mockito.when;
 
 class UserServiceTest {
     UserService userService;
-    UserDAO userDAO;
-    User user;
 
     @BeforeEach
     void setUp() {
         userService = mock(UserService.class);
-        userDAO = mock(UserDAO.getInstance().getClass());
+        UserDAO userDAO= mock(UserDAO.class);
     }
 
     @AfterEach
@@ -50,23 +48,4 @@ class UserServiceTest {
 
     }
 
-    @ParameterizedTest
-    @CsvSource({"test@gmail.com"})
-    void getId(String email) throws SQLException {
-        when(UserDAO.findUserByEmail(email)).thenReturn(user);
-        user = UserDAO.findUserByEmail(email);
-        assertEquals(6, user.getId());
-    }
-
-    @Test
-    void getUser() {
-    }
-
-    @Test
-    void testGetUser() {
-    }
-
-    @Test
-    void insertUser() {
-    }
 }

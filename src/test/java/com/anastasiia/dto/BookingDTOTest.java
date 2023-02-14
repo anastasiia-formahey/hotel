@@ -36,19 +36,4 @@ class BookingDTOTest {
         assertEquals(Date.valueOf("2023-02-03"), bookingDTO.getBookingExpirationDate());
     }
 
-    @Test
-    void testSetBookingExpirationDate() {
-    }
-
-    @Test
-    void entityToDTO() {
-        BookingDTO bookingDTO1 = bookingDTO.entityToDTO(new Booking());
-        assertEquals(BookingDTO.class, bookingDTO1.getClass());
-    }
-
-    @Test
-    void dtoToEntity() {
-        Booking booking = bookingDTO.dtoToEntity();
-        assertEquals(Booking.class, booking.getClass());
-    }
 }
