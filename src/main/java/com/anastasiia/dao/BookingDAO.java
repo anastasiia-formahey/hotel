@@ -7,6 +7,7 @@ import com.anastasiia.entity.User;
 import com.anastasiia.utils.*;
 import org.apache.log4j.Logger;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,39 +15,30 @@ import java.util.List;
 public class BookingDAO {
 
     private static final Logger log = Logger.getLogger(BookingDAO.class);
-
-    private static BookingDAO instance = null;
-
-    private BookingDAO(){}
-
-    public static synchronized BookingDAO getInstance() {
-        if(instance ==null){
-            instance = new BookingDAO();
-        }
-        return instance;
+    private DataSource dataSource;
+    public BookingDAO(DataSource dataSource){
+        this.dataSource = dataSource;
     }
 
-    public boolean insertBooking(List<Booking> bookings){
+    public boolean insertBooking(List<Booking> bookings) throws SQLException {
         log.debug("Method starts");
-
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet;
         Room room = null;
         boolean isSuccess = false;
+        ResultSet resultSet;
 
-        try {
-            connection = DBManager.getInstance().getConnection();
+        try (Connection connection = dataSource.getConnection();
+        PreparedStatement  preparedStatement1 = connection.prepareStatement(SqlQuery.SQL_SELECT_ROOM_FROM_OCCUPANCY_OF_ROOM);
+        PreparedStatement  preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_BOOKING);
+        ){
             connection.setAutoCommit(false);
             connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
             for(Booking booking: bookings) {
-                preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ROOM_FROM_OCCUPANCY_OF_ROOM);
 
-                preparedStatement.setInt(1, booking.getRoomId());
-                preparedStatement.setDate(2, booking.getCheckInDate());
-                preparedStatement.setInt(3, booking.getRoomId());
-                preparedStatement.setDate(4, booking.getCheckOutDate());
-                resultSet = preparedStatement.executeQuery();
+                preparedStatement1.setInt(1, booking.getRoomId());
+                preparedStatement1.setDate(2, booking.getCheckInDate());
+                preparedStatement1.setInt(3, booking.getRoomId());
+                preparedStatement1.setDate(4, booking.getCheckOutDate());
+                resultSet = preparedStatement1.executeQuery();
                 if (resultSet.next()){
                     room = new Room();
                     room.setId(resultSet.getInt("id"));
@@ -57,7 +49,6 @@ public class BookingDAO {
                     log.trace(room.toString());
                 }
                 if (room == null) {
-                    preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_BOOKING, Statement.RETURN_GENERATED_KEYS);
                     preparedStatement.setInt(1, booking.getRoomId());
                     preparedStatement.setInt(2, booking.getClientId());
                     preparedStatement.setDate(3, booking.getCheckInDate());
@@ -67,6 +58,7 @@ public class BookingDAO {
                     preparedStatement.setString(7, booking.getStatusOfBooking().name());
                     preparedStatement.executeUpdate();
                     isSuccess = true;
+                    connection.commit();
                 }else {
                     log.trace(room.toString());
                     log.trace("Booking already exists");
@@ -74,39 +66,27 @@ public class BookingDAO {
                 }
             }
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
+            throw new SQLException(ex);
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
             log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
         return isSuccess;
     }
 
-    public boolean insertBooking(List<Booking> bookings, boolean isConfirm){
+    public boolean insertBooking(List<Booking> bookings, boolean isConfirm) throws SQLException {
         log.debug("Method starts");
+       boolean isSuccess = false;
 
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet;
-        Room room = null;
-        boolean isSuccess = false;
-
-        try {
-            connection = DBManager.getInstance().getConnection();
+        try (Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_BOOKING);
+        ){
             connection.setAutoCommit(false);
             connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
             for(Booking booking: bookings) {
-                    preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_BOOKING, Statement.RETURN_GENERATED_KEYS);
-                    preparedStatement.setInt(1, booking.getRoomId());
+                     preparedStatement.setInt(1, booking.getRoomId());
                     preparedStatement.setInt(2, booking.getClientId());
                     preparedStatement.setDate(3, booking.getCheckInDate());
                     preparedStatement.setDate(4, booking.getCheckOutDate());
@@ -116,65 +96,44 @@ public class BookingDAO {
                     preparedStatement.executeUpdate();
             }
             isSuccess = true;
+            connection.commit();
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
+            throw new SQLException(ex);
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
             log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
         return isSuccess;
     }
 
-    public void updateStatus(int bookingId, Status status) {
+    public void updateStatus(int bookingId, Status status) throws SQLException {
         log.debug("Method starts");
-
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_BOOKING_STATUS);
-
-            preparedStatement.setString(1,status.name());
+        try(Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_BOOKING_STATUS);
+                ) {
+             preparedStatement.setString(1,status.name());
             preparedStatement.setInt(2,bookingId);
 
             preparedStatement.executeUpdate();
             log.trace("Query execution => " + preparedStatement);
-
+            connection.commit();
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
+            throw new SQLException(ex);
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
             log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
     }
 
-    public List<Booking> selectAll() {
+    public List<Booking> selectAll() throws SQLException {
         ArrayList<Booking> listOfBookings = new ArrayList<>();
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         ResultSet resultSet;
-        try{
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_BOOKINGS);
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement  preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_BOOKINGS);){
 
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
@@ -182,30 +141,21 @@ public class BookingDAO {
                         new BookingMapper().mapRow(resultSet));
             }
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
+            throw  new SQLException(ex);
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
             log.trace("Close connection with DBManager");
         }
         return listOfBookings;
     }
     public List<Booking> selectAll(int currentPage, int amount, String orderBy) {
         ArrayList<Booking> listOfBookings = new ArrayList<>();
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         ResultSet resultSet;
-        try{
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(
                     SqlQuery.SQL_SELECT_ALL_BOOKINGS + " ORDER BY "+ orderBy + " LIMIT "+ currentPage +"," + amount);
+        ){
             log.debug(preparedStatement.executeQuery());
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
@@ -213,63 +163,41 @@ public class BookingDAO {
                         new BookingMapper().mapRow(resultSet));
             }
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
-            log.trace("Close connection with DBManager");
+           log.trace("Close connection with DBManager");
         }
         return listOfBookings;
     }
     public List<Booking> selectAllByUserId(int userId) {
         ArrayList<Booking> listOfBookings = new ArrayList<>();
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         ResultSet resultSet;
-        try{
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(
-                    SqlQuery.SQL_SELECT_ALL_BOOKINGS_BY_USER_ID);
+        try(Connection connection = dataSource.getConnection();
+        PreparedStatement  preparedStatement = connection.prepareStatement(
+                SqlQuery.SQL_SELECT_ALL_BOOKINGS_BY_USER_ID);){
             preparedStatement.setInt(1, userId);
-
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
                 listOfBookings.add(
                         new BookingMapper().mapRow(resultSet));
             }
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
             log.trace("Close connection with DBManager");
         }
         return listOfBookings;
     }
     public List<Booking> selectAllByUserId(int currentPage, int amount, String orderBy,int userId) {
         ArrayList<Booking> listOfBookings = new ArrayList<>();
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         ResultSet resultSet;
-        try{
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement  preparedStatement = connection.prepareStatement(
                     SqlQuery.SQL_SELECT_ALL_BOOKINGS_BY_USER_ID + " ORDER BY "+ orderBy + " LIMIT "+ currentPage +"," + amount);
-            preparedStatement.setInt(1, userId);
+        ){
+           preparedStatement.setInt(1, userId);
 
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
@@ -277,54 +205,13 @@ public class BookingDAO {
                         new BookingMapper().mapRow(resultSet));
             }
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
             log.trace("Close connection with DBManager");
         }
         return listOfBookings;
     }
-
-    public List<Booking> selectByRoom(Room room) {
-        ArrayList<Booking> listOfBookings = new ArrayList<>();
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet;
-        try{
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_BOOKING_BY_ROOM);
-            preparedStatement.setInt(1, room.getId());
-
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()){
-                listOfBookings.add(
-                        new BookingMapper().mapRow(resultSet));
-            }
-        }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
-            log.error("Cannot execute the query ==> " + ex);
-            log.trace("Close connection with DBManager");
-        }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
-            log.trace("Close connection with DBManager");
-        }
-        return listOfBookings;
-    }
-
     private static class BookingMapper implements EntityMapper<Booking> {
         public Booking mapRow(ResultSet resultSet) {
             log.debug("Mapper starts");

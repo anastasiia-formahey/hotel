@@ -29,7 +29,7 @@ public class RoomPageCommand implements Command {
         String pageRoom = Pages.ROOMS;
         int currentPage = Pagination.getCurrentPage(request.getParameter(JspAttributes.CURRENT_PAGE));
         String orderBy = request.getParameter(JspAttributes.ORDER_BY);
-        int rows = RoomDAO.getInstance().selectAllRooms().size();
+        int rows = roomService.selectAllRooms().size();
         request.getSession().setAttribute("rows", rows);
         if (orderBy == null){
             orderBy= Fields.ID;

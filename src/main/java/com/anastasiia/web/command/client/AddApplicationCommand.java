@@ -1,5 +1,6 @@
 package com.anastasiia.web.command.client;
 
+import com.anastasiia.dao.DBManager;
 import com.anastasiia.dto.ApplicationDTO;
 import com.anastasiia.dto.UserDTO;
 import com.anastasiia.services.ApplicationService;

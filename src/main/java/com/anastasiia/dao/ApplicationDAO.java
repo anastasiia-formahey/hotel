@@ -7,6 +7,7 @@ import com.anastasiia.utils.SqlQuery;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,101 +15,71 @@ import java.util.List;
 public class ApplicationDAO {
 
     private static final Logger log = Logger.getLogger(ApplicationDAO.class);
+    private static DataSource dataSource;
 
-    private static ApplicationDAO instance = null;
-
-    private ApplicationDAO(){}
-
-    public static synchronized ApplicationDAO getInstance(){
-        if(instance == null){
-            instance = new ApplicationDAO();
-        }
-        return instance;
+    public ApplicationDAO(DataSource dataSource){
+        this.dataSource = dataSource;
     }
 
-    public void insertApplication(Application application){
+    public void insertApplication(Application application) throws SQLException {
         log.debug(application.toString());
         log.debug("Method starts");
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet;
-        try {
-            connection = DBManager.getInstance().getConnection();
-            log.trace("Get connection with database by DBManager");
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_APPLICATION, Statement.RETURN_GENERATED_KEYS);
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_APPLICATION);
+        ) {
             preparedStatement.setInt(1, application.getClientId());
             preparedStatement.setInt(2, application.getNumberOfGuests());
             preparedStatement.setString(3, application.getClassOfRoom().name());
             preparedStatement.setInt(4, application.getLengthOfStay());
             preparedStatement.setString(5, application.getStatus().name());
 
-
             preparedStatement.executeUpdate();
             log.trace("Query execution => " + preparedStatement);
-            resultSet = preparedStatement.getGeneratedKeys();
-            if (resultSet.next()){
-                application.setId(resultSet.getInt(1));
-            }
-            resultSet.close();
-
+            connection.commit();
         } catch (SQLException e) {
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + e);
             log.trace("Close connection with DBManager");
+            throw new SQLException(e);
+
+
         }finally {
-        try {
-            assert preparedStatement != null;
-            preparedStatement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        DBManager.getInstance().commitAndClose(connection);
+
         log.trace("Close connection with DBManager");
     }
         log.debug("Method finished");
+
     }
 
-    public List<Application> selectAllApplications(){
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
+    public List<Application> selectAllApplications() throws SQLException {
         ResultSet resultSet;
         ArrayList <Application> listOfApplications = new ArrayList<>();
 
-        try{
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_APPLICATIONS);
-            log.debug(preparedStatement.executeQuery());
+        try(Connection  connection = dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_APPLICATIONS);
+            ){
+           log.debug(preparedStatement.executeQuery());
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
                listOfApplications.add(new ApplicationMapper().mapRow(resultSet));
             }
 
         }catch (SQLException e){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + e);
             log.trace("Close connection with DBManager");
+            throw new SQLException(e);
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
             log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
         return listOfApplications;
     }
     public List<Application> selectAllApplications(int id){
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         ResultSet resultSet;
         ArrayList <Application> listOfApplications = new ArrayList<>();
 
-        try{
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_APPLICATIONS_BY_USER_ID);
+        try(Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_APPLICATIONS_BY_USER_ID);
+        ){
             preparedStatement.setInt(1, id);
             log.debug(preparedStatement.executeQuery());
             resultSet = preparedStatement.executeQuery();
@@ -117,31 +88,21 @@ public class ApplicationDAO {
             }
 
         }catch (SQLException e){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + e);
             log.trace("Close connection with DBManager");
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
             log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
         return listOfApplications;
     }
     public List<Application> selectAllApplications(int currentPage, int amount, String orderBy){
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         ResultSet resultSet;
         ArrayList <Application> listOfApplications = new ArrayList<>();
 
-        try{
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_APPLICATIONS+ " ORDER BY "+ orderBy + " LIMIT "+ currentPage +"," + amount);
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_APPLICATIONS+ " ORDER BY "+ orderBy + " LIMIT "+ currentPage +"," + amount);
+        ){
             log.debug(preparedStatement.executeQuery());
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
@@ -149,31 +110,22 @@ public class ApplicationDAO {
             }
 
         }catch (SQLException e){
-            DBManager.getInstance().rollbackAndClose(connection);
-            log.error("Cannot execute the query ==> " + e);
+           log.error("Cannot execute the query ==> " + e);
             log.trace("Close connection with DBManager");
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
             log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
         return listOfApplications;
     }
     public List<Application> selectAllApplications(int currentPage, int amount, String orderBy, int id){
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
+
         ResultSet resultSet;
         ArrayList <Application> listOfApplications = new ArrayList<>();
 
-        try{
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_APPLICATIONS_BY_USER_ID + " ORDER BY "+ orderBy + " LIMIT "+ currentPage +"," + amount);
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement  preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_APPLICATIONS_BY_USER_ID + " ORDER BY "+ orderBy + " LIMIT "+ currentPage +"," + amount);
+        ){
             preparedStatement.setInt(1,id);
             log.debug(preparedStatement.executeQuery());
             resultSet = preparedStatement.executeQuery();
@@ -182,46 +134,31 @@ public class ApplicationDAO {
             }
 
         }catch (SQLException e){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + e);
             log.trace("Close connection with DBManager");
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
+
             log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
         return listOfApplications;
     }
 
-    public void updateStatus(int applicationId, Status status) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = DBManager.getInstance().getConnection();
+    public void updateStatus(int applicationId, Status status) throws SQLException {
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_APPLICATION_STATUS);
+        ) {
             log.trace("Get connection with database by DBManager");
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_APPLICATION_STATUS);
             preparedStatement.setString(1, status.name());
             preparedStatement.setInt(2, applicationId);
             preparedStatement.executeUpdate();
             log.trace("Query execution => " + preparedStatement);
+            connection.commit();
         } catch (SQLException e) {
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + e);
             log.trace("Close connection with DBManager");
+            throw new SQLException(e);
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
             log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");

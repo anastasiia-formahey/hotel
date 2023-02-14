@@ -5,6 +5,7 @@ import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.SqlQuery;
 import org.apache.log4j.Logger;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,27 +13,19 @@ import java.util.List;
 public class RoomDAO {
     private static final Logger log = Logger.getLogger(RoomDAO.class);
 
-    private static RoomDAO instance = null;
+    private static DataSource dataSource;
 
-    private RoomDAO(){}
-
-    public static synchronized RoomDAO getInstance() {
-        if(instance==null){
-            instance = new RoomDAO();
-        }
-        return instance;
+    public RoomDAO(DataSource dataSource){
+        this.dataSource = dataSource;
     }
 
-    public boolean insertRoom(Room room){
+    public int insertRoom(Room room){
         log.debug("Method starts");
-
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         ResultSet resultSet;
-        try{
-            connection = DBManager.getInstance().getConnection();
-            log.trace("Get connection with database by DBManager");
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_ROOM, Statement.RETURN_GENERATED_KEYS);
+        try(Connection connection = dataSource.getConnection();
+        PreparedStatement  preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_ROOM, Statement.RETURN_GENERATED_KEYS);
+        ){
+             log.trace("Get connection with database by DBManager");
             preparedStatement.setInt(1, room.getNumberOfPerson());
             preparedStatement.setDouble(2, room.getPrice());
             preparedStatement.setString(3, room.getClassOfRoom().name());
@@ -45,35 +38,24 @@ public class RoomDAO {
                 room.setId(resultSet.getInt(1));
             }
             resultSet.close();
+            connection.commit();
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
-            return false;
+            return 0;
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
-            log.trace("Close connection with DBManager");
+           log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
-        return true;
+        return room.getId();
     }
 
     public List<Room> selectAllRooms() {
-
         ArrayList<Room> listOfRooms = new ArrayList<>();
-
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         ResultSet resultSet;
-        try{
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_ROOMS);
+        try(Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_ROOMS);
+        ){
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
                 Room room = new Room();
@@ -85,37 +67,23 @@ public class RoomDAO {
                 listOfRooms.add(room);
             }
             resultSet.close();
-
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
-            log.trace("Close connection with DBManager");
+           log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
         return listOfRooms;
-
     }
 
     public Room findRoomById(int id) {
-
-        ArrayList<Room> listOfRooms = new ArrayList<>();
         Room room = new Room();
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         ResultSet resultSet;
-        try{
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ROOM_BY_ID);
-            preparedStatement.setInt(1, id);
+        try(Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ROOM_BY_ID);
+        ){
+           preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
                 room.setId(resultSet.getInt("id"));
@@ -127,17 +95,9 @@ public class RoomDAO {
             resultSet.close();
 
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
             log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
@@ -147,13 +107,10 @@ public class RoomDAO {
 
     public void updateRoom(Room room){
         log.debug("Method starts");
-
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try{
-            connection = DBManager.getInstance().getConnection();
+        try(Connection connection = dataSource.getConnection();
+        PreparedStatement  preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_ROOM_BY_ID);
+        ){
             log.trace("Get connection with database by DBManager");
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_ROOM_BY_ID);
             preparedStatement.setInt(1, room.getNumberOfPerson());
             preparedStatement.setDouble(2, room.getPrice());
             preparedStatement.setString(3, room.getClassOfRoom().name());
@@ -162,35 +119,24 @@ public class RoomDAO {
 
             preparedStatement.executeUpdate();
             log.trace("Query execution => " + preparedStatement);
+            connection.commit();
 
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
-            return;
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
-            log.trace("Close connection with DBManager");
+           log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
     }
 
     public List<Room> selectAllRooms(int startPage, int amount, String orderBy) {
         ArrayList<Room> listOfRooms = new ArrayList<>();
-
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         ResultSet resultSet;
-        try{
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(
-                    SqlQuery.SQL_SELECT_ALL_ROOMS + " ORDER BY "+ orderBy + " LIMIT "+ startPage +"," + amount);
+        try(Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(
+                SqlQuery.SQL_SELECT_ALL_ROOMS + " ORDER BY "+ orderBy + " LIMIT "+ startPage +"," + amount);
+        ){
             log.debug(preparedStatement.executeQuery());
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
@@ -205,77 +151,22 @@ public class RoomDAO {
             resultSet.close();
 
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
-            log.trace("Close connection with DBManager");
+           log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
         return listOfRooms;
     }
 
-    public List<Room> selectRoomsForBooking(int numberOfPerson,Date checkInDate,Date checkOutDate,
-                                            int startPage, int amount, String orderBy) {
-        ArrayList<Room> listOfRooms = new ArrayList<>();
-
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet;
-        try{
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(
-                    SqlQuery.SQL_SELECT_ROOMS_FOR_BOOKING+ " ORDER BY "+ orderBy + " LIMIT "+ startPage +"," + amount);
-            preparedStatement.setInt(1, numberOfPerson);
-            preparedStatement.setDate(2, checkInDate);
-            preparedStatement.setDate(3, checkOutDate);
-            log.debug(preparedStatement.executeQuery());
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()){
-                Room room = new Room();
-                room.setId(resultSet.getInt("id"));
-                room.setNumberOfPerson(resultSet.getInt("number_of_person"));
-                room.setPrice(resultSet.getDouble("price"));
-                room.setClassOfRoom(ClassOfRoom.valueOf(resultSet.getString("class_of_room")));
-                room.setImage(resultSet.getString("image"));
-                listOfRooms.add(room);
-            }
-            resultSet.close();
-
-        }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
-            log.error("Cannot execute the query ==> " + ex);
-            log.trace("Close connection with DBManager");
-        }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
-            log.trace("Close connection with DBManager");
-        }
-        log.debug("Method finished");
-        return listOfRooms;
-    }
     public List<Room> selectRoomsForBooking(int numberOfPerson,Date checkInDate,Date checkOutDate) {
         ArrayList<Room> listOfRooms = new ArrayList<>();
-
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         ResultSet resultSet;
-        try{
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(
-                    SqlQuery.SQL_SELECT_ROOMS_FOR_BOOKING);
+        try(Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(
+                SqlQuery.SQL_SELECT_ROOMS_FOR_BOOKING);
+        ){
             preparedStatement.setInt(1, numberOfPerson);
             preparedStatement.setDate(2, checkInDate);
             preparedStatement.setDate(3, checkOutDate);
@@ -293,18 +184,10 @@ public class RoomDAO {
             resultSet.close();
 
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
-            log.error("Cannot execute the query ==> " + ex);
+           log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
-            log.trace("Close connection with DBManager");
+           log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
         return listOfRooms;

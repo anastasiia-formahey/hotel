@@ -1,6 +1,7 @@
 package com.anastasiia.services;
 
 import com.anastasiia.dao.ApplicationDAO;
+import com.anastasiia.dao.DBManager;
 import com.anastasiia.dao.OccupancyOfRoomDAO;
 import com.anastasiia.dao.RequestDAO;
 import com.anastasiia.dto.ApplicationDTO;
@@ -9,18 +10,27 @@ import com.anastasiia.entity.Request;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RequestService {
     private static final Logger log = Logger.getLogger(RequestService.class);
+    private final RequestDAO requestDAO = new RequestDAO(DBManager.getInstance());
+    private final ApplicationDAO applicationDAO = new ApplicationDAO(DBManager.getInstance());
+    private final OccupancyOfRoomDAO occupancyOfRoomDAO = new OccupancyOfRoomDAO(DBManager.getInstance());
 
     public void insertRequest(RequestDTO requestDTO, ApplicationDTO applicationDTO){
         log.debug(requestDTO.toString());
-        RequestDAO.getInstance().insertRequest(dtoToEntity(requestDTO));
-        ApplicationDAO.getInstance().updateStatus(requestDTO.getApplicationId(), Status.REVIEWED);
+        try {
+            requestDAO.insertRequest(dtoToEntity(requestDTO));
+            applicationDAO.updateStatus(requestDTO.getApplicationId(), Status.REVIEWED);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         for(RequestDTO.RequestElement requestElement: requestDTO.getRequestElements())
-        OccupancyOfRoomDAO.getInstance().insertOccupancyOfRoom(
+        occupancyOfRoomDAO.insertOccupancyOfRoom(
                 requestElement.getRoom().getId(),
                 applicationDTO.getUserDTO().getId(),
                 requestElement.getCheckInDate(),
@@ -30,7 +40,7 @@ public class RequestService {
     }
 
     public RequestDTO getRequestByApplicationId(int id){
-        return entityToDTO(RequestDAO.getInstance().selectByApplicationId(id));
+        return entityToDTO(requestDAO.selectByApplicationId(id));
     }
 
     public RequestDTO entityToDTO(List<Request> requests){
@@ -60,7 +70,11 @@ public class RequestService {
     }
 
     public void updateStatus(int applicationId) {
-        RequestDAO.getInstance().updateStatus(applicationId, Status.CONFIRMED);
-        ApplicationDAO.getInstance().updateStatus(applicationId, Status.CONFIRMED);
+        try {
+            requestDAO.updateStatus(applicationId, Status.CONFIRMED);
+            applicationDAO.updateStatus(applicationId, Status.CONFIRMED);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -7,32 +7,22 @@ import com.anastasiia.utils.Role;
 import com.anastasiia.utils.SqlQuery;
 import org.apache.log4j.Logger;
 
+import javax.sql.DataSource;
 import java.sql.*;
 
 public class UserDAO {
     private static final Logger log = Logger.getLogger(UserDAO.class);
-
-    private static UserDAO instance = null;
-
-    private UserDAO(){}
-
-    public static synchronized UserDAO getInstance(){
-        if(instance == null){
-            instance = new UserDAO();
-        }
-        return instance;
+    private DataSource dataSource;
+     public UserDAO(DataSource dataSource){
+        this.dataSource = dataSource;
     }
 
-
-    public boolean insertUser(User user){
+    public void insertUser(User user) throws SQLException {
         log.debug("Method starts");
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet;
-        try{
-            connection = DBManager.getInstance().getConnection();
+        try(Connection connection = dataSource.getConnection();
+        PreparedStatement  preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_USER);
+        ){
             log.trace("Get connection with database by DBManager");
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_USER, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, user.getFirstName());
             preparedStatement.setString(2, user.getLastName());
             preparedStatement.setString(3, user.getEmail());
@@ -41,40 +31,27 @@ public class UserDAO {
 
             preparedStatement.executeUpdate();
             log.trace("Query execution => " + preparedStatement);
+            connection.commit();
 
-            resultSet = preparedStatement.getGeneratedKeys();
-            if(resultSet.next()){
-                user.setId(resultSet.getInt(1));
-            }
-            resultSet.close();
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
-            return false;
+            throw new SQLException(ex);
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
+
             log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
-        return true;
+
     }
-    public static User findUserById(int id) {
+    public User findUserById(int id) throws SQLException {
         log.debug("Method starts");
         User user = null;
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         ResultSet resultSet;
-        try{
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_FIND_USER_BY_ID);
-            preparedStatement.setInt(1, id);
+        try(Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_FIND_USER_BY_ID);
+        ){
+             preparedStatement.setInt(1, id);
             log.debug(preparedStatement.executeQuery());
             resultSet = preparedStatement.executeQuery();
             if(resultSet.next()) {
@@ -83,33 +60,24 @@ public class UserDAO {
             resultSet.close();
 
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
+            throw new SQLException(ex);
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
             log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
         return user;
     }
 
-    public static User findUserByEmail(String email) {
+    public User findUserByEmail(String email) {
         //log.debug("Method starts");
         User user = null;
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         ResultSet resultSet;
-        try{
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_FIND_USER_BY_EMAIL);
-            preparedStatement.setString(1, email);
+        try(Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_FIND_USER_BY_EMAIL);
+             ){
+           preparedStatement.setString(1, email);
             //log.debug(preparedStatement.executeQuery());
             resultSet = preparedStatement.executeQuery();
             if(resultSet.next()) {
@@ -118,20 +86,12 @@ public class UserDAO {
             resultSet.close();
 
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
-            //log.error("Cannot execute the query ==> " + ex);
-            //log.trace("Close connection with DBManager");
+            log.error("Cannot execute the query ==> " + ex);
+            log.trace("Close connection with DBManager");
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
-           // log.trace("Close connection with DBManager");
+            log.trace("Close connection with DBManager");
         }
-        //log.debug("Method finished");
+        log.debug("Method finished");
         return user;
     }
 

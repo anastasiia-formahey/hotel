@@ -1,5 +1,6 @@
 package com.anastasiia.services;
 
+import com.anastasiia.dao.DBManager;
 import com.anastasiia.dao.OccupancyOfRoomDAO;
 import com.anastasiia.dao.RoomDAO;
 import com.anastasiia.dto.BookingDTO;
@@ -18,6 +19,8 @@ import java.util.stream.Collectors;
 
 public class RoomService {
     private static final Logger log = Logger.getLogger(RoomService.class);
+    private final RoomDAO roomDAO = new RoomDAO(DBManager.getInstance());
+    private final OccupancyOfRoomDAO occupancyOfRoomDAO = new OccupancyOfRoomDAO(DBManager.getInstance());
 
     public List<Integer> getCapacityOfRoom(){
         ArrayList <Integer> list = new ArrayList<>();
@@ -29,8 +32,8 @@ public class RoomService {
         list.add(8);
         return list;
     }
-    public void insertRoom(RoomDTO roomDTO){
-        RoomDAO.getInstance().insertRoom(dtoToEntity(roomDTO));
+    public int insertRoom(RoomDTO roomDTO){
+       return roomDAO.insertRoom(dtoToEntity(roomDTO));
     }
 
     public void editRoom(HttpServletRequest request){
@@ -46,7 +49,7 @@ public class RoomService {
         room.setImage(image);
         room.setId(roomEdit.getId());
         room.setFeatures(new FeatureService().getFeaturesForRoom(request));
-        RoomDAO.getInstance().updateRoom(dtoToEntity(room));
+        roomDAO.updateRoom(dtoToEntity(room));
         new FeatureService().updateFeatures(dtoToEntity(room));
     }
 
@@ -55,15 +58,18 @@ public class RoomService {
         if (orderBy == null){
             orderBy="id";
         }
-        return selectAllRoomsDTO(RoomDAO.getInstance().selectAllRooms(startPage, amount, orderBy));
+        return selectAllRoomsDTO(roomDAO.selectAllRooms(startPage, amount, orderBy));
     }
 
     public List<RoomDTO> selectAllRoomsDTO(List<Room> rooms){
         return rooms.stream().map(this::entityToDTO).collect(Collectors.toList());
     }
+    public List<Room> selectAllRooms(){
+        return roomDAO.selectAllRooms();
+    }
 
     public List<RoomDTO> findRoomForBooking(HttpServletRequest request){
-        return RoomDAO.getInstance().selectRoomsForBooking(
+        return roomDAO.selectRoomsForBooking(
                 Integer.parseInt(request.getParameter(JspAttributes.NUMBER_OF_PERSONS)),
                 Date.valueOf(request.getParameter(JspAttributes.CHECK_IN_DATE)),
                 Date.valueOf(request.getParameter(JspAttributes.CHECK_OUT_DATE)))
@@ -71,7 +77,7 @@ public class RoomService {
     }
 
     public RoomDTO findRoomById(int id){
-        return entityToDTO(RoomDAO.getInstance().findRoomById(id));
+        return entityToDTO(roomDAO.findRoomById(id));
     }
     public RoomDTO entityToDTO(Room room){
         RoomDTO roomDTO = new RoomDTO();
@@ -96,7 +102,7 @@ public class RoomService {
     }
 
     private Status getStatusOfRoom(Room room) {
-        Status status = OccupancyOfRoomDAO.getInstance()
+        Status status = occupancyOfRoomDAO
                 .getStatus(room, new BookingService().getCurrentDate());
         if (status.equals(Status.PAID)){
             status = Status.BUSY;
@@ -108,6 +114,4 @@ public class RoomService {
         log.debug(room.getId());
         return status;
     }
-
-
 }

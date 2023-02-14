@@ -55,7 +55,7 @@
       <div class="row g-0">
     <div class="table-responsive-sm">
       <div class="card-text p-2 pb-4 border-bottom-0">
-        <h1 class="fw-bold mb-0 fs-2">Applications</h1>
+        <h1 class="fw-bold mb-0 fs-2"><fmt:message key="applications"/></h1>
       </div>
     <table class="table table-hover">
       <thead>

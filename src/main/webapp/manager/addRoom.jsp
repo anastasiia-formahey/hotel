@@ -79,7 +79,7 @@
       <div class="form-floating mb-4">
         <label for="price"><fmt:message key="form.price"/></label>
         <div class="input-group">
-        <input type="number" name="price" class="form-control" id="price" placeholder="100" required>
+        <input type="number" name="price" class="form-control" id="price" placeholder="100" min="1" required>
           <span class="input-group-text" id="basic-addon1"><fmt:message key="uah"/></span>
       </div>
       </div>

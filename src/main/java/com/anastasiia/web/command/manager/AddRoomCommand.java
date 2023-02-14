@@ -28,7 +28,7 @@ public class AddRoomCommand implements Command {
                room.setImage(request.getParameter(JspAttributes.IMAGE));
 
         List<Feature> features = featureService.getFeaturesForRoom(request);
-        roomService.insertRoom(room);
+        room.setId(roomService.insertRoom(room));
         featureService.insertRoomFeatures(room, features);
 
         return new CommandResult(request.getHeader("referer"), true);

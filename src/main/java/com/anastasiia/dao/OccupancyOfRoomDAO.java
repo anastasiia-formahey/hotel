@@ -6,88 +6,61 @@ import com.anastasiia.utils.SqlQuery;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
+import javax.sql.DataSource;
 import java.sql.*;
 
 public class OccupancyOfRoomDAO {
     private static final Logger log = Logger.getLogger(OccupancyOfRoomDAO.class);
 
-    private static OccupancyOfRoomDAO instance = null;
+    private static DataSource dataSource;
 
-    private OccupancyOfRoomDAO(){}
-
-    public static synchronized OccupancyOfRoomDAO getInstance() {
-        if(instance ==null){
-            instance = new OccupancyOfRoomDAO();
-        }
-        return instance;
+    public OccupancyOfRoomDAO(DataSource dataSource){
+        this.dataSource = dataSource;
     }
 
-    public void insertOccupancyOfRoom(int roomId, int clientId, Date checkIn, Date checkOut, Status status){
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
 
-        try {
-            connection = DBManager.getInstance().getConnection();
-                preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_OCCUPANCY_OF_ROOM);
+    public void insertOccupancyOfRoom(int roomId, int clientId, Date checkIn, Date checkOut, Status status){
+       try(Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_OCCUPANCY_OF_ROOM);
+        ) {
                 preparedStatement.setInt(1, roomId);
                 preparedStatement.setInt(2, clientId);
                 preparedStatement.setDate(3, checkIn);
                 preparedStatement.setDate(4, checkOut);
                 preparedStatement.setString(5, status.name());
                 preparedStatement.executeUpdate();
-
+                connection.commit();
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
-            log.error("Cannot execute the query ==> " + ex);
+             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
-            log.trace("Close connection with DBManager");
+           log.trace("Close connection with DBManager");
         }
     }
 
     public void updateStatus(int roomId, Status status){
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_OCCUPANCY_OF_ROOM_STATUS);
+        try(Connection connection = dataSource.getConnection();
+        PreparedStatement  preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_OCCUPANCY_OF_ROOM_STATUS);
+        ) {
             preparedStatement.setString(1, status.name());
             preparedStatement.setInt(2, roomId);
             preparedStatement.executeUpdate();
-
+            connection.commit();
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
-            log.trace("Close connection with DBManager");
+           log.trace("Close connection with DBManager");
         }
     }
 
     public boolean isExist(int roomId, int clientId, Date checkIn, Date checkOut, Status status){
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         ResultSet resultSet;
         OccupancyOfRoom occupancyOfRoom = null;
 
-        try {
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_OCCUPANCY_OF_ROOM);
+        try(Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_OCCUPANCY_OF_ROOM);
+        ) {
             preparedStatement.setInt(1, roomId);
             preparedStatement.setInt(2, clientId);
             preparedStatement.setDate(3, checkIn);
@@ -105,17 +78,9 @@ public class OccupancyOfRoomDAO {
             resultSet.close();
 
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
             log.trace("Close connection with DBManager");
         }
         return occupancyOfRoom != null;
@@ -123,14 +88,12 @@ public class OccupancyOfRoomDAO {
 
 
     public Status getStatus(Room room, Date currentDate) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         ResultSet resultSet;
         OccupancyOfRoom occupancyOfRoom = null;
 
-        try {
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_STATUS_FROM_OCCUPANCY_OF_ROOM);
+        try (Connection connection = dataSource.getConnection();
+        PreparedStatement  preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_STATUS_FROM_OCCUPANCY_OF_ROOM);
+        ){
             preparedStatement.setInt(1, room.getId());
             preparedStatement.setDate(2, currentDate);
             log.debug(preparedStatement.executeQuery());
@@ -148,17 +111,9 @@ public class OccupancyOfRoomDAO {
             resultSet.close();
 
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
             log.trace("Close connection with DBManager");
         }
 

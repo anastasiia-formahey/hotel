@@ -5,83 +5,57 @@ import com.anastasiia.entity.Room;
 import com.anastasiia.utils.SqlQuery;
 import org.apache.log4j.Logger;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FeaturesDAO {
     private static final Logger log = Logger.getLogger(FeaturesDAO.class);
-    private static FeaturesDAO instance = null;
-    private FeaturesDAO(){}
-
-    public static synchronized FeaturesDAO getInstance(){
-        if(instance == null){
-            instance = new FeaturesDAO();
-        }
-        return instance;
+    private DataSource dataSource;
+    public FeaturesDAO(DataSource dataSource){
+        this.dataSource = dataSource;
     }
 
-    public List<Feature> selectAll(){
+    public List<Feature> selectAll() throws SQLException {
         List <Feature> features = new ArrayList<>();
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         ResultSet resultSet;
-
-        try {
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(SqlQuery.SELECT_ALL_FEATURES);
-            resultSet = preparedStatement.executeQuery();
+        try (Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SELECT_ALL_FEATURES);){
+           resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
                 Feature feature = new Feature(resultSet.getInt( "id"), resultSet.getString( "name"));
                 features.add(feature);
             }
         } catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
-
+            throw new SQLException(ex);
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
             log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
         return features;
     }
 
-    public void insertRoomFeatures(Room room, Feature features){
+    public void insertRoomFeatures(Room room, Feature features) throws SQLException {
         log.debug("Method starts");
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet;
-        try {
-            connection = DBManager.getInstance().getConnection();
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_ROOM_FEATURES);
+        ) {
             log.trace("Get connection with database by DBManager");
-
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_ROOM_FEATURES);
             preparedStatement.setInt(1, room.getId());
             preparedStatement.setInt(2, features.getId());
+            log.trace("preparedStatement " + preparedStatement);
             preparedStatement.executeUpdate();
             log.trace("Query execution => " + preparedStatement);
-
+            connection.commit();
         }catch (SQLException ex){
-                DBManager.getInstance().rollbackAndClose(connection);
                 log.error("Cannot execute the query ==> " + ex);
                 log.trace("Close connection with DBManager");
+                throw new SQLException(ex);
 
             }finally {
-                try {
-                    assert preparedStatement != null;
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                DBManager.getInstance().commitAndClose(connection);
                 log.trace("Close connection with DBManager");
             }
             log.debug("Method finished");
@@ -91,13 +65,11 @@ public class FeaturesDAO {
     public List<Feature> selectAll(int id){
         log.debug("Method starts");
         List <Feature> features = new ArrayList<>();
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         ResultSet resultSet;
 
-        try {
-            connection = DBManager.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ROOM_FEATURES);
+        try (Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ROOM_FEATURES);
+        ){
             preparedStatement.setInt(1, id);
             log.trace("Query execution => " + preparedStatement);
             resultSet = preparedStatement.executeQuery();
@@ -108,57 +80,40 @@ public class FeaturesDAO {
                 log.debug(feature.toString());
             }
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
 
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
             log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
         return features;
     }
 
-    public void updateRoomFeatures(Room room, List<Feature> features){
+    public void updateRoomFeatures(Room room, List<Feature> features) throws SQLException {
         log.debug("Method starts");
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-            connection = DBManager.getInstance().getConnection();
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement  preparedStatement1 = connection.prepareStatement(SqlQuery.SQL_DELETE_FEATURES);
+            PreparedStatement  preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_ROOM_FEATURES);
+        ) {
             connection.setAutoCommit(false);
             connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
             log.trace("Transactions");
-            preparedStatement = connection.prepareStatement(SqlQuery.SQL_DELETE_FEATURES);
-            preparedStatement.setInt(1, room.getId());
-            log.trace("Query execution => " + preparedStatement);
-            preparedStatement.executeUpdate();
+           preparedStatement1.setInt(1, room.getId());
+            log.trace("Query execution => " + preparedStatement1);
+            preparedStatement1.executeUpdate();
             for (Feature feature: features) {
-                preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_ROOM_FEATURES);
                 preparedStatement.setInt(1, room.getId());
                 preparedStatement.setInt(2, feature.getId());
                 preparedStatement.executeUpdate();
             }
+            connection.commit();
         }catch (SQLException ex){
-            DBManager.getInstance().rollbackAndClose(connection);
             log.error("Cannot execute the query ==> " + ex);
             log.trace("Close connection with DBManager");
+            throw new SQLException(ex);
 
         }finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DBManager.getInstance().commitAndClose(connection);
             log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");

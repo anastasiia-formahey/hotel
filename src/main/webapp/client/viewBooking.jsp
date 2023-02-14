@@ -54,7 +54,7 @@
             <div class="row g-0">
                 <div class="table-responsive-sm">
                     <div class="card-text p-2 pb-4 border-bottom-0">
-                        <h1 class="fw-bold mb-0 fs-2">Bookings</h1>
+                        <h1 class="fw-bold mb-0 fs-2"><fmt:message key="header.booking"/></h1>
                     </div>
                     <c:if test="${isSuccess eq true}">
                         <div class="alert alert-success" role="alert">

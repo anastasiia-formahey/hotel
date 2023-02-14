@@ -1,6 +1,7 @@
 package com.anastasiia.services;
 
 import com.anastasiia.dao.BookingDAO;
+import com.anastasiia.dao.DBManager;
 import com.anastasiia.dao.OccupancyOfRoomDAO;
 import com.anastasiia.dao.RoomDAO;
 import com.anastasiia.dto.BookingDTO;
@@ -10,6 +11,7 @@ import com.anastasiia.entity.Booking;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -20,8 +22,15 @@ import java.util.stream.Collectors;
 
 public class BookingService {
     private static final Logger log = Logger.getLogger(BookingService.class);
+    private final BookingDAO bookingDAO = new BookingDAO(DBManager.getInstance());
+    private final OccupancyOfRoomDAO occupancyOfRoomDAO = new OccupancyOfRoomDAO(DBManager.getInstance());
     private void checkBooking(){
-        List<Booking> bookings = BookingDAO.getInstance().selectAll();
+        List<Booking> bookings;
+        try {
+            bookings = bookingDAO.selectAll();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         for (Booking booking:bookings) {
             log.debug(withDrawnBooking(booking));
             if(!withDrawnBooking(booking)
@@ -36,9 +45,13 @@ public class BookingService {
                 .map(BookingDTO::dtoToEntity)
                 .collect(Collectors.toList());
 
-        isSuccess = isConfirm
-                ? BookingDAO.getInstance().insertBooking(bookings, true)
-                : BookingDAO.getInstance().insertBooking(bookings);
+        try {
+            isSuccess = isConfirm
+                    ? bookingDAO.insertBooking(bookings, true)
+                    : bookingDAO.insertBooking(bookings);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         if (isSuccess){
             for (Booking booking: bookings){
                 new OccupancyOfRoomService().insertOccupancyOfRoom(
@@ -55,33 +68,42 @@ public class BookingService {
 
     public List<BookingDTO> selectAllBooking(){
         checkBooking();
-        List<Booking> listOfBooking = BookingDAO.getInstance().selectAll();
+        List<Booking> listOfBooking = null;
+        try {
+            listOfBooking = bookingDAO.selectAll();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return listOfBooking
                 .stream().map(new BookingDTO()::entityToDTO).collect(Collectors.toList());
     }
     public List<BookingDTO> selectAllBooking(int userId){
         checkBooking();
-        List<Booking> listOfBooking = BookingDAO.getInstance().selectAllByUserId(userId);
+        List<Booking> listOfBooking = bookingDAO.selectAllByUserId(userId);
         return listOfBooking
                 .stream().map(new BookingDTO()::entityToDTO).collect(Collectors.toList());
     }
     public List<BookingDTO> selectAllBooking(int currentPage, int recordsPerPage, String orderBy){
         checkBooking();
         currentPage = currentPage * Pagination.RECORDS_PER_PAGE - recordsPerPage;
-        List<Booking> listOfBooking = BookingDAO.getInstance().selectAll(currentPage,  recordsPerPage, orderBy);
+        List<Booking> listOfBooking = bookingDAO.selectAll(currentPage,  recordsPerPage, orderBy);
         return listOfBooking
                 .stream().map(new BookingDTO()::entityToDTO).collect(Collectors.toList());
     }
     public List<BookingDTO> selectAllBooking(int currentPage, int recordsPerPage, String orderBy,int userId){
         checkBooking();
         currentPage = currentPage * Pagination.RECORDS_PER_PAGE - recordsPerPage;
-        List<Booking> listOfBooking = BookingDAO.getInstance().selectAllByUserId( currentPage, recordsPerPage, orderBy,userId);
+        List<Booking> listOfBooking = bookingDAO.selectAllByUserId( currentPage, recordsPerPage, orderBy,userId);
         return listOfBooking
                 .stream().map(new BookingDTO()::entityToDTO).collect(Collectors.toList());
     }
     public void updateStatus(int bookingId, int roomId, Status status){
-        BookingDAO.getInstance().updateStatus(bookingId, status);
-        OccupancyOfRoomDAO.getInstance().updateStatus(roomId, status);
+        try {
+            bookingDAO.updateStatus(bookingId, status);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        occupancyOfRoomDAO.updateStatus(roomId, status);
     }
     public boolean withDrawnBooking(Booking booking){
        return booking.getBookingExpirationDate()

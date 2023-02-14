@@ -1,5 +1,6 @@
 package com.anastasiia.services;
 
+import com.anastasiia.dao.DBManager;
 import com.anastasiia.dao.FeaturesDAO;
 import com.anastasiia.dto.RoomDTO;
 import com.anastasiia.entity.Feature;
@@ -8,6 +9,7 @@ import com.anastasiia.utils.JspAttributes;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,13 +17,18 @@ import java.util.List;
 public class FeatureService {
 
     private static final Logger log = Logger.getLogger(FeatureService.class);
+    private final FeaturesDAO featuresDAO = new FeaturesDAO(DBManager.getInstance());
     RoomService roomService = new RoomService();
 
     public List<Feature> getListOfFeatures(){
-        return FeaturesDAO.getInstance().selectAll();
+        try {
+            return featuresDAO.selectAll();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
     public List<Feature> getListOfFeatures(Room room){
-        return FeaturesDAO.getInstance().selectAll(room.getId());
+        return featuresDAO.selectAll(room.getId());
     }
 
     public List<Feature> getFeaturesForRoom(HttpServletRequest request){
@@ -56,11 +63,19 @@ public class FeatureService {
 
     public void insertRoomFeatures(RoomDTO room, List<Feature> features){
         for (Feature feature: features) {
-            FeaturesDAO.getInstance().insertRoomFeatures(roomService.dtoToEntity(room), feature);
+            try {
+                featuresDAO.insertRoomFeatures(roomService.dtoToEntity(room), feature);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     public void updateFeatures(Room room){
-        FeaturesDAO.getInstance().updateRoomFeatures(room, room.getFeatures());
+        try {
+            featuresDAO.updateRoomFeatures(room, room.getFeatures());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
