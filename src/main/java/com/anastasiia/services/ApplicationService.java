@@ -3,6 +3,7 @@ package com.anastasiia.services;
 import com.anastasiia.dao.ApplicationDAO;
 import com.anastasiia.dao.DBManager;
 import com.anastasiia.dto.ApplicationDTO;
+import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -51,4 +52,9 @@ public class ApplicationService {
                 .filter(applicationDTO -> id==(applicationDTO.getId()))
                 .findAny().orElse(new ApplicationDTO());
     }
+
+    public int applicationCountByStatus(Status status){
+        return applicationDAO.applicationCountByStatus(status);
+    }
 }
+

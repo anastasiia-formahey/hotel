@@ -70,7 +70,6 @@ public class UserDTO extends User {
         userDTO.setLastName(user.getLastName());
         userDTO.setEmail(user.getEmail());
         userDTO.setRole(user.getRole());
-        log.debug(userDTO);
         return userDTO;
     }
     public User dtoToEntity(){

@@ -41,6 +41,9 @@ public class CommandContainer {
         commandMap.put("deleteRoomFromReview", new DeleteRoomFromReviewCommand());
         commandMap.put("sendRequest", new SendRequestCommand());
         commandMap.put("getRequest", new GetRequestCommand());
+        commandMap.put("getOccupancyOfRoom", new GetOccupancyOfRoom());
+        commandMap.put("viewOccupancyOfRoom", new ViewOccupancyOfRoom());
+        commandMap.put("checkInRoom", new CheckInRoom());
     }
 
     /**

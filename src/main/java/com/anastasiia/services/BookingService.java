@@ -34,9 +34,13 @@ public class BookingService {
         for (Booking booking:bookings) {
             log.debug(withDrawnBooking(booking));
             if(!withDrawnBooking(booking)
-                    && booking.getStatusOfBooking().equals(Status.BOOKED)){
-                updateStatus(booking.getId(), booking.getRoomId(), Status.CANCELED);
+                    && booking.getStatusOfBooking().equals(Status.BOOKED)
+            || !withDrawnBooking(booking)
+                    && booking.getStatusOfBooking().equals(Status.NOT_CONFIRMED)){
+                updateStatus(booking.getId(), booking.getRoomId(),
+                        booking.getCheckInDate(), booking.getCheckOutDate(), Status.CANCELED);
             }
+
         }
     }
     public boolean insertBooking(List <BookingDTO> bookingDTOS, boolean isConfirm){
@@ -97,13 +101,13 @@ public class BookingService {
         return listOfBooking
                 .stream().map(new BookingDTO()::entityToDTO).collect(Collectors.toList());
     }
-    public void updateStatus(int bookingId, int roomId, Status status){
+    public void updateStatus(int bookingId, int roomId, java.sql.Date checkIn, java.sql.Date checkOut, Status status){
         try {
             bookingDAO.updateStatus(bookingId, status);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        occupancyOfRoomDAO.updateStatus(roomId, status);
+        occupancyOfRoomDAO.updateStatus(roomId,status, checkIn,checkOut);
     }
     public boolean withDrawnBooking(Booking booking){
        return booking.getBookingExpirationDate()

@@ -29,8 +29,7 @@ public class ViewRoomCommand implements Command {
         for (RoomDTO room1:listOfRooms) {
             if (room1.getId() == Integer.parseInt(request.getParameter(JspAttributes.NUMBER_OF_ROOM))){
                 room = room1;
-                room.setFeatures(featureService.getListOfFeatures(roomService.dtoToEntity(room)));
-                //todo convert dto to entity
+                room.setFeatures(featureService.getListOfFeatures(room.getId()));
             }
         }
         switch (roleInSession){

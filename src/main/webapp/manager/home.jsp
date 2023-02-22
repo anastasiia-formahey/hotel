@@ -1,3 +1,4 @@
+<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -25,7 +26,14 @@
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="${pageContext.request.contextPath}/manager/?command=home" class="nav-link px-2 text-secondary"><fmt:message key="header.home"/></a></li>
                 <li><a href="${pageContext.request.contextPath}/manager/?command=rooms" class="nav-link px-2 text-white"><fmt:message key="header.rooms"/></a></li>
-                <li><a href="${pageContext.request.contextPath}/manager/?command=viewApplications" class="nav-link px-2 text-white"><fmt:message key="header.applications"/></a></li>
+                <li><a href="${pageContext.request.contextPath}/manager/?command=viewApplications" class="nav-link px-2 text-white position-relative">
+                    <fmt:message key="header.applications"/>
+                    <c:if test="${sessionScope.applicationCount > 0}">
+                    <span class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger">
+                        ${sessionScope.applicationCount}
+    <span class="visually-hidden">unread messages</span>
+                            </c:if>
+                </a></li>
                 <li><a href="${pageContext.request.contextPath}/manager/?command=viewBooking" class="nav-link px-2 text-white"><fmt:message key="header.booking"/></a></li>
             </ul>
 
@@ -37,8 +45,8 @@
                     <input type="hidden" name="command" value="locale"/>
                     <select class="form-select-sm" id="locale" name="locale" onchange="submit()"
                             style="background-color: RGBA(33,37,41,var(--bs-bg-opacity,1))!important; color: white">
-                        <option value="en" ${locale == 'en' ? 'selected' : ''}>EN</option>
-                        <option value="ua" ${locale == 'ua' ? 'selected' : ''}>UA</option>
+                        <option value="en" ${locale == 'en' ? 'selected' : ''}><fmt:message key="lang.en"/></option>
+                        <option value="ua" ${locale == 'ua' ? 'selected' : ''}><fmt:message key="lang.ua"/></option>
                     </select>
                 </form>
             </div>
@@ -51,16 +59,62 @@
         <div class="card mb-3 p-4" style="height: 100%">
             <div class="row g-0">
                 <div class="col-md-2">
+                    <div class="card-body">
                     <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor" class="bi bi-person-check" viewBox="0 0 16 16">
                         <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514ZM11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"></path>
                         <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"></path>
-                    </svg> </div>
+                    </svg>
+                    </div>
+                </div>
                 <div class="col-md-6">
                     <div class="card-body">
                         <h5 class="card-title">${sessionScope.user.getFirstName()} ${sessionScope.user.getLastName()}</h5>
                         <p class="card-text">${sessionScope.user.getRole()}</p>
                         <p class="card-text">${sessionScope.user.getEmail()}</p>
                     </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <fmt:message key="occupancy.of.rooms"/>
+                            <form action="${pageContext.request.contextPath}/manager/" method="get"><div class="form-floating">
+                                <div class="input-group">
+
+                                        <input type="hidden" name="command" value="getOccupancyOfRoom">
+                                <input type="date" class=" form-control" name="dateOfOccupancy" id="dateOfOccupancy"
+                                       value="${sessionScope.dateOfOccupancy}" required>
+                                        <button type="submit" class="btn btn-warning">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-search"
+                                                                                           viewBox="0 0 16 16">
+                                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+                                        </svg>
+                                        </button>
+
+                                </div></div> </form></div>
+                        <div class="card-body">
+
+                                <div class="row row-cols-sm-5 row-cols-sm-2 row-cols-md-5 p-5" style="width: 500px; margin-left: -29px;">
+                                    <c:forEach items="${sessionScope.roomMap}" var="room" varStatus="loop">
+                                        <div class="col" style="width: 17%; margin-bottom: 5px">
+                                            <div class="card shadow-sm">
+                                                <a <c:if test="${room.getValue() ne 'FREE'}"> href="${pageContext.request.contextPath}/manager/?command=viewOccupancyOfRoom&numberOfRoom=${room.getKey()}&status=${room.getValue()}"</c:if> <tags:buttonByStatus value="${room.getValue()}"/>
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-title="<fmt:message key="room.number"/>${room.getKey()} <fmt:message key="form.status"/>&nbsp;:&nbsp;<fmt:message key="status.${room.getValue()}"/>" data-bs-content="${room.getValue()}"
+                                                >${room.getKey()}
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    </c:forEach>
+                                </div>
+                            <script>
+                                const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+                                const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+                            </script>
+
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

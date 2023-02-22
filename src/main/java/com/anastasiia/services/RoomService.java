@@ -80,14 +80,13 @@ public class RoomService {
         return entityToDTO(roomDAO.findRoomById(id));
     }
     public RoomDTO entityToDTO(Room room){
-        RoomDTO roomDTO = new RoomDTO();
+        RoomDTO roomDTO = new RoomDTO.RoomDTOBuilder()
+                .withNumberOfPerson(room.getNumberOfPerson())
+                .withPrice(room.getPrice())
+                .withClassOfRoom(room.getClassOfRoom())
+                .withImage(room.getImage())
+                .build();
         roomDTO.setId(room.getId());
-        roomDTO.setNumberOfPerson(room.getNumberOfPerson());
-        roomDTO.setPrice(room.getPrice());
-        roomDTO.setClassOfRoom(room.getClassOfRoom());
-        roomDTO.setImage(room.getImage());
-        roomDTO.setFeatures(room.getFeatures());
-        roomDTO.setStatus(getStatusOfRoom(room));
         return roomDTO;
     }
     public Room dtoToEntity(RoomDTO roomDTO){
@@ -113,5 +112,9 @@ public class RoomService {
         log.debug(status);
         log.debug(room.getId());
         return status;
+    }
+
+    public Map<Integer, Status> getRoomMap(Date dateOfOccupancy) {
+        return roomDAO.selectRoomsForMap(dateOfOccupancy);
     }
 }

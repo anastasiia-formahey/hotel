@@ -8,6 +8,7 @@ import com.anastasiia.utils.Status;
 
 import java.util.List;
 
+
 public class RoomDTO {
     private int id;
     private int numberOfPerson;
@@ -18,6 +19,14 @@ public class RoomDTO {
     private Status status;
 
     public RoomDTO(){}
+    public RoomDTO(RoomDTOBuilder roomDTOBuilder){
+        this.numberOfPerson = roomDTOBuilder.numberOfPerson;
+        this.price = roomDTOBuilder.price;
+        this.classOfRoom = roomDTOBuilder.classOfRoom;
+        this.image = roomDTOBuilder.image;
+        this.features = roomDTOBuilder.features;
+        this.status = roomDTOBuilder.status;
+    }
 
 
     public int getId() {
@@ -76,5 +85,42 @@ public class RoomDTO {
         this.status = status;
     }
 
+    public static class RoomDTOBuilder{
+         int numberOfPerson;
+         double price;
+         ClassOfRoom classOfRoom;
+         String image;
+         List<Feature> features;
+         Status status;
+         public RoomDTOBuilder(){}
+
+        public RoomDTOBuilder withNumberOfPerson(int numberOfPerson){
+             this.numberOfPerson = numberOfPerson;
+             return this;
+        }
+        public RoomDTOBuilder withPrice(double price){
+            this.price = price;
+            return this;
+        }
+        public RoomDTOBuilder withClassOfRoom(ClassOfRoom classOfRoom){
+            this.classOfRoom = classOfRoom;
+            return this;
+        }
+        public RoomDTOBuilder withImage(String image){
+            this.image = image;
+            return this;
+        }
+        public RoomDTOBuilder withFeatures(List<Feature> features){
+            this.features = features;
+            return this;
+        }
+        public RoomDTOBuilder withStatus(Status status){
+            this.status = status;
+            return this;
+        }
+        public RoomDTO build(){
+             return new RoomDTO(this);
+        }
+    }
 
 }

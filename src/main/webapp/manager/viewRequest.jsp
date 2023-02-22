@@ -1,3 +1,4 @@
+<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -6,7 +7,7 @@
 <!DOCTYPE html>
 <html class="h-100" lang=${sessionScope.locale}>
 <head>
-    <title><fmt:message key="header.login"/></title>
+    <title><fmt:message key="title.viewRequests"/></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 
@@ -22,12 +23,19 @@
                 <img src="${pageContext.request.contextPath}/images/—Pngtree—watermelon%20logo_6945475.png" height="50px">
             </a>
 
-            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="${pageContext.request.contextPath}/manager/?command=home" class="nav-link px-2 text-secondary"><fmt:message key="header.home"/></a></li>
+            <div class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <a href="${pageContext.request.contextPath}/manager/?command=home" class="nav-link px-2 text-secondary"><fmt:message key="header.home"/></a>
                 <li><a href="${pageContext.request.contextPath}/manager/?command=rooms" class="nav-link px-2 text-white"><fmt:message key="header.rooms"/></a></li>
-                <li><a href="${pageContext.request.contextPath}/manager/?command=viewApplications" class="nav-link px-2 text-white"><fmt:message key="header.applications"/></a></li>
+                <li><a href="${pageContext.request.contextPath}/manager/?command=viewApplications" class="nav-link px-2 text-white position-relative">
+                    <fmt:message key="header.applications"/>
+                    <c:if test="${sessionScope.applicationCount > 0}">
+                    <span class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger">
+                        ${sessionScope.applicationCount}
+    <span class="visually-hidden">unread messages</span>
+                            </c:if>
+                </a></li>
                 <li><a href="${pageContext.request.contextPath}/manager/?command=viewBooking" class="nav-link px-2 text-white"><fmt:message key="header.booking"/></a></li>
-            </ul>
+            </div>
 
             <div class="text-end d-flex" style="padding-right: 10px">
                 <a href="${pageContext.request.contextPath}/manager/?command=logout" class="btn btn-outline-warning me-2"><fmt:message key="header.logout"/></a>
@@ -37,8 +45,8 @@
                     <input type="hidden" name="command" value="locale"/>
                     <select class="form-select-sm" id="locale" name="locale" onchange="submit()"
                             style="background-color: RGBA(33,37,41,var(--bs-bg-opacity,1))!important; color: white">
-                        <option value="en" ${locale == 'en' ? 'selected' : ''}>EN</option>
-                        <option value="ua" ${locale == 'ua' ? 'selected' : ''}>UA</option>
+                        <option value="en" ${locale == 'en' ? 'selected' : ''}><fmt:message key="lang.en"/></option>
+                        <option value="ua" ${locale == 'ua' ? 'selected' : ''}><fmt:message key="lang.ua"/></option>
                     </select>
                 </form>
             </div>
@@ -59,18 +67,13 @@
 
                         <div class="card mb-3 p-2">
                             <div class="row g-2">
-                                <div class="col-md-5">
+                                <div class="col-md-7">
                                     <img class="bd-placeholder-img card-img-top form-control-lg" width="100%" height="100%" src="${pageContext.request.contextPath}/images/${booking.getRoom().getImage()}" role="img"></div>
                                 <div class="col-md-5">
                                     <h3 class="featurette-heading fw-normal lh-1"><fmt:message key="room.number"/>${booking.getRoom().getId()}</h3>
                                     <div class="form-floating mb-2">
                                         <p class="card-text"> <fmt:message key="form.status"/>
-                                            <span
-                                                    <c:if test="${application.getStatus() == 'NEW'}">class="badge bg-primary" </c:if>
-                                                    <c:if test="${application.getStatus() == 'CONFIRMED'}">class="badge bg-success" </c:if>
-                                                    <c:if test="${application.getStatus() == 'NOT_CONFIRMED'}">class="badge bg-secondary" </c:if>
-                                                    <c:if test="${application.getStatus() == 'REVIEWED'}">class="badge bg-warning" </c:if>
-                                            >${application.getStatus()}</span></p>
+                                            <span <tags:status value="${application.getStatus()}"/>><fmt:message key="status.${application.getStatus()}"/></span>
 
                                     </div>
                                     <div class="form-floating mb-2">
@@ -108,14 +111,10 @@
                                         <label for="price"><fmt:message key="form.price"/>/<fmt:message key="uah"/></label>
                                     </div>
                                 </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
                     </c:forEach>
-
-
             </div>
         </div>
     </div>

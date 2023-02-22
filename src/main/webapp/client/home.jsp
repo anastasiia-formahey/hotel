@@ -38,9 +38,8 @@
                     <input type="hidden" name="command" value="locale"/>
                     <select class="form-select-sm" id="locale" name="locale" onchange="submit()"
                             style="background-color: RGBA(33,37,41,var(--bs-bg-opacity,1))!important; color: white">
-                        <option value="en" ${locale == 'en' ? 'selected' : ''}>EN</option>
-                        <option value="ua" ${locale == 'ua' ? 'selected' : ''}>UA</option>
-                    </select>
+                        <option value="en" ${locale == 'en' ? 'selected' : ''}><fmt:message key="lang.en"/></option>
+                        <option value="ua" ${locale == 'ua' ? 'selected' : ''}><fmt:message key="lang.ua"/></option> </select>
                 </form>
             </div>
         </div>

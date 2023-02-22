@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html class="h-100" lang=${sessionScope.locale} >
 <head>
-  <title><fmt:message key="header.rooms"/></title>
+  <title><fmt:message key="title.addRoom"/></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 
@@ -22,12 +22,19 @@
         <img src="${pageContext.request.contextPath}/images/—Pngtree—watermelon%20logo_6945475.png" height="50px">
       </a>
 
-      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="${pageContext.request.contextPath}/manager/?command=home" class="nav-link px-2 text-secondary"><fmt:message key="header.home"/></a></li>
+      <div class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <a href="${pageContext.request.contextPath}/manager/?command=home" class="nav-link px-2 text-secondary"><fmt:message key="header.home"/></a>
         <li><a href="${pageContext.request.contextPath}/manager/?command=rooms" class="nav-link px-2 text-white"><fmt:message key="header.rooms"/></a></li>
-        <li><a href="${pageContext.request.contextPath}/manager/?command=viewApplications" class="nav-link px-2 text-white"><fmt:message key="header.applications"/></a></li>
+        <li><a href="${pageContext.request.contextPath}/manager/?command=viewApplications" class="nav-link px-2 text-white position-relative">
+          <fmt:message key="header.applications"/>
+          <c:if test="${sessionScope.applicationCount > 0}">
+          <span class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger">
+                        ${sessionScope.applicationCount}
+    <span class="visually-hidden">unread messages</span>
+                            </c:if>
+        </a></li>
         <li><a href="${pageContext.request.contextPath}/manager/?command=viewBooking" class="nav-link px-2 text-white"><fmt:message key="header.booking"/></a></li>
-      </ul>
+      </div>
 
       <div class="text-end d-flex" style="padding-right: 10px">
         <a href="${pageContext.request.contextPath}/manager/?command=logout" class="btn btn-outline-warning me-2"><fmt:message key="header.logout"/></a>
@@ -37,8 +44,8 @@
           <input type="hidden" name="command" value="locale"/>
           <select class="form-select-sm" id="locale" name="locale" onchange="submit()"
                   style="background-color: RGBA(33,37,41,var(--bs-bg-opacity,1))!important; color: white">
-            <option value="en" ${locale == 'en' ? 'selected' : ''}>EN</option>
-            <option value="ua" ${locale == 'ua' ? 'selected' : ''}>UA</option>
+            <option value="en" ${locale == 'en' ? 'selected' : ''}><fmt:message key="lang.en"/></option>
+            <option value="ua" ${locale == 'ua' ? 'selected' : ''}><fmt:message key="lang.ua"/></option>
           </select>
         </form>
       </div>
@@ -77,10 +84,11 @@
       </div>
 
       <div class="form-floating mb-4">
-        <label for="price"><fmt:message key="form.price"/></label>
+
         <div class="input-group">
+          <span class="input-group-text" id="basic-addon3"><fmt:message key="form.price"/></span>
         <input type="number" name="price" class="form-control" id="price" placeholder="100" min="1" required>
-          <span class="input-group-text" id="basic-addon1"><fmt:message key="uah"/></span>
+          <span class="input-group-text" id="basic-addon1">&#8372;</span>
       </div>
       </div>
       <div class="form-floating mb-4">

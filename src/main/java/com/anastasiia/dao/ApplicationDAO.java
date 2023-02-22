@@ -164,6 +164,23 @@ public class ApplicationDAO {
         log.debug("Method finished");
     }
 
+    public int applicationCountByStatus(Status status) {
+        ResultSet resultSet;
+        int countResult= 0;
+        try(Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.COUNT_APPLICATION_BY_STATUS)){
+            preparedStatement.setString(1, status.name());
+            resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                countResult = resultSet.getInt("COUNT(id)");
+            }
+        }catch (SQLException e){
+            log.trace(e);
+
+        }
+        return countResult;
+    }
+
     private static class ApplicationMapper implements EntityMapper<Application>{
         public Application mapRow(ResultSet resultSet){
             try {

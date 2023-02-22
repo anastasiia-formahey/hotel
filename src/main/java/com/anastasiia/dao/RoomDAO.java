@@ -3,12 +3,15 @@ package com.anastasiia.dao;
 import com.anastasiia.entity.Room;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.SqlQuery;
+import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RoomDAO {
     private static final Logger log = Logger.getLogger(RoomDAO.class);
@@ -75,6 +78,41 @@ public class RoomDAO {
         }
         log.debug("Method finished");
         return listOfRooms;
+    }
+    public Map<Integer, Status> selectRoomsForMap(Date date) {
+        Map<Integer, Status> idStatusMap = new HashMap<>();
+        ArrayList <Integer> distinctList = new ArrayList<>();
+        ResultSet resultSet;
+        int roomId;
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement preparedStatement1 = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_ROOMS_FOR_MAP);
+            PreparedStatement preparedStatement2 = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_ROOMS);
+        ){
+            preparedStatement1.setDate(1, date);
+            resultSet = preparedStatement1.executeQuery();
+            log.debug(date.toString());
+            while (resultSet.next()){
+                roomId = resultSet.getInt("id");
+                idStatusMap.put(roomId, Status.valueOf(resultSet.getString("status")));
+                distinctList.add(roomId);
+            }
+            resultSet = preparedStatement2.executeQuery();
+            while (resultSet.next()){
+                roomId = resultSet.getInt("id");
+               if(!distinctList.contains(roomId)) {
+                   idStatusMap.put(roomId, Status.FREE);
+                }
+            }
+            resultSet.close();
+
+        }catch (SQLException ex){
+            log.error("Cannot execute the query ==> " + ex);
+            log.trace("Close connection with DBManager");
+        }finally {
+            log.trace("Close connection with DBManager");
+        }
+        log.debug("Method finished");
+        return idStatusMap;
     }
 
     public Room findRoomById(int id) {

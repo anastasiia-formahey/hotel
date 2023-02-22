@@ -52,7 +52,7 @@ class OccupancyOfRoomDAOTest {
         DataSource dataSource = mock(DataSource.class);
         OccupancyOfRoomDAO occupancyOfRoomDAO = new OccupancyOfRoomDAO(dataSource);
         try(PreparedStatement ignored = prepareMock(dataSource)){
-            assertDoesNotThrow(()->occupancyOfRoomDAO.updateStatus(1, Status.BOOKED));
+            assertDoesNotThrow(()->occupancyOfRoomDAO.updateStatus(1, Status.BOOKED,Date.valueOf("2023-02-25"), Date.valueOf("2023-02-27")));
         }
     }
 

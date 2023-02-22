@@ -27,8 +27,8 @@ public class FeatureService {
             throw new RuntimeException(e);
         }
     }
-    public List<Feature> getListOfFeatures(Room room){
-        return featuresDAO.selectAll(room.getId());
+    public List<Feature> getListOfFeatures(int id){
+        return featuresDAO.selectAll(id);
     }
 
     public List<Feature> getFeaturesForRoom(HttpServletRequest request){
@@ -48,7 +48,7 @@ public class FeatureService {
 
     public List<Feature> getFeaturesForRoomEdit(Room room){
         List<Feature> featuresList = getListOfFeatures();
-        List<Feature> featuresSelected = getListOfFeatures(room);
+        List<Feature> featuresSelected = getListOfFeatures(room.getId());
         log.debug(featuresSelected.toString());
             for (Feature featureSelected: featuresSelected) {
                 for (Feature feature: featuresList) {

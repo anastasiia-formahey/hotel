@@ -1,29 +1,30 @@
 <%@ attribute name="value" type="java.lang.String"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
+<fmt:setBundle basename="resources"/>
 <c:choose>
         <c:when test="${value == 'NEW'}">
-                <span class="badge bg-primary">NEW</span>
+                class="badge bg-primary"
         </c:when>
         <c:when test="${value == 'FREE'}">
-                <span class="badge bg-success">FREE</span>
+                class="badge bg-success"
         </c:when>
         <c:when test="${value == 'PAID'}">
-                <span class="badge bg-success">PAID</span>
+               class="badge bg-success"
         </c:when>
         <c:when test="${value == 'BUSY'}">
-                <span class="badge bg-danger">BUSY</span>
+                class="badge bg-danger"
         </c:when>
         <c:when test="${value == 'CONFIRMED'}">
-                <span class="badge bg-success">CONFIRMED</span>
+               class="badge bg-success"
         </c:when>
         <c:when test="${value == 'REVIEWED'}">
-                <span class="badge bg-warning">REVIEWED</span>
+               class="badge bg-warning"
         </c:when>
         <c:when test="${value == 'BOOKED'}">
-                <span class="badge bg-warning">BOOKED</span>
+               class="badge bg-warning"
         </c:when>
         <c:when test="${value == 'NOT_CONFIRMED'}">
-                <span class="badge bg-secondary">NOT_CONFIRMED</span>
+                class="badge bg-secondary"
         </c:when>
 </c:choose>

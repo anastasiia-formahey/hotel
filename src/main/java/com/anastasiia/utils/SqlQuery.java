@@ -12,6 +12,9 @@ public interface SqlQuery {
     String SQL_INSERT_ROOM
             = "INSERT INTO `hotel`.`room` VALUES (DEFAULT, ?, ?, ?, ?)";
     String SQL_SELECT_ALL_ROOMS = "SELECT * FROM room";
+    String SQL_SELECT_ALL_ROOMS_FOR_MAP = "select id, number_of_person, price, class_of_room, image, status from room LEFT join hotel.occupancy_of_room oor on room.id = oor.room_id\n" +
+            "where status != 'CANCELED' " +
+            "and date (?) between check_in_date and check_out_date";
 
     String SQL_SELECT_ROOMS_FOR_BOOKING = "SELECT * FROM room  where number_of_person = ? and room.id not in" +
             " (select room_id from occupancy_of_room where" +
@@ -49,10 +52,15 @@ public interface SqlQuery {
     String SQL_INSERT_OCCUPANCY_OF_ROOM
             = "INSERT INTO hotel.occupancy_of_room VALUES ( ?, ?, ?, ?, ?)";
     String SQL_UPDATE_OCCUPANCY_OF_ROOM_STATUS
-            = "UPDATE hotel.occupancy_of_room SET status=? WHERE room_id=?";
+            = "UPDATE hotel.occupancy_of_room SET status=? WHERE room_id=?" +
+            " and check_in_date=? and check_out_date=?";
     String SQL_SELECT_OCCUPANCY_OF_ROOM
             = "SELECT * FROM occupancy_of_room where room_id=? " +
             "AND client_id=? AND check_in_date=? AND check_out_date=?";
+    String SQL_SELECT_OCCUPANCY_OF_ROOM_BY_ID
+            = "select room_id, id , first_name, last_name, email, role, check_in_date, check_out_date, status from occupancy_of_room left join user on occupancy_of_room.client_id = user.id " +
+            "    where room_id = ? and " +
+            "        DATE (?) between check_in_date and check_out_date";
 
     String SQL_SELECT_STATUS_FROM_OCCUPANCY_OF_ROOM
             = "SELECT * FROM occupancy_of_room where room_id=? " +
@@ -64,4 +72,5 @@ public interface SqlQuery {
             " AND DATE (?) between check_in_date AND check_out_date" +
             " OR occupancy_of_room.room_id =?" +
             " AND DATE (?) between check_in_date AND check_out_date";
+    String COUNT_APPLICATION_BY_STATUS = "SELECT COUNT(id) FROM application WHERE status=?";
 }

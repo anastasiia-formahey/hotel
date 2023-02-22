@@ -23,12 +23,19 @@
         <img src="${pageContext.request.contextPath}/images/—Pngtree—watermelon%20logo_6945475.png" height="50px">
       </a>
 
-      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="${pageContext.request.contextPath}/manager/?command=home" class="nav-link px-2 text-secondary"><fmt:message key="header.home"/></a></li>
+      <div class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <a href="${pageContext.request.contextPath}/manager/?command=home" class="nav-link px-2 text-secondary"><fmt:message key="header.home"/></a>
         <li><a href="${pageContext.request.contextPath}/manager/?command=rooms" class="nav-link px-2 text-white"><fmt:message key="header.rooms"/></a></li>
-        <li><a href="${pageContext.request.contextPath}/manager/?command=viewApplications" class="nav-link px-2 text-white"><fmt:message key="header.applications"/></a></li>
+        <li><a href="${pageContext.request.contextPath}/manager/?command=viewApplications" class="nav-link px-2 text-white position-relative">
+          <fmt:message key="header.applications"/>
+          <c:if test="${sessionScope.applicationCount > 0}">
+          <span class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger">
+                        ${sessionScope.applicationCount}
+    <span class="visually-hidden">unread messages</span>
+                            </c:if>
+        </a></li>
         <li><a href="${pageContext.request.contextPath}/manager/?command=viewBooking" class="nav-link px-2 text-white"><fmt:message key="header.booking"/></a></li>
-      </ul>
+      </div>
 
       <div class="text-end d-flex" style="padding-right: 10px">
         <a href="${pageContext.request.contextPath}/manager/?command=logout" class="btn btn-outline-warning me-2"><fmt:message key="header.logout"/></a>
@@ -38,8 +45,8 @@
           <input type="hidden" name="command" value="locale"/>
           <select class="form-select-sm" id="locale" name="locale" onchange="submit()"
                   style="background-color: RGBA(33,37,41,var(--bs-bg-opacity,1))!important; color: white">
-            <option value="en" ${locale == 'en' ? 'selected' : ''}>EN</option>
-            <option value="ua" ${locale == 'ua' ? 'selected' : ''}>UA</option>
+            <option value="en" ${locale == 'en' ? 'selected' : ''}><fmt:message key="lang.en"/></option>
+            <option value="ua" ${locale == 'ua' ? 'selected' : ''}><fmt:message key="lang.ua"/></option>
           </select>
         </form>
       </div>
@@ -77,7 +84,7 @@
             <p class="card-text"><fmt:message key="room.number"/> ${room.getId()}  &nbsp;&nbsp;&nbsp; <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
               <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"></path>
             </svg>- ${room.getNumberOfPerson()}</p>
-            <p class="card-text"> <b><fmt:message key="form.price"/></b> : ${room.getPrice()}, <b><fmt:message key="form.classOfRoom"/></b>: ${room.getClassOfRoom()}</p>
+            <p class="card-text"> <b><fmt:message key="form.price"/></b> : ${room.getPrice()}&#8372;, <b><fmt:message key="form.classOfRoom"/></b>: ${room.getClassOfRoom()}</p>
             <div class="d-flex justify-content-between align-items-center">
               <div class="btn-group">
                 <button type="submit" name="command" value="viewRoom" class="btn btn-sm btn-outline-dark"><fmt:message key="button.view"/></button>

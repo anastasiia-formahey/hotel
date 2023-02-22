@@ -25,6 +25,7 @@ public class SendRequestCommand implements Command {
         log.debug(requestDTO.toString());
         requestService.insertRequest(requestDTO, applicationDTO);
         request.setAttribute("requestSent", true);
+        request.getSession().setAttribute("applicationCount", applicationService.applicationCountByStatus(Status.NEW));
         return new CommandResult(Pages.MANAGER_VIEW_APPLICATIONS_COMMAND, true);
     }
 }

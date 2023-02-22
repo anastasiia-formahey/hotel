@@ -40,8 +40,8 @@
           <input type="hidden" name="command" value="locale"/>
           <select class="form-select-sm" id="locale" name="locale" onchange="submit()"
                   style="background-color: RGBA(33,37,41,var(--bs-bg-opacity,1))!important; color: white">
-            <option value="en" ${locale == 'en' ? 'selected' : ''}>EN</option>
-            <option value="ua" ${locale == 'ua' ? 'selected' : ''}>UA</option>
+            <option value="en" ${locale == 'en' ? 'selected' : ''}><fmt:message key="lang.en"/></option>
+            <option value="ua" ${locale == 'ua' ? 'selected' : ''}><fmt:message key="lang.ua"/></option>
           </select>
         </form>
       </div>
@@ -78,7 +78,9 @@
         <td>${application.getNumberOfGuests()}</td>
         <td>${application.getClassOfRoom()}</td>
         <td>${application.getLengthOfStay()} day(s)</td>
-        <td><tags:status value="${application.getStatus()}"/></td>
+        <td><span
+                <tags:status value="${application.getStatus()}"/>><fmt:message key="status.${application.getStatus()}"/></span>
+        </td>
         <td>
             <button type="submit" class="btn btn-outline-dark"
                     <c:if test="${application.getStatus() != 'REVIEWED'}">

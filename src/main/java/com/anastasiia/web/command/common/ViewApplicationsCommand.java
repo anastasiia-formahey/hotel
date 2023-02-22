@@ -4,10 +4,7 @@ import com.anastasiia.dto.ApplicationDTO;
 import com.anastasiia.dto.UserDTO;
 import com.anastasiia.services.ApplicationService;
 import com.anastasiia.services.Pagination;
-import com.anastasiia.utils.Fields;
-import com.anastasiia.utils.JspAttributes;
-import com.anastasiia.utils.Pages;
-import com.anastasiia.utils.Role;
+import com.anastasiia.utils.*;
 import com.anastasiia.web.command.Command;
 import com.anastasiia.web.command.CommandResult;
 
@@ -39,6 +36,7 @@ public class ViewApplicationsCommand implements Command {
                 break;
             }
             case MANAGER:{
+                request.getSession().setAttribute("applicationCount", applicationService.applicationCountByStatus(Status.NEW));
                 applicationList = applicationService.selectAll(currentPage, Pagination.RECORDS_PER_PAGE, orderBy);
                 page = Pages.MANAGER_VIEW_APPLICATIONS;
                 break;
