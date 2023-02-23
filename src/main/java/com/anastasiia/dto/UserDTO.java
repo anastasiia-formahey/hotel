@@ -4,7 +4,9 @@ import com.anastasiia.entity.User;
 import com.anastasiia.services.UserService;
 import com.anastasiia.utils.Role;
 import org.apache.log4j.Logger;
-
+/**
+ * <code>UserDTO</code> - class implements data transfer object for <code>User entity</code>
+ */
 public class UserDTO extends User {
 
     private static final Logger log = Logger.getLogger(UserDTO.class);
@@ -62,18 +64,6 @@ public class UserDTO extends User {
     @Override
     public void setRole(Role role) {
         this.role = role;
-    }
-    public UserDTO entityToDTO(User user){
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setFirstName(user.getFirstName());
-        userDTO.setLastName(user.getLastName());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setRole(user.getRole());
-        return userDTO;
-    }
-    public User dtoToEntity(){
-       return new UserService().getUser(this.getEmail());
     }
 
     @Override

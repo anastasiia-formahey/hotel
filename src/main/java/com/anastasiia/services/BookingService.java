@@ -24,6 +24,36 @@ public class BookingService {
     private static final Logger log = Logger.getLogger(BookingService.class);
     private final BookingDAO bookingDAO = new BookingDAO(DBManager.getInstance());
     private final OccupancyOfRoomDAO occupancyOfRoomDAO = new OccupancyOfRoomDAO(DBManager.getInstance());
+   private final UserService userService = new UserService();
+    public BookingDTO entityToDTO(Booking booking){
+        BookingDTO bookingDTO = new BookingDTO();
+        bookingDTO.setId(booking.getId());
+        bookingDTO.setRoomId(booking.getRoomId());
+        bookingDTO.setNumberOfPerson(new RoomService()
+                .findRoomById(booking.getRoomId())
+                .getNumberOfPerson());
+        bookingDTO.setUser(new UserService().getUser(booking.getClientId()));
+        bookingDTO.setCheckInDate(booking.getCheckInDate());
+        bookingDTO.setCheckOutDate(booking.getCheckOutDate());
+        bookingDTO.setPrice(booking.getPrice());
+        bookingDTO.setDateOfBooking(booking.getDateOfBooking());
+        bookingDTO.setStatusOfBooking(booking.getStatusOfBooking());
+        bookingDTO.setBookingExpirationDate(booking.getBookingExpirationDate());
+        return bookingDTO;
+    }
+    public Booking dtoToEntity(BookingDTO bookingDTO){
+        Booking booking = new Booking();
+        booking.setId(bookingDTO.getId());
+        booking.setRoomId(bookingDTO.getRoom().getId());
+        booking.setClientId(userService.dtoToEntity(bookingDTO.getUser()).getId());
+        booking.setCheckInDate(bookingDTO.getCheckInDate());
+        booking.setCheckOutDate(bookingDTO.getCheckOutDate());
+        booking.setPrice(bookingDTO.getPrice());
+        booking.setDateOfBooking(bookingDTO.getDateOfBooking());
+        booking.setStatusOfBooking(bookingDTO.getStatusOfBooking());
+        booking.setBookingExpirationDate();
+        return booking;
+    }
     private void checkBooking(){
         List<Booking> bookings;
         try {
@@ -46,7 +76,7 @@ public class BookingService {
     public boolean insertBooking(List <BookingDTO> bookingDTOS, boolean isConfirm){
         boolean isSuccess = false;
         List<Booking> bookings = bookingDTOS.stream()
-                .map(BookingDTO::dtoToEntity)
+                .map(this::dtoToEntity)
                 .collect(Collectors.toList());
 
         try {
@@ -79,27 +109,27 @@ public class BookingService {
             throw new RuntimeException(e);
         }
         return listOfBooking
-                .stream().map(new BookingDTO()::entityToDTO).collect(Collectors.toList());
+                .stream().map(this::entityToDTO).collect(Collectors.toList());
     }
     public List<BookingDTO> selectAllBooking(int userId){
         checkBooking();
         List<Booking> listOfBooking = bookingDAO.selectAllByUserId(userId);
         return listOfBooking
-                .stream().map(new BookingDTO()::entityToDTO).collect(Collectors.toList());
+                .stream().map(this::entityToDTO).collect(Collectors.toList());
     }
     public List<BookingDTO> selectAllBooking(int currentPage, int recordsPerPage, String orderBy){
         checkBooking();
         currentPage = currentPage * Pagination.RECORDS_PER_PAGE - recordsPerPage;
         List<Booking> listOfBooking = bookingDAO.selectAll(currentPage,  recordsPerPage, orderBy);
         return listOfBooking
-                .stream().map(new BookingDTO()::entityToDTO).collect(Collectors.toList());
+                .stream().map(this::entityToDTO).collect(Collectors.toList());
     }
     public List<BookingDTO> selectAllBooking(int currentPage, int recordsPerPage, String orderBy,int userId){
         checkBooking();
         currentPage = currentPage * Pagination.RECORDS_PER_PAGE - recordsPerPage;
         List<Booking> listOfBooking = bookingDAO.selectAllByUserId( currentPage, recordsPerPage, orderBy,userId);
         return listOfBooking
-                .stream().map(new BookingDTO()::entityToDTO).collect(Collectors.toList());
+                .stream().map(this::entityToDTO).collect(Collectors.toList());
     }
     public void updateStatus(int bookingId, int roomId, java.sql.Date checkIn, java.sql.Date checkOut, Status status){
         try {

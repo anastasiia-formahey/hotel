@@ -77,7 +77,7 @@ class OccupancyOfRoomDAOTest {
             when(preparedStatement.executeQuery()).thenReturn(resultSet);
             resultSetMock(resultSet);
             assertEquals(Status.FREE,
-                    occupancyOfRoomDAO.getStatus(new Room(),Date.valueOf("2023-02-25")));
+                    occupancyOfRoomDAO.getStatus(1,Date.valueOf("2023-02-25")));
         }
     }
 }

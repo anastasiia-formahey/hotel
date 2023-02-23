@@ -7,7 +7,9 @@ import com.anastasiia.services.UserService;
 import com.anastasiia.utils.Status;
 
 import java.sql.Date;
-
+/**
+ * <code>BookingDTO</code> - class implements data transfer object for <code>Booking entity</code>
+ */
 public class BookingDTO {
     private int id;
     private int roomId;
@@ -132,37 +134,6 @@ public class BookingDTO {
 
     public void setBookingExpirationDate(Date bookingExpirationDate) {
         this.bookingExpirationDate = bookingExpirationDate;
-    }
-    public BookingDTO entityToDTO(Booking booking){
-        //todo move method to service
-        BookingDTO bookingDTO = new BookingDTO();
-        bookingDTO.setId(booking.getId());
-        bookingDTO.setRoomId(booking.getRoomId());
-        bookingDTO.setNumberOfPerson(new RoomService()
-                .findRoomById(booking.getRoomId())
-                .getNumberOfPerson());
-        bookingDTO.setUser(new UserService().getUser(booking.getClientId()));
-        bookingDTO.setCheckInDate(booking.getCheckInDate());
-        bookingDTO.setCheckOutDate(booking.getCheckOutDate());
-        bookingDTO.setPrice(booking.getPrice());
-        bookingDTO.setDateOfBooking(booking.getDateOfBooking());
-        bookingDTO.setStatusOfBooking(booking.getStatusOfBooking());
-        bookingDTO.setBookingExpirationDate(booking.getBookingExpirationDate());
-        return bookingDTO;
-    }
-    public Booking dtoToEntity(){
-        //todo move method to service
-        Booking booking = new Booking();
-        booking.setId(this.getId());
-        booking.setRoomId(this.getRoom().getId());
-        booking.setClientId(this.getUser().dtoToEntity().getId());
-        booking.setCheckInDate(this.getCheckInDate());
-        booking.setCheckOutDate(this.getCheckOutDate());
-        booking.setPrice(this.getPrice());
-        booking.setDateOfBooking(this.getDateOfBooking());
-        booking.setStatusOfBooking(this.getStatusOfBooking());
-        booking.setBookingExpirationDate();
-        return booking;
     }
 
     @Override

@@ -3,7 +3,9 @@ package com.anastasiia.dto;
 import com.anastasiia.utils.Status;
 
 import java.sql.Date;
-
+/**
+ * <code>OccupancyOfRoomDTO</code> - class implements data transfer object for <code>OccupancyOfRoom entity</code>
+ */
 public class OccupancyOfRoomDTO {
     private int roomId;
     private UserDTO client;

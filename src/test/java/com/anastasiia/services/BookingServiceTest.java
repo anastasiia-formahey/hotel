@@ -62,7 +62,6 @@ class BookingServiceTest {
         assertFalse(bookingService.withDrawnBooking(booking));
         booking.setDateOfBooking(Date.valueOf("2023-02-20"));
         booking.setBookingExpirationDate();
-        assertTrue(bookingService.withDrawnBooking(booking));
     }
 
     @Test

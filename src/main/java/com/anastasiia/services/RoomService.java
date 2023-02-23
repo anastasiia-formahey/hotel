@@ -102,7 +102,7 @@ public class RoomService {
 
     private Status getStatusOfRoom(Room room) {
         Status status = occupancyOfRoomDAO
-                .getStatus(room, new BookingService().getCurrentDate());
+                .getStatus(room.getId(), new BookingService().getCurrentDate());
         if (status.equals(Status.PAID)){
             status = Status.BUSY;
         }

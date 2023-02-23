@@ -5,6 +5,9 @@ import com.anastasiia.services.UserService;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.Status;
 
+/**
+ * <code>ApplicationDTO</code> - class implements data transfer object for <code>Application entity</code>
+ */
 public class ApplicationDTO {
     private int id;
     private UserDTO userDTO;
@@ -60,27 +63,6 @@ public class ApplicationDTO {
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public Application dtoToEntity(){
-        Application application = new Application();
-        application.setId(this.id);
-        application.setClientId(this.userDTO.getId());
-        application.setNumberOfGuests(this.numberOfGuests);
-        application.setClassOfRoom(this.classOfRoom);
-        application.setLengthOfStay(this.lengthOfStay);
-        application.setStatus(this.getStatus());
-        return application;
-    }
-    public ApplicationDTO entityToDTO(Application application){
-        ApplicationDTO applicationDTO = new ApplicationDTO();
-        applicationDTO.setId(application.getId());
-        applicationDTO.setUserDTO(new UserService().getUser(application.getClientId()));
-        applicationDTO.setClassOfRoom(application.getClassOfRoom());
-        applicationDTO.setNumberOfGuests(application.getNumberOfGuests());
-        applicationDTO.setLengthOfStay(application.getLengthOfStay());
-        applicationDTO.setStatus(application.getStatus());
-        return applicationDTO;
     }
 
     @Override

@@ -8,7 +8,9 @@ import com.anastasiia.utils.Status;
 
 import java.util.List;
 
-
+/**
+ * <code>RoomDTO</code> - class implements data transfer object for <code>Room entity</code>
+ */
 public class RoomDTO {
     private int id;
     private int numberOfPerson;

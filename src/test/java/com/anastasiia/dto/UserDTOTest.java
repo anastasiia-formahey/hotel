@@ -34,9 +34,5 @@ class UserDTOTest {
         user = null;
     }
 
-    @Test
-    void entityToDTO() {
-        assertEquals(UserDTO.class, userDTO.entityToDTO(user).getClass());
-    }
 
 }

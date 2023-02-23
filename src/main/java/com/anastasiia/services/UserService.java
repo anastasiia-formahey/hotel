@@ -37,7 +37,7 @@ public class UserService {
 
     public UserDTO getUser(String email) {
         user = userDAO.findUserByEmail(email);
-        return new UserDTO().entityToDTO(user);
+        return entityToDTO(user);
     }
     public UserDTO getUser(int id) {
         try {
@@ -45,7 +45,7 @@ public class UserService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return new UserDTO().entityToDTO(user);
+        return entityToDTO(user);
     }
 
     public void insertUser(User user) {
@@ -54,5 +54,17 @@ public class UserService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+    public UserDTO entityToDTO(User user){
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setRole(user.getRole());
+        return userDTO;
+    }
+    public User dtoToEntity(UserDTO userDTO){
+        return getUser(userDTO.getEmail());
     }
 }

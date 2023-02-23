@@ -3,7 +3,9 @@ package com.anastasiia.entity;
 import com.anastasiia.utils.Status;
 
 import java.sql.Date;
-
+/**
+ * <code>OccupancyOfRoom</code> - class entity for table 'occupancy_of_room'
+ */
 public class OccupancyOfRoom {
     private int roomId;
     private int clientId;

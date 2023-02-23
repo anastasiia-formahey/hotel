@@ -21,10 +21,4 @@ class ApplicationDTOTest {
         applicationDTO.setLengthOfStay(2);
         applicationDTO.setStatus(Status.NEW);
     }
-
-    @Test
-    void dtoToEntity() {
-        Application application = applicationDTO.dtoToEntity();
-        assertEquals(Application.class, application.getClass());
-    }
 }

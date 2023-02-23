@@ -7,7 +7,9 @@ import org.apache.log4j.Logger;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * <code>RequestDTO</code> - class implements data transfer object for <code>Request entity</code>
+ */
 public class RequestDTO {
 
     private static final Logger log = Logger.getLogger(RequestDTO.class);

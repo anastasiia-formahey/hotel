@@ -14,6 +14,7 @@ import java.util.Map;
 public class OccupancyOfRoomService {
     private final OccupancyOfRoomDAO occupancyOfRoomDAO = new OccupancyOfRoomDAO(DBManager.getInstance());
 
+    private final UserService userService = new UserService();
     public void insertOccupancyOfRoom(int roomId, int clientId, Date checkIn, Date checkOut, Status status){
         if(occupancyOfRoomDAO
                 .isExist(roomId, clientId, checkIn, checkOut)){
@@ -30,7 +31,7 @@ public class OccupancyOfRoomService {
                User user = entry.getValue();
                occupancyOfRoomDTO = new OccupancyOfRoomDTO(
                        occupancyOfRoom.getRoomId(),
-                       new UserDTO().entityToDTO(user),
+                       userService.entityToDTO(user),
                        occupancyOfRoom.getCheckInDate(),
                        occupancyOfRoom.getCheckOutDate(),
                        occupancyOfRoom.getStatus()
