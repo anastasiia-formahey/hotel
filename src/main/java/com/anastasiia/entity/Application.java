@@ -6,6 +6,9 @@ import com.anastasiia.utils.Status;
 import java.time.LocalDate;
 import java.sql.Date;
 
+/**
+ * <code>Application</code> - class entity for table 'application'
+ */
 public class Application extends Entity {
     private int id;
     private int clientId;

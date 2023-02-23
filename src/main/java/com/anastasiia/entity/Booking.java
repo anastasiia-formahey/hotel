@@ -6,7 +6,9 @@ import com.anastasiia.services.UserService;
 import com.anastasiia.utils.Status;
 
 import java.sql.Date;
-
+/**
+ * <code>Booking</code> - class entity for table 'booking'
+ */
 public class Booking extends Entity{
     private int id;
     private int roomId;
@@ -114,23 +116,6 @@ public class Booking extends Entity{
 
     public void setPrice(Double price) {
         this.price = price;
-    }
-
-    public BookingDTO entityToDTO(){
-        BookingDTO bookingDTO = new BookingDTO();
-        bookingDTO.setId(this.getId());
-        bookingDTO.setRoomId(this.getRoomId());
-        bookingDTO.setNumberOfPerson(new RoomService()
-                .findRoomById(this.getRoomId())
-                .getNumberOfPerson());
-        bookingDTO.setUser(new UserService().getUser(this.getClientId()));
-        bookingDTO.setCheckInDate(this.getCheckInDate());
-        bookingDTO.setCheckOutDate(this.getCheckOutDate());
-        bookingDTO.setPrice(this.getPrice());
-        bookingDTO.setDateOfBooking(this.getDateOfBooking());
-        bookingDTO.setStatusOfBooking(this.getStatusOfBooking());
-        bookingDTO.setBookingExpirationDate(this.getBookingExpirationDate());
-        return bookingDTO;
     }
 
     @Override

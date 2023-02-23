@@ -1,5 +1,7 @@
 package com.anastasiia.entity;
-
+/**
+ * <code>Feature</code> - class entity for table 'features'
+ */
 public class Feature extends Entity{
     private int id;
     private String name;

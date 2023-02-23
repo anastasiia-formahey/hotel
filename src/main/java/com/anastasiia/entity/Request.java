@@ -3,7 +3,9 @@ package com.anastasiia.entity;
 import com.anastasiia.utils.Status;
 
 import java.sql.Date;
-
+/**
+ * <code>Request</code> - class entity for table 'request'
+ */
 public class Request {
     private int applicationId;
     private Date checkInDate;

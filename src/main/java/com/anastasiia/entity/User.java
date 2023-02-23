@@ -1,9 +1,10 @@
 package com.anastasiia.entity;
 
 import com.anastasiia.utils.Role;
-
+/**
+ * <code>User</code> - class entity for table 'user'
+ */
 public class User extends Entity{
-
     private int id;
     private String firstName;
     private String lastName;

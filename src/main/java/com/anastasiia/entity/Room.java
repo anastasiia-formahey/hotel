@@ -3,7 +3,9 @@ package com.anastasiia.entity;
 import com.anastasiia.utils.ClassOfRoom;
 
 import java.util.List;
-
+/**
+ * <code>Room</code> - class entity for table 'room'
+ */
 public class Room extends Entity{
 
     private int id;
@@ -57,7 +59,6 @@ public class Room extends Entity{
     }
 
     public String getImage() {
-
         return image;
     }
 
