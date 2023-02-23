@@ -1,7 +1,6 @@
 package com.anastasiia.dao;
 
 import com.anastasiia.entity.Room;
-import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.Status;
 import org.junit.jupiter.api.Test;
 
@@ -65,7 +64,7 @@ class OccupancyOfRoomDAOTest {
             when(preparedStatement.executeQuery()).thenReturn(resultSet);
             resultSetMock(resultSet);
             assertTrue(occupancyOfRoomDAO.isExist(1,1,
-                    Date.valueOf("2023-02-25"), Date.valueOf("2023-02-27"), Status.BOOKED));
+                    Date.valueOf("2023-02-25"), Date.valueOf("2023-02-27")));
         }
     }
 

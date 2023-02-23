@@ -13,16 +13,25 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <Code>RequestDAO</Code> - class implements data access object for <code>Request</code> entity
+ */
 public class RequestDAO {
     private static final Logger log = Logger.getLogger(RequestDAO.class);
-    private static DataSource dataSource;
+    private final DataSource dataSource;
     public RequestDAO(DataSource dataSource){
         this.dataSource = dataSource;
     }
 
+    /**
+     * Method inserts new <code>Request</code> objects
+     * @param requests list of <code>Request</code> objects to insert
+     * @throws SQLException
+     */
     public void insertRequest(List<Request> requests) throws SQLException {
+        log.debug("Method starts");
         try (Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_REQUEST);
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_REQUEST)
         ){
             connection.setAutoCommit(false);
             connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
@@ -37,36 +46,42 @@ public class RequestDAO {
             connection.commit();
         } catch (SQLException ex){
            log.error("Cannot execute the query ==> " + ex);
-            log.trace("Close connection with DBManager");
             throw new SQLException(ex);
-        }finally {
-           log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
     }
+
+    /**
+     * Method update <code>Status</code> of <code>Request</code> object by <code>Application</code> identity
+     * @param applicationId <code>Application</code> identity
+     * @param status <code>Status</code> object to update (<tt>CONFIRMED</tt>, <tt>NOT_CONFIRMED</tt>)
+     */
     public void updateStatus(int applicationId, Status status) {
+        log.debug("Method starts");
         try (Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_REQUEST_STATUS);
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_REQUEST_STATUS)
         ){
-             log.trace("Get connection with database by DBManager");
             preparedStatement.setString(1, status.name());
             preparedStatement.setInt(2, applicationId);
             preparedStatement.executeUpdate();
             connection.commit();
-            log.trace("Query execution => " + preparedStatement);
         } catch (SQLException e) {
             log.error("Cannot execute the query ==> " + e);
-            log.trace("Close connection with DBManager");
-        }finally {
-            log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
     }
+
+    /**
+     * Method selects records from the table by <code>Application</code> identity
+     * @param id <code>Application</code> identity
+     * @return list of <code>Request</code> objects
+     */
     public List<Request> selectByApplicationId(int id){
+        log.debug("Method starts");
         List<Request> requests = new ArrayList<>();
         ResultSet resultSet;
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement  preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_REQUEST_BY_APPLICATION_ID);
+             PreparedStatement  preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_REQUEST_BY_APPLICATION_ID)
         ){
            preparedStatement.setInt(1, id);
            resultSet = preparedStatement.executeQuery();
@@ -82,10 +97,6 @@ public class RequestDAO {
            }
         } catch (SQLException ex){
              log.error("Cannot execute the query ==> " + ex);
-            log.trace("Close connection with DBManager");
-
-        }finally {
-            log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
         return requests;

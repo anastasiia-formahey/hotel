@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 
 /**
  * Database Manager. Works with MySQL Database
+ *
  * @author Anastasiia Formahei
  * */
 
@@ -20,25 +21,26 @@ public class DBManager {
     private DBManager(){}
 
     public static synchronized DataSource getInstance(){
+        log.debug("Method starts");
         if(dataSource == null){
             dataSource = new DBManager().getDataSource();
         }
+        log.debug("Method finished");
         return dataSource;
     }
 
     /**
-     * This method returns a database connection pool from the context.xml
+     * This method returns a <code>DataSource</code> object.
+     * <p>The settings for getting the datasource are taken in the file <code><b>context.xml</b></code></p>
      * @return a datasource
      * */
-    public DataSource getDataSource(){
-
+    private DataSource getDataSource(){
         log.debug("Method starts");
         try {
             Context envContext = new InitialContext();
             dataSource = (DataSource) envContext.lookup("java:comp/env/jdbc/hotel");
         } catch (NamingException e) {
             log.error("Cannot obtain a connection pool", e);
-
         }
         log.debug("Method finished");
         return dataSource;

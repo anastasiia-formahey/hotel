@@ -12,20 +12,25 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *<Code>ApplicationDAO</Code> - class implements data access object for Application entity
+ * */
 public class ApplicationDAO {
 
     private static final Logger log = Logger.getLogger(ApplicationDAO.class);
-    private static DataSource dataSource;
+    private final DataSource dataSource;
 
     public ApplicationDAO(DataSource dataSource){
         this.dataSource = dataSource;
     }
 
+    /**
+     * Method inserts new object into table
+     * @param application object to insert */
     public void insertApplication(Application application) throws SQLException {
-        log.debug(application.toString());
         log.debug("Method starts");
         try(Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_APPLICATION);
+            PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_APPLICATION)
         ) {
             preparedStatement.setInt(1, application.getClientId());
             preparedStatement.setInt(2, application.getNumberOfGuests());
@@ -34,51 +39,51 @@ public class ApplicationDAO {
             preparedStatement.setString(5, application.getStatus().name());
 
             preparedStatement.executeUpdate();
-            log.trace("Query execution => " + preparedStatement);
             connection.commit();
+            log.debug("Application has inserted");
         } catch (SQLException e) {
             log.error("Cannot execute the query ==> " + e);
-            log.trace("Close connection with DBManager");
             throw new SQLException(e);
-
-
-        }finally {
-
-        log.trace("Close connection with DBManager");
-    }
+        }
         log.debug("Method finished");
 
     }
 
+    /**
+     * Method selects all records from the table
+     * @return list of applications
+     * @throws SQLException
+     */
     public List<Application> selectAllApplications() throws SQLException {
+        log.debug("Method starts");
         ResultSet resultSet;
         ArrayList <Application> listOfApplications = new ArrayList<>();
-
         try(Connection  connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_APPLICATIONS);
+            PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_APPLICATIONS)
             ){
-           log.debug(preparedStatement.executeQuery());
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
                listOfApplications.add(new ApplicationMapper().mapRow(resultSet));
             }
-
         }catch (SQLException e){
             log.error("Cannot execute the query ==> " + e);
-            log.trace("Close connection with DBManager");
             throw new SQLException(e);
-        }finally {
-            log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
         return listOfApplications;
     }
+
+    /**
+     * Method selects all records from the table by user identity
+     * @param id user identity
+     * @return list of applications by specific user
+     */
     public List<Application> selectAllApplications(int id){
+        log.debug("Method starts");
         ResultSet resultSet;
         ArrayList <Application> listOfApplications = new ArrayList<>();
-
         try(Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_APPLICATIONS_BY_USER_ID);
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_APPLICATIONS_BY_USER_ID)
         ){
             preparedStatement.setInt(1, id);
             log.debug(preparedStatement.executeQuery());
@@ -86,85 +91,97 @@ public class ApplicationDAO {
             while (resultSet.next()){
                listOfApplications.add(new ApplicationMapper().mapRow(resultSet));
             }
-
         }catch (SQLException e){
             log.error("Cannot execute the query ==> " + e);
-            log.trace("Close connection with DBManager");
-        }finally {
-            log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
         return listOfApplications;
     }
+
+    /**
+     * Method selects all records from the table with limits.
+     * This method uses to implement a pagination
+     * @param currentPage start record to selecting
+     * @param amount number of records to select
+     * @param orderBy parameter for sorting records
+     * @return list of applications with certain number of records
+     */
     public List<Application> selectAllApplications(int currentPage, int amount, String orderBy){
+        log.debug("Method starts");
         ResultSet resultSet;
         ArrayList <Application> listOfApplications = new ArrayList<>();
-
         try(Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_APPLICATIONS+ " ORDER BY "+ orderBy + " LIMIT "+ currentPage +"," + amount);
+            PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_APPLICATIONS+ " ORDER BY "+ orderBy + " LIMIT "+ currentPage +"," + amount)
         ){
             log.debug(preparedStatement.executeQuery());
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
                listOfApplications.add(new ApplicationMapper().mapRow(resultSet));
             }
-
         }catch (SQLException e){
            log.error("Cannot execute the query ==> " + e);
-            log.trace("Close connection with DBManager");
-        }finally {
-            log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
         return listOfApplications;
     }
-    public List<Application> selectAllApplications(int currentPage, int amount, String orderBy, int id){
 
+    /**
+     * Method selects all records from the table with limits by user identity.
+     * This method uses to implement a pagination
+     * @param currentPage start record to selecting
+     * @param amount number of records to select
+     * @param orderBy parameter for sorting records
+     * @param id user identity
+     * @return list of applications with certain number of records by specific user
+     */
+    public List<Application> selectAllApplications(int currentPage, int amount, String orderBy, int id){
+        log.debug("Method starts");
         ResultSet resultSet;
         ArrayList <Application> listOfApplications = new ArrayList<>();
-
         try(Connection connection = dataSource.getConnection();
-            PreparedStatement  preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_APPLICATIONS_BY_USER_ID + " ORDER BY "+ orderBy + " LIMIT "+ currentPage +"," + amount);
+            PreparedStatement  preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_APPLICATIONS_BY_USER_ID + " ORDER BY "+ orderBy + " LIMIT "+ currentPage +"," + amount)
         ){
             preparedStatement.setInt(1,id);
-            log.debug(preparedStatement.executeQuery());
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
                 listOfApplications.add(new ApplicationMapper().mapRow(resultSet));
             }
-
         }catch (SQLException e){
             log.error("Cannot execute the query ==> " + e);
-            log.trace("Close connection with DBManager");
-        }finally {
-
-            log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
         return listOfApplications;
     }
 
+    /**
+     * Method updates status of a record in table
+     * @param applicationId application identity
+     * @param status application status to update
+     * @throws SQLException
+     */
     public void updateStatus(int applicationId, Status status) throws SQLException {
+        log.debug("Method starts");
         try(Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_APPLICATION_STATUS);
+            PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_APPLICATION_STATUS)
         ) {
-            log.trace("Get connection with database by DBManager");
             preparedStatement.setString(1, status.name());
             preparedStatement.setInt(2, applicationId);
             preparedStatement.executeUpdate();
-            log.trace("Query execution => " + preparedStatement);
             connection.commit();
         } catch (SQLException e) {
             log.error("Cannot execute the query ==> " + e);
-            log.trace("Close connection with DBManager");
             throw new SQLException(e);
-        }finally {
-            log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
     }
 
+    /**
+     * Method counts an amount of records by specific status
+     * @param status object of class <Code>Status<Code/>
+     * @return amount of records by specific <Code>status</Code>
+     */
     public int applicationCountByStatus(Status status) {
+        log.debug("Method starts");
         ResultSet resultSet;
         int countResult= 0;
         try(Connection connection = dataSource.getConnection();
@@ -175,13 +192,23 @@ public class ApplicationDAO {
                 countResult = resultSet.getInt("COUNT(id)");
             }
         }catch (SQLException e){
-            log.trace(e);
-
+            log.error("Cannot execute the query ==> " + e);
         }
+        log.debug("Method finished");
         return countResult;
     }
 
+    /**
+     * <Code>ApplicationMapper</Code> class that help to create object of <Code>Application.class</Code>
+     * from <code>ResultSet</code>
+     *
+     */
     private static class ApplicationMapper implements EntityMapper<Application>{
+        /**
+         * Method creates object of <code>Application</code> from <code>ResultSet</code>
+         * @param resultSet <code>ResultSet</code> object
+         * @return <code>Application</code> object
+         */
         public Application mapRow(ResultSet resultSet){
             try {
                 Application application = new Application();

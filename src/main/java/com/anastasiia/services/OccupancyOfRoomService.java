@@ -16,7 +16,7 @@ public class OccupancyOfRoomService {
 
     public void insertOccupancyOfRoom(int roomId, int clientId, Date checkIn, Date checkOut, Status status){
         if(occupancyOfRoomDAO
-                .isExist(roomId, clientId, checkIn, checkOut, status)){
+                .isExist(roomId, clientId, checkIn, checkOut)){
             occupancyOfRoomDAO.updateStatus(roomId, status, checkIn,checkOut);
         }else {
             occupancyOfRoomDAO.insertOccupancyOfRoom(roomId, clientId, checkIn, checkOut, status);
