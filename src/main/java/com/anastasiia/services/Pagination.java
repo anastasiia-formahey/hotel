@@ -1,16 +1,20 @@
 package com.anastasiia.services;
 
-import com.anastasiia.dao.RoomDAO;
-
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Pagination class implements pagination to use it on views
+ */
 public class Pagination {
     public static final int RECORDS_PER_PAGE = 6;
 
+    /**
+     * Method sets pagination parameters into request to use it on java servlet pages
+     * @param request HttpServletRequest request
+     */
     public static void setPagination(HttpServletRequest request) {
         int currentPage = getCurrentPage(request.getParameter("currentPage"));
         int rows = (int) request.getSession().getAttribute("rows");
-        //int rows = RoomDAO.getInstance().selectAllRooms().size();
         String orderBy = request.getParameter("orderBy");
         if (orderBy == null){
             orderBy="id";
@@ -25,6 +29,11 @@ public class Pagination {
         request.setAttribute("recordsPerPage", RECORDS_PER_PAGE);
         request.setAttribute("orderBy", orderBy);
     }
+
+    /**
+     * @param currentPageParam value of current page
+     * @return int value of current page
+     */
     public static int getInt(String currentPageParam) {
         int current;
         try {
@@ -34,6 +43,12 @@ public class Pagination {
         }
         return current;
     }
+
+    /**
+     *
+     * @param currentPageParam value of current page
+     * @return int value of current page
+     */
     public static int getCurrentPage(String currentPageParam) {
         return (currentPageParam == null || getInt(currentPageParam) <= 1) ? 1 : getInt(currentPageParam);
     }

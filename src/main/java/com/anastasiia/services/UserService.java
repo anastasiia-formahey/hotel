@@ -9,14 +9,29 @@ import org.apache.log4j.Logger;
 
 import java.sql.SQLException;
 
+/**
+ * UserService - class mediates communication between a controller and DAO/repository layer
+ */
 public class UserService {
     private static final Logger log = Logger.getLogger(UserService.class);
     private final UserDAO userDAO = new UserDAO(DBManager.getInstance());
     User user;
+
+    /**
+     * method validate user email searching user in database
+     * @param email user email
+     * @return <b>true</b> if user with this email is exist
+     */
     public boolean validateUserByEmail(String email){
         return userDAO.findUserByEmail(email) != null;
     }
 
+    /**
+     * method validate user by email and password fields matching with database
+     * @param email user email
+     * @param password user password
+     * @return <b>true</b> if user with this email is exist and password is correct
+     */
     public boolean validateUserByEmailAndPassword(String email, String password){
         user = userDAO.findUserByEmail(email);
         if(user !=null) {
@@ -25,20 +40,30 @@ public class UserService {
         }else return false;
     }
 
+    /**
+     * Method gets Role object by user email
+     * @param email user email
+     * @return Role object (<code>MANGER, CLIENT, UNREGISTERED</code>)
+     */
     public Role getRole(String email) {
         user = userDAO.findUserByEmail(email);
         return user.getRole();
     }
 
-    public Object getId(String email) {
-        user = userDAO.findUserByEmail(email);
-        return user.getId();
-    }
-
+    /**
+     * Method gets User by user email
+     * @param email user email
+     * @return UserDTO object
+     */
     public UserDTO getUser(String email) {
         user = userDAO.findUserByEmail(email);
         return entityToDTO(user);
     }
+    /**
+     * Method gets User by user emaiidentityl
+     * @param id user identity
+     * @return UserDTO object
+     */
     public UserDTO getUser(int id) {
         try {
             user = userDAO.findUserById(id);
@@ -48,6 +73,10 @@ public class UserService {
         return entityToDTO(user);
     }
 
+    /**
+     * Method inserts new User
+     * @param user User entity object
+     */
     public void insertUser(User user) {
         try {
             userDAO.insertUser(user);
@@ -55,6 +84,12 @@ public class UserService {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Method generates UserDTO object from User entity
+     * @param user User entity
+     * @return UserDTO object
+     */
     public UserDTO entityToDTO(User user){
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
@@ -64,6 +99,12 @@ public class UserService {
         userDTO.setRole(user.getRole());
         return userDTO;
     }
+
+    /**
+     * Method generates User entity from UserDTO object
+     * @param userDTO UserDTO object
+     * @return User entity
+     */
     public User dtoToEntity(UserDTO userDTO){
         return getUser(userDTO.getEmail());
     }
