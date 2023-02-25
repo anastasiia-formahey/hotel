@@ -3,7 +3,7 @@ package com.anastasiia.web.command.common;
 import com.anastasiia.entity.User;
 import com.anastasiia.services.PasswordEncoder;
 import com.anastasiia.services.UserService;
-import com.anastasiia.utils.Fields;
+import com.anastasiia.dao.Fields;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Pages;
 import com.anastasiia.utils.Role;
@@ -20,7 +20,7 @@ public class SignUpCommand implements Command {
     UserService userService = new UserService();
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-        String email = request.getParameter(Fields.EMAIL);
+        String email = request.getParameter(Fields.USER_EMAIL);
         User user = new User(
                 request.getParameter(JspAttributes.FIRST_NAME_JSP),
                 request.getParameter(JspAttributes.LAST_NAME_JSP),

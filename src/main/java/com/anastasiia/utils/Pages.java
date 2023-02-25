@@ -29,17 +29,13 @@ public interface Pages {
     String MANAGER_EDIT_ROOM =  "/manager/editRoom.jsp";
     String EDIT_ROOM = "/manager/?command=rooms";
     String MANAGER_VIEW_BOOKINGS = "/manager/viewBooking.jsp";
-
     String MANAGER_VIEW_APPLICATIONS = "/manager/viewApplications.jsp";
     String MANAGER_VIEW_APPLICATIONS_COMMAND = "/manager/?command=viewApplications";
     String MANAGER_REVIEW_APPLICATIONS = "/manager/reviewApplications.jsp";
-
+    String MANAGER_VIEW_REQUEST = "/manager/viewRequest.jsp";;
     //admin
     String ADMIN_HOME = "/admin/home.jsp";
 
-
     String ERROR = "/errorPage.jsp";
 
-    String EDIT_ROOM_PAGE = "/manager/editRoom.jsp";
-    String MANAGER_VIEW_REQUEST = "/manager/viewRequest.jsp";;
 }

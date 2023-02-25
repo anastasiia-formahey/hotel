@@ -3,7 +3,6 @@ package com.anastasiia.dao;
 import com.anastasiia.entity.EntityMapper;
 import com.anastasiia.entity.Room;
 import com.anastasiia.utils.ClassOfRoom;
-import com.anastasiia.utils.SqlQuery;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
@@ -243,11 +242,12 @@ public class RoomDAO {
             log.debug("Mapper starts");
             try{
                 Room room = new Room();
-                room.setId(resultSet.getInt("id"));
-                room.setNumberOfPerson(resultSet.getInt("number_of_person"));
-                room.setPrice(resultSet.getDouble("price"));
-                room.setClassOfRoom(ClassOfRoom.valueOf(resultSet.getString("class_of_room")));
-                room.setImage(resultSet.getString("image"));log.debug("Mapper finished");
+                room.setId(resultSet.getInt(Fields.ROOM_ID));
+                room.setNumberOfPerson(resultSet.getInt(Fields.ROOM_NUMBER_OF_PERSON));
+                room.setPrice(resultSet.getDouble(Fields.ROOM_PRICE));
+                room.setClassOfRoom(ClassOfRoom.valueOf(resultSet.getString(Fields.ROOM_CLASS_OF_ROOM)));
+                room.setImage(resultSet.getString(Fields.ROOM_IMAGE));
+                log.debug("Mapper finished");
                 return room;
             } catch (SQLException e) {
                 throw new IllegalStateException(e);

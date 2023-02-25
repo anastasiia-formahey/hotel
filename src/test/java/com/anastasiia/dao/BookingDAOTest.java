@@ -2,7 +2,6 @@ package com.anastasiia.dao;
 
 import com.anastasiia.entity.Booking;
 import com.anastasiia.utils.ClassOfRoom;
-import com.anastasiia.utils.Fields;
 import com.anastasiia.utils.Status;
 import org.junit.jupiter.api.Test;
 

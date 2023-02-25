@@ -4,7 +4,7 @@ import com.anastasiia.dto.BookingDTO;
 import com.anastasiia.dto.UserDTO;
 import com.anastasiia.services.BookingService;
 import com.anastasiia.services.Pagination;
-import com.anastasiia.utils.Fields;
+import com.anastasiia.dao.Fields;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Pages;
 import com.anastasiia.utils.Role;
@@ -29,7 +29,7 @@ public class ViewBookingCommand implements Command {
                 : bookingService.selectAllBooking(userDTO.getId()).size();
         request.getSession().setAttribute("rows", rows);
         if (orderBy == null){
-            orderBy= Fields.ID;
+            orderBy= Fields.USER_ID;
         }
         Pagination.setPagination(request);
         switch ((Role)request.getSession().getAttribute(JspAttributes.ROLE)){

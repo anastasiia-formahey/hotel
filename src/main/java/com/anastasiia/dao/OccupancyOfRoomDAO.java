@@ -1,9 +1,9 @@
 package com.anastasiia.dao;
 
+import com.anastasiia.entity.EntityMapper;
 import com.anastasiia.entity.OccupancyOfRoom;
 import com.anastasiia.entity.User;
 import com.anastasiia.utils.Role;
-import com.anastasiia.utils.SqlQuery;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
@@ -35,7 +35,7 @@ public class OccupancyOfRoomDAO {
     public void insertOccupancyOfRoom(int roomId, int clientId, Date checkIn, Date checkOut, Status status){
        log.debug("Method starts");
         try(Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_OCCUPANCY_OF_ROOM);
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_OCCUPANCY_OF_ROOM)
         ) {
                 preparedStatement.setInt(1, roomId);
                 preparedStatement.setInt(2, clientId);
@@ -99,13 +99,7 @@ public class OccupancyOfRoomDAO {
             preparedStatement.setDate(4, checkOut);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
-                occupancyOfRoom = new OccupancyOfRoom(
-                        resultSet.getInt("room_id"),
-                        resultSet.getInt("client_id"),
-                        resultSet.getDate("check_in_date"),
-                        resultSet.getDate("check_out_date"),
-                        Status.valueOf(resultSet.getString("status"))
-                );
+                occupancyOfRoom = new OccupancyOfRoomMapper().mapRow(resultSet);
             }
             resultSet.close();
         }catch (SQLException ex){
@@ -135,13 +129,7 @@ public class OccupancyOfRoomDAO {
             preparedStatement.setDate(2, date);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
-                occupancyOfRoom = new OccupancyOfRoom(
-                        resultSet.getInt("room_id"),
-                        resultSet.getInt("client_id"),
-                        resultSet.getDate("check_in_date"),
-                        resultSet.getDate("check_out_date"),
-                        Status.valueOf(resultSet.getString("status"))
-                );
+                occupancyOfRoom = new OccupancyOfRoomMapper().mapRow(resultSet);
             }
             resultSet.close();
         }catch (SQLException ex){
@@ -172,18 +160,12 @@ public class OccupancyOfRoomDAO {
             preparedStatement.setDate(2, date);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
-                occupancyOfRoom = new OccupancyOfRoom(
-                        resultSet.getInt("room_id"),
-                        resultSet.getInt("id"),
-                        resultSet.getDate("check_in_date"),
-                        resultSet.getDate("check_out_date"),
-                        Status.valueOf(resultSet.getString("status"))
-                );
-                user.setId(resultSet.getInt("id"));
-                user.setFirstName(resultSet.getString("first_name"));
-                user.setLastName(resultSet.getString("last_name"));
-                user.setEmail(resultSet.getString("email"));
-                user.setRole(Role.valueOf(resultSet.getString("role")));
+                occupancyOfRoom = new OccupancyOfRoomMapper().mapRow(resultSet);
+                user.setId(resultSet.getInt(Fields.USER_ID));
+                user.setFirstName(resultSet.getString(Fields.USER_FIRST_NAME));
+                user.setLastName(resultSet.getString(Fields.USER_LAST_NAME));
+                user.setEmail(resultSet.getString(Fields.USER_EMAIL));
+                user.setRole(Role.valueOf(resultSet.getString(Fields.USER_ROLE)));
                 occupancyOfRoomUserMap.put(occupancyOfRoom,user);
             }
             resultSet.close();
@@ -192,5 +174,33 @@ public class OccupancyOfRoomDAO {
         }
         log.debug("Method finished");
         return occupancyOfRoomUserMap;
+    }
+
+    /**
+     * <Code>OccupancyOfRoomMapper</Code> class that help to create <Code>OccupancyOfRoom</Code> object
+     * from <code>ResultSet</code>
+     */
+    private static class OccupancyOfRoomMapper implements EntityMapper<OccupancyOfRoom>{
+        /**
+         * Method creates object of <code>OccupancyOfRoom</code> from <code>ResultSet</code>
+         * @param resultSet <code>ResultSet</code> object
+         * @return <code>OccupancyOfRoom</code> object
+         */
+        @Override
+        public OccupancyOfRoom mapRow(ResultSet resultSet) {
+            OccupancyOfRoom occupancyOfRoom;
+            try {
+                occupancyOfRoom = new OccupancyOfRoom(
+                        resultSet.getInt(Fields.OCCUPANCY_OF_ROOM_ROOM_ID),
+                        resultSet.getInt(Fields.OCCUPANCY_OF_ROOM_CLIENT_ID),
+                        resultSet.getDate(Fields.OCCUPANCY_OF_ROOM_CHECK_IN),
+                        resultSet.getDate(Fields.OCCUPANCY_OF_ROOM_CHECK_OUT),
+                        Status.valueOf(resultSet.getString(Fields.OCCUPANCY_OF_ROOM_STATUS))
+                );
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return occupancyOfRoom;
+        }
     }
 }

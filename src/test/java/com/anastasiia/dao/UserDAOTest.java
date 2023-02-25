@@ -1,12 +1,7 @@
 package com.anastasiia.dao;
 
 import com.anastasiia.entity.User;
-import com.anastasiia.utils.ClassOfRoom;
-import com.anastasiia.utils.Fields;
 import com.anastasiia.utils.Role;
-import com.anastasiia.utils.Status;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
@@ -16,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 class UserDAOTest {
@@ -47,12 +41,12 @@ class UserDAOTest {
     }
     private void resultSetMock(ResultSet resultSet) throws SQLException {
         when(resultSet.next()).thenReturn(true).thenReturn(false);
-        when(resultSet.getInt(Fields.ID)).thenReturn(1);
-        when(resultSet.getString(Fields.FIRST_NAME)).thenReturn("Test");
-        when(resultSet.getString(Fields.LAST_NAME)).thenReturn("Test");
-        when(resultSet.getString(Fields.EMAIL)).thenReturn("test@gmail.com");
-        when(resultSet.getString(Fields.PASSWORD)).thenReturn("0000");
-        when(resultSet.getString(Fields.ROLE)).thenReturn(Role.CLIENT.name());
+        when(resultSet.getInt(Fields.USER_ID)).thenReturn(1);
+        when(resultSet.getString(Fields.USER_FIRST_NAME)).thenReturn("Test");
+        when(resultSet.getString(Fields.USER_LAST_NAME)).thenReturn("Test");
+        when(resultSet.getString(Fields.USER_EMAIL)).thenReturn("test@gmail.com");
+        when(resultSet.getString(Fields.USER_PASSWORD)).thenReturn("0000");
+        when(resultSet.getString(Fields.USER_ROLE)).thenReturn(Role.CLIENT.name());
     }
 
     @Test

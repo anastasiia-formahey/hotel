@@ -2,9 +2,7 @@ package com.anastasiia.dao;
 
 import com.anastasiia.entity.EntityMapper;
 import com.anastasiia.entity.User;
-import com.anastasiia.utils.Fields;
 import com.anastasiia.utils.Role;
-import com.anastasiia.utils.SqlQuery;
 import org.apache.log4j.Logger;
 
 import javax.sql.DataSource;
@@ -109,12 +107,12 @@ public class UserDAO {
         public User mapRow(ResultSet resultSet) {
             try{
                 User user = new User();
-                        user.setId(resultSet.getInt(Fields.ID));
-                        user.setFirstName(resultSet.getString(Fields.FIRST_NAME));
-                        user.setLastName(resultSet.getString(Fields.LAST_NAME));
-                        user.setEmail(resultSet.getString(Fields.EMAIL));
-                        user.setPassword(resultSet.getString(Fields.PASSWORD));
-                        user.setRole(Role.valueOf(resultSet.getString(Fields.ROLE)));
+                        user.setId(resultSet.getInt(Fields.USER_ID));
+                        user.setFirstName(resultSet.getString(Fields.USER_FIRST_NAME));
+                        user.setLastName(resultSet.getString(Fields.USER_LAST_NAME));
+                        user.setEmail(resultSet.getString(Fields.USER_EMAIL));
+                        user.setPassword(resultSet.getString(Fields.USER_PASSWORD));
+                        user.setRole(Role.valueOf(resultSet.getString(Fields.USER_ROLE)));
                 return user;
             } catch (SQLException e) {
                 throw new IllegalStateException(e);

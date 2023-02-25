@@ -1,5 +1,6 @@
 package com.anastasiia.web.command.common;
 
+import com.anastasiia.dao.Fields;
 import com.anastasiia.dto.ApplicationDTO;
 import com.anastasiia.dto.UserDTO;
 import com.anastasiia.services.ApplicationService;
@@ -26,7 +27,7 @@ public class ViewApplicationsCommand implements Command {
                 : applicationService.selectAll(userDTO.getId()).size();
         request.getSession().setAttribute("rows", rows);
         if (orderBy == null){
-            orderBy= Fields.ID;
+            orderBy= Fields.USER_ID;
         }
         Pagination.setPagination(request);
         switch ((Role)request.getSession().getAttribute(JspAttributes.ROLE)){

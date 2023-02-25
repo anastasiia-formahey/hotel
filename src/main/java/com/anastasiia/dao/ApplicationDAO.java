@@ -3,7 +3,6 @@ package com.anastasiia.dao;
 import com.anastasiia.entity.Application;
 import com.anastasiia.entity.EntityMapper;
 import com.anastasiia.utils.ClassOfRoom;
-import com.anastasiia.utils.SqlQuery;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
@@ -212,12 +211,12 @@ public class ApplicationDAO {
         public Application mapRow(ResultSet resultSet){
             try {
                 Application application = new Application();
-                application.setId(resultSet.getInt("id"));
-                application.setClientId(resultSet.getInt("client_id"));
-                application.setNumberOfGuests(resultSet.getInt("number_of_guests"));
-                application.setClassOfRoom(ClassOfRoom.valueOf(resultSet.getString("apartment_class")));
-                application.setLengthOfStay(Integer.parseInt(resultSet.getString("length_of_stay")));
-                application.setStatus(Status.valueOf(resultSet.getString("status")));
+                application.setId(resultSet.getInt(Fields.APPLICATION_ID));
+                application.setClientId(resultSet.getInt(Fields.APPLICATION_CLIENT_ID));
+                application.setNumberOfGuests(resultSet.getInt(Fields.APPLICATION_NUMBER_OF_GUESTS));
+                application.setClassOfRoom(ClassOfRoom.valueOf(resultSet.getString(Fields.APPLICATION_APARTMENT_CLASS)));
+                application.setLengthOfStay(Integer.parseInt(resultSet.getString(Fields.APPLICATION_LENGTH_OF_STAY)));
+                application.setStatus(Status.valueOf(resultSet.getString(Fields.APPLICATION_STATUS)));
                 return application;
             } catch (SQLException e) {
                 throw new IllegalStateException(e);

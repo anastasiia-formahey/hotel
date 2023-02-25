@@ -2,7 +2,6 @@ package com.anastasiia.dao;
 
 import com.anastasiia.entity.Feature;
 import com.anastasiia.entity.Room;
-import com.anastasiia.utils.SqlQuery;
 import org.apache.log4j.Logger;
 
 import javax.sql.DataSource;
@@ -33,7 +32,7 @@ public class FeaturesDAO {
         PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SELECT_ALL_FEATURES)){
            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
-                Feature feature = new Feature(resultSet.getInt( "id"), resultSet.getString( "name"));
+                Feature feature = new Feature(resultSet.getInt( Fields.FEATURES_ID), resultSet.getString( Fields.FEATURES_NAME));
                 features.add(feature);
             }
         } catch (SQLException ex){
@@ -81,20 +80,15 @@ public class FeaturesDAO {
         PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ROOM_FEATURES);
         ){
             preparedStatement.setInt(1, id);
-            log.trace("Query execution => " + preparedStatement);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
-                Feature feature = new Feature(resultSet.getInt( "id"), resultSet.getString( "name"));
+                Feature feature = new Feature(resultSet.getInt( Fields.FEATURES_ID), resultSet.getString( Fields.FEATURES_NAME));
                 feature.setChecked(true);
                 features.add(feature);
                 log.debug(feature.toString());
             }
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
-            log.trace("Close connection with DBManager");
-
-        }finally {
-            log.trace("Close connection with DBManager");
         }
         log.debug("Method finished");
         return features;

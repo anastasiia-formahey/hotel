@@ -1,6 +1,6 @@
 package com.anastasiia.web.command.common;
 
-import com.anastasiia.dao.RoomDAO;
+import com.anastasiia.dao.Fields;
 import com.anastasiia.services.BookingService;
 import com.anastasiia.services.Pagination;
 import com.anastasiia.services.RoomService;
@@ -32,7 +32,7 @@ public class RoomPageCommand implements Command {
         int rows = roomService.selectAllRooms().size();
         request.getSession().setAttribute("rows", rows);
         if (orderBy == null){
-            orderBy= Fields.ID;
+            orderBy= Fields.USER_ID;
         }
         Pagination.setPagination(request);
         request.getSession().setAttribute(JspAttributes.CLASS_OF_ROOM, ClassOfRoom.values());

@@ -3,7 +3,8 @@ package com.anastasiia.dao;
 import com.anastasiia.entity.Booking;
 import com.anastasiia.entity.EntityMapper;
 import com.anastasiia.entity.Room;
-import com.anastasiia.utils.*;
+import com.anastasiia.utils.ClassOfRoom;
+import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
 import javax.sql.DataSource;

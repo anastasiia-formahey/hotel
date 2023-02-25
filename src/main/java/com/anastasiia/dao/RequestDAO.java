@@ -1,7 +1,6 @@
 package com.anastasiia.dao;
 
 import com.anastasiia.entity.Request;
-import com.anastasiia.utils.SqlQuery;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
@@ -87,11 +86,11 @@ public class RequestDAO {
            resultSet = preparedStatement.executeQuery();
            while (resultSet.next()){
                Request request = new Request(
-                       resultSet.getInt("application_id"),
-                       resultSet.getDate("check_in_date"),
-                       resultSet.getDate("check_out_date"),
-                       resultSet.getInt("room_id"),
-                       Status.valueOf(resultSet.getString("status"))
+                       resultSet.getInt(Fields.REQUEST_APPLICATION_ID),
+                       resultSet.getDate(Fields.REQUEST_CHECK_IN),
+                       resultSet.getDate(Fields.REQUEST_CHECK_OUT),
+                       resultSet.getInt(Fields.REQUEST_ROOM_ID),
+                       Status.valueOf(resultSet.getString(Fields.REQUEST_STATUS))
                );
                requests.add(request);
            }
