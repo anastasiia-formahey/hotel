@@ -23,6 +23,7 @@ public class BookRoomPageCommand implements Command {
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
+        log.debug("Method starts");
         List<BookingDTO> bookingDTOS = new ArrayList<>();
         ArrayList<RoomDTO> listOfRooms = (ArrayList)request.getSession().getAttribute(JspAttributes.ROOMS);
         RoomDTO room = new RoomDTO();
@@ -33,13 +34,10 @@ public class BookRoomPageCommand implements Command {
         }
         BookingDTO bookingDTO = new BookingDTO();
         UserDTO userDTO = (UserDTO)  request.getSession().getAttribute(JspAttributes.USER);
-        log.debug(request.getParameter(JspAttributes.CHECK_IN_DATE));
-        log.debug(request.getParameter(JspAttributes.CHECK_OUT_DATE));
-        log.debug(request.getParameter(JspAttributes.PRICE));
         bookingDTO.setRoom(room);
         bookingDTO.setUser(userDTO);
-        bookingDTO.setCheckInDate(Date.valueOf(request.getSession().getAttribute("checkIn").toString()));
-        bookingDTO.setCheckOutDate(Date.valueOf(request.getSession().getAttribute("checkOut").toString()));
+        bookingDTO.setCheckInDate(Date.valueOf(request.getSession().getAttribute(JspAttributes.CHECK_IN_DATE).toString()));
+        bookingDTO.setCheckOutDate(Date.valueOf(request.getSession().getAttribute(JspAttributes.CHECK_OUT_DATE).toString()));
         bookingDTO.setPrice(bookingService.getTotalCost(room.getPrice(), bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate()));
         bookingDTO.setDateOfBooking(bookingService.getCurrentDate());
         bookingDTO.setStatusOfBooking(Status.BOOKED);
@@ -47,7 +45,7 @@ public class BookRoomPageCommand implements Command {
         bookingDTOS.add(bookingDTO);
         log.debug(room.toString());
         request.getSession().setAttribute(JspAttributes.ROOM, room);
-        request.getSession().setAttribute("bookingDTOS", bookingDTOS);
+        request.getSession().setAttribute(JspAttributes.BOOKING_DTOS, bookingDTOS);
         return new CommandResult(Pages.CLIENT_BOOK_ROOM,false);
     }
 }

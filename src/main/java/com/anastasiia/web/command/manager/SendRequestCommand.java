@@ -4,6 +4,7 @@ import com.anastasiia.dto.ApplicationDTO;
 import com.anastasiia.dto.RequestDTO;
 import com.anastasiia.services.ApplicationService;
 import com.anastasiia.services.RequestService;
+import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Pages;
 import com.anastasiia.utils.Status;
 import com.anastasiia.web.command.Command;
@@ -19,13 +20,13 @@ public class SendRequestCommand implements Command {
     ApplicationService applicationService = new ApplicationService();
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-        RequestDTO requestDTO = (RequestDTO) request.getSession().getAttribute("requestDTO");
-        ApplicationDTO applicationDTO = (ApplicationDTO) request.getSession().getAttribute("app");
+        log.debug("Method starts");
+        RequestDTO requestDTO = (RequestDTO) request.getSession().getAttribute(JspAttributes.REQUEST_DTO);
+        ApplicationDTO applicationDTO = (ApplicationDTO) request.getSession().getAttribute(JspAttributes.APP);
         requestDTO.setStatusOfRequest(Status.NOT_CONFIRMED);
-        log.debug(requestDTO.toString());
         requestService.insertRequest(requestDTO, applicationDTO);
-        request.setAttribute("requestSent", true);
-        request.getSession().setAttribute("applicationCount", applicationService.applicationCountByStatus(Status.NEW));
+        request.setAttribute(JspAttributes.REQUEST_SENT, true);
+        request.getSession().setAttribute(JspAttributes.APPLICATION_COUNT, applicationService.applicationCountByStatus(Status.NEW));
         return new CommandResult(Pages.MANAGER_VIEW_APPLICATIONS_COMMAND, true);
     }
 }

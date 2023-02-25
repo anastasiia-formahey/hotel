@@ -14,11 +14,10 @@ public class LogOutCommand implements Command {
     private static final Logger log = Logger.getLogger(LogOutCommand.class);
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-        log.debug("LogOutCommand starts");
+        log.debug("Method starts");
         HttpSession session = request.getSession();
         session.removeAttribute(JspAttributes.USER);
             session.invalidate();
-        log.debug("LogOutCommand finished");
         return new CommandResult(Pages.INDEX, true);
     }
 }

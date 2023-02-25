@@ -17,16 +17,16 @@ public class FindRoomCommand implements Command {
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         String page = "";
         UserDTO userDTO = (UserDTO) request.getSession().getAttribute(JspAttributes.USER);
-        request.setAttribute("isBooking", true);
-        request.getSession().setAttribute("numberOfPerson", request.getParameter("numberOfPerson"));
-        request.getSession().setAttribute("checkIn", request.getParameter("checkInDate"));
-        request.getSession().setAttribute("checkOut", request.getParameter("checkOutDate"));
+        request.setAttribute(JspAttributes.IS_BOOKING, true);
+        request.getSession().setAttribute(JspAttributes.NUMBER_OF_PERSON, request.getParameter(JspAttributes.NUMBER_OF_PERSON));
+        request.getSession().setAttribute(JspAttributes.CHECK_IN, request.getParameter(JspAttributes.CHECK_IN_DATE));
+        request.getSession().setAttribute(JspAttributes.CHECK_OUT, request.getParameter(JspAttributes.CHECK_OUT_DATE));
         request.getSession().setAttribute(JspAttributes.CLASS_OF_ROOM, ClassOfRoom.values());
         request.getSession().setAttribute(JspAttributes.CAPACITY, roomService.getCapacityOfRoom());
         switch (userDTO.getRole()){
             case CLIENT: {
                 page = Pages.CLIENT_ROOMS_FOR_BOOKING;
-                request.getSession().setAttribute("rooms", roomService.findRoomForBooking(request));
+                request.getSession().setAttribute(JspAttributes.ROOMS, roomService.findRoomForBooking(request));
                 break;
             }
             case MANAGER:{

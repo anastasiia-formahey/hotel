@@ -16,6 +16,7 @@ public class LoginCommand implements Command {
     UserService userService = new UserService();
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
+        log.debug("Method starts");
         String email = request.getParameter(JspAttributes.EMAIL);
         String password = request.getParameter(JspAttributes.PASSWORD);
         if (userService.validateUserByEmailAndPassword(email, password)) {

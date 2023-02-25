@@ -27,7 +27,8 @@ public class GetRequestCommand implements Command {
     UserDTO userDTO;
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-        int applicationId = Integer.parseInt(request.getParameter("applicationId"));
+        log.debug("Method starts");
+        int applicationId = Integer.parseInt(request.getParameter(JspAttributes.APPLICATION_ID));
         Role role = (Role) request.getSession().getAttribute(JspAttributes.ROLE);
         RequestDTO requestDTO = requestService.getRequestByApplicationId(applicationId);
         ApplicationDTO applicationDTO = null;
@@ -54,8 +55,8 @@ public class GetRequestCommand implements Command {
         }
 
         List<BookingDTO> bookingDTOS = bookingService.getBookingFromRequest(requestDTO,userDTO);
-        request.getSession().setAttribute("bookingDTOS", bookingDTOS);
-        request.setAttribute("application", applicationDTO);
+        request.getSession().setAttribute(JspAttributes.BOOKING_DTOS, bookingDTOS);
+        request.setAttribute(JspAttributes.APPLICATION, applicationDTO);
         log.debug(bookingDTOS);
         return new CommandResult(page, false);
     }

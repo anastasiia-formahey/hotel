@@ -19,17 +19,17 @@ public class ReviewApplicationCommand implements Command {
     private static final Logger log = Logger.getLogger(ReviewApplicationCommand.class);
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-        request.getSession().removeAttribute("rooms");
+        log.debug("Method starts");
+        request.getSession().removeAttribute(JspAttributes.ROOMS);
         List<ApplicationDTO> applicationDTOList = (ArrayList<ApplicationDTO>)request.getSession().getAttribute(JspAttributes.APPLICATIONS);
         ArrayList<Integer> addedRooms = new ArrayList<>();
         RequestDTO requestDTO = new RequestDTO();
         ApplicationDTO applicationDTO = new ApplicationService()
-                .get(applicationDTOList, Integer.parseInt(request.getParameter("applicationToReview")));
-        request.getSession().setAttribute("app", applicationDTO);
-        log.debug(applicationDTO);
-        request.getSession().setAttribute("listOfRoomInReview", new ArrayList<RoomDTO>());
-        request.getSession().setAttribute("addedRooms", addedRooms);
-        request.getSession().setAttribute("requestDTO", requestDTO);
+                .get(applicationDTOList, Integer.parseInt(request.getParameter(JspAttributes.APPLICATION_TO_REVIEW)));
+        request.getSession().setAttribute(JspAttributes.APP, applicationDTO);
+        request.getSession().setAttribute(JspAttributes.LIST_OF_ROOM_IN_REVIEW, new ArrayList<RoomDTO>());
+        request.getSession().setAttribute(JspAttributes.ADDED_ROOMS, addedRooms);
+        request.getSession().setAttribute(JspAttributes.REQUEST_DTO, requestDTO);
 
         return new CommandResult(Pages.MANAGER_REVIEW_APPLICATIONS, true);
     }

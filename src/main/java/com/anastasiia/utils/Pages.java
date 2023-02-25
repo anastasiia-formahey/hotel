@@ -38,4 +38,7 @@ public interface Pages {
 
     String ERROR = "/errorPage.jsp";
 
+    String MANAGER_COMMAND_HOME = "/manager/?command=home";
+    String ADDED_ROOMS = "addedRooms";
+    String MANAGER_VIEW_OCCUPANCY_OF_ROOM_JSP = "/manager/viewOccupancyOfRoom.jsp";
 }

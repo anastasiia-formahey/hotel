@@ -20,9 +20,9 @@ public class AddRoomCommand implements Command {
     FeatureService featureService = new FeatureService();
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
+        log.debug("Method starts");
         RoomDTO room = new RoomDTO();
-
-               room.setNumberOfPerson(Integer.parseInt(request.getParameter(JspAttributes.NUMBER_OF_PERSONS)));
+               room.setNumberOfPerson(Integer.parseInt(request.getParameter(JspAttributes.NUMBER_OF_PERSON)));
                room.setPrice(Integer.parseInt(request.getParameter(JspAttributes.PRICE)));
                room.setClassOfRoom(ClassOfRoom.valueOf(request.getParameter(JspAttributes.CLASS_OF_ROOM)));
                room.setImage(request.getParameter(JspAttributes.IMAGE));

@@ -44,13 +44,13 @@ public class HomeCommand implements Command {
             case MANAGER: {
                 homePage = Pages.MANAGER_HOME;
                 Date dateOfOccupancy = bookingService.getCurrentDate();
-                if(request.getParameter("dateOfOccupancy") ==null ){
-                    session.setAttribute("dateOfOccupancy", dateOfOccupancy);
+                if(request.getParameter(JspAttributes.DATE_OF_OCCUPANCY) ==null ){
+                    session.setAttribute(JspAttributes.DATE_OF_OCCUPANCY, dateOfOccupancy);
                 }else {
-                    dateOfOccupancy = Date.valueOf(session.getAttribute("dateOfOccupancy").toString());
+                    dateOfOccupancy = Date.valueOf(session.getAttribute(JspAttributes.DATE_OF_OCCUPANCY).toString());
                 }
-                session.setAttribute("applicationCount", applicationService.applicationCountByStatus(Status.NEW));
-                session.setAttribute("roomMap", roomService.getRoomMap(dateOfOccupancy));
+                session.setAttribute(JspAttributes.APPLICATION_COUNT, applicationService.applicationCountByStatus(Status.NEW));
+                session.setAttribute(JspAttributes.ROOM_MAP, roomService.getRoomMap(dateOfOccupancy));
                 request.getSession().setAttribute(JspAttributes.ROOMS,
                         roomService.selectAllRoomsDTO(roomService.selectAllRooms()));
                 break;

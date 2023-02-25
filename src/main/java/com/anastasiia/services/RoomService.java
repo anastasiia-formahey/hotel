@@ -98,7 +98,7 @@ public class RoomService {
      */
     public List<RoomDTO> findRoomForBooking(HttpServletRequest request){
         return roomDAO.selectRoomsForBooking(
-                Integer.parseInt(request.getParameter(JspAttributes.NUMBER_OF_PERSONS)),
+                Integer.parseInt(request.getParameter(JspAttributes.NUMBER_OF_PERSON)),
                 Date.valueOf(request.getParameter(JspAttributes.CHECK_IN_DATE)),
                 Date.valueOf(request.getParameter(JspAttributes.CHECK_OUT_DATE)))
                 .stream().map(this::entityToDTO).collect(Collectors.toList());

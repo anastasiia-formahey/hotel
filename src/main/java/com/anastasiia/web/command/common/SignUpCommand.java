@@ -20,6 +20,7 @@ public class SignUpCommand implements Command {
     UserService userService = new UserService();
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
+        log.debug("Method starts");
         String email = request.getParameter(Fields.USER_EMAIL);
         User user = new User(
                 request.getParameter(JspAttributes.FIRST_NAME_JSP),
@@ -28,7 +29,6 @@ public class SignUpCommand implements Command {
                 PasswordEncoder.encode(request.getParameter(JspAttributes.PASSWORD)),
                 Role.CLIENT
         );
-        log.debug(user.toString());
         if(!userService.validateUserByEmail(email)){
             userService.insertUser(user);
             return new CommandResult(Pages.LOGIN, true);

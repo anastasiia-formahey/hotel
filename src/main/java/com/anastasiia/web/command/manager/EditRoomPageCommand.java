@@ -20,6 +20,7 @@ public class EditRoomPageCommand implements Command {
     FeatureService featureService = new FeatureService();
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
+        log.debug("Method starts");
         ArrayList<RoomDTO> listOfRooms = (ArrayList)request.getSession().getAttribute(JspAttributes.ROOMS);
         RoomDTO room = new RoomDTO();
         for (RoomDTO room1:listOfRooms) {
@@ -29,7 +30,6 @@ public class EditRoomPageCommand implements Command {
                 log.debug(room.toString());
             }
         }
-        log.debug(room.toString());
 
         request.getSession().setAttribute(JspAttributes.ROOM_EDIT, room);
         request.getSession().setAttribute(JspAttributes.CLASS_OF_ROOM, ClassOfRoom.values());

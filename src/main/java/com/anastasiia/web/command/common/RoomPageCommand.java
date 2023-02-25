@@ -18,6 +18,7 @@ public class RoomPageCommand implements Command {
     BookingService bookingService = new BookingService();
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
+        log.debug("Method starts");
         Object roleParameter = request.getSession().getAttribute(JspAttributes.ROLE);
         if(roleParameter == "" || roleParameter == null){
             roleParameter = Role.UNREGISTERED;
@@ -25,12 +26,11 @@ public class RoomPageCommand implements Command {
         Role roleInSession =
                 Role.valueOf(roleParameter.toString());
         request.getSession().setAttribute(JspAttributes.ROLE, roleInSession);
-        log.debug("Role ==> " + roleInSession);
         String pageRoom = Pages.ROOMS;
         int currentPage = Pagination.getCurrentPage(request.getParameter(JspAttributes.CURRENT_PAGE));
         String orderBy = request.getParameter(JspAttributes.ORDER_BY);
         int rows = roomService.selectAllRooms().size();
-        request.getSession().setAttribute("rows", rows);
+        request.getSession().setAttribute(JspAttributes.ROWS, rows);
         if (orderBy == null){
             orderBy= Fields.USER_ID;
         }
@@ -48,7 +48,7 @@ public class RoomPageCommand implements Command {
             }
             case CLIENT:{
                 pageRoom = Pages.CLIENT_ROOMS;
-                request.getSession().setAttribute("currentDate", bookingService.getCurrentDate());
+                request.getSession().setAttribute(JspAttributes.CURRENT_DATE, bookingService.getCurrentDate());
                 request.getSession().setAttribute(JspAttributes.ROOMS,
                         roomService.selectAllRooms(currentPage, Pagination.RECORDS_PER_PAGE, orderBy));
                 break;
@@ -57,8 +57,6 @@ public class RoomPageCommand implements Command {
                 request.getSession().setAttribute(JspAttributes.ROOMS,
                     roomService.selectAllRooms(currentPage, Pagination.RECORDS_PER_PAGE, orderBy));
         }
-        log.debug("Go to ==> " + pageRoom);
-
         return new CommandResult(pageRoom, false);
     }
 }

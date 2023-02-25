@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginPageCommand implements Command {
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-//        request.getSession().removeAttribute(JspAttributes.ERROR);
         return new CommandResult(Pages.LOGIN, false);
     }
 }

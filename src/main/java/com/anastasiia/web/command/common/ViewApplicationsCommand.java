@@ -8,6 +8,7 @@ import com.anastasiia.services.Pagination;
 import com.anastasiia.utils.*;
 import com.anastasiia.web.command.Command;
 import com.anastasiia.web.command.CommandResult;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,8 +16,10 @@ import java.util.List;
 
 public class ViewApplicationsCommand implements Command {
     ApplicationService applicationService = new ApplicationService();
+    private static final Logger log = Logger.getLogger(ViewApplicationsCommand.class);
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
+        log.debug("Method starts");
         List<ApplicationDTO> applicationList;
         String page;
         int currentPage = Pagination.getCurrentPage(request.getParameter(JspAttributes.CURRENT_PAGE));
@@ -25,7 +28,7 @@ public class ViewApplicationsCommand implements Command {
         int rows = request.getSession().getAttribute(JspAttributes.ROLE).equals(Role.MANAGER)
                 ? applicationService.selectAll().size()
                 : applicationService.selectAll(userDTO.getId()).size();
-        request.getSession().setAttribute("rows", rows);
+        request.getSession().setAttribute(JspAttributes.ROWS, rows);
         if (orderBy == null){
             orderBy= Fields.USER_ID;
         }
@@ -37,13 +40,13 @@ public class ViewApplicationsCommand implements Command {
                 break;
             }
             case MANAGER:{
-                request.getSession().setAttribute("applicationCount", applicationService.applicationCountByStatus(Status.NEW));
+                request.getSession().setAttribute(JspAttributes.APPLICATION_COUNT, applicationService.applicationCountByStatus(Status.NEW));
                 applicationList = applicationService.selectAll(currentPage, Pagination.RECORDS_PER_PAGE, orderBy);
                 page = Pages.MANAGER_VIEW_APPLICATIONS;
                 break;
             }
             default:
-                throw new IllegalStateException("Unexpected value: " + (Role) request.getSession().getAttribute(JspAttributes.ROLE));
+                throw new IllegalStateException("Unexpected value: " + request.getSession().getAttribute(JspAttributes.ROLE));
         }
         request.getSession().setAttribute(JspAttributes.APPLICATIONS, applicationList);
        return new CommandResult(page, false);

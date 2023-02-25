@@ -16,7 +16,6 @@ public class EditRoomCommand implements Command {
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         log.debug("Method starts");
         roomService.editRoom(request);
-        log.debug("Method finished");
         return new CommandResult(Pages.EDIT_ROOM, true);
     }
 }

@@ -2,7 +2,6 @@ package com.anastasiia.web.command.common;
 
 import com.anastasiia.dto.RoomDTO;
 import com.anastasiia.services.FeatureService;
-import com.anastasiia.services.RoomService;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Pages;
 import com.anastasiia.utils.Role;
@@ -17,10 +16,10 @@ import java.util.ArrayList;
 public class ViewRoomCommand implements Command {
 
     private static final Logger log = Logger.getLogger(ViewRoomCommand.class);
-    RoomService roomService = new RoomService();
     FeatureService featureService = new FeatureService();
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response){
+        log.debug("Method starts");
         String page;
         Role roleInSession = (Role)request.getSession().getAttribute(JspAttributes.ROLE);
         ArrayList <RoomDTO> listOfRooms = (ArrayList)request.getSession().getAttribute(JspAttributes.ROOMS);
