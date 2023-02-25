@@ -11,6 +11,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * SecurityCommandFilter checks by Role of user permission to access the command
+ */
 public class SecurityCommandFilter implements Filter {
     private static final Logger log = Logger.getLogger(SecurityCommandFilter.class);
 

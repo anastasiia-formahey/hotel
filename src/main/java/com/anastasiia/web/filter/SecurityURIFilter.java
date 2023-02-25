@@ -9,6 +9,9 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+/**
+ * SecurityURIFilter checks by Role url permission to access the request uri
+ */
 @WebFilter("/*")
 public class SecurityURIFilter implements Filter {
 
