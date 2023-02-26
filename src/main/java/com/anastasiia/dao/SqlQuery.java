@@ -62,7 +62,7 @@ public interface SqlQuery {
             = "SELECT * FROM occupancy_of_room where room_id=? " +
             "AND client_id=? AND check_in_date=? AND check_out_date=?";
     String SQL_SELECT_OCCUPANCY_OF_ROOM_BY_ID
-            = "select room_id, id , first_name, last_name, email, role, check_in_date, check_out_date, status from occupancy_of_room left join user on occupancy_of_room.client_id = user.id " +
+            = "select room_id, client_id, id , first_name, last_name, email, role, check_in_date, check_out_date, status from occupancy_of_room left join user on occupancy_of_room.client_id = user.id " +
             "    where room_id = ? and " +
             "        DATE (?) between check_in_date and check_out_date";
     String SQL_SELECT_STATUS_FROM_OCCUPANCY_OF_ROOM

@@ -161,7 +161,7 @@ public class OccupancyOfRoomDAO {
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
                 occupancyOfRoom = new OccupancyOfRoomMapper().mapRow(resultSet);
-                user.setId(resultSet.getInt(Fields.USER_ID));
+                user.setId(resultSet.getInt(Fields.OCCUPANCY_OF_ROOM_CLIENT_ID));
                 user.setFirstName(resultSet.getString(Fields.USER_FIRST_NAME));
                 user.setLastName(resultSet.getString(Fields.USER_LAST_NAME));
                 user.setEmail(resultSet.getString(Fields.USER_EMAIL));

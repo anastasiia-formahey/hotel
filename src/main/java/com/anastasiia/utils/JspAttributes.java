@@ -68,4 +68,6 @@ public interface JspAttributes {
     //occupancyOfRoom
     String OCCUPANCY_OF_ROOM = "occupancyOfRoom";
     String DATE_OF_OCCUPANCY = "dateOfOccupancy";
+    String APPLICATION_ADDED = "applicationAdded";
+    String APPLICATION_ID = "applicationId";
 }
