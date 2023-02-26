@@ -7,6 +7,14 @@
     <display-name>Hotel</display-name>
 
     <jsp-config>
+        <taglib>
+            <taglib-uri>timeTags</taglib-uri>
+            <taglib-location>/WEB-INF/timeTag.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>priceTag</taglib-uri>
+            <taglib-location>/WEB-INF/price.tld</taglib-location>
+        </taglib>
         <jsp-property-group>
             <url-pattern>*.jsp</url-pattern>
             <page-encoding>UTF-8</page-encoding>
@@ -96,6 +104,4 @@
         <error-code>404</error-code>
         <location>/errorPage404.jsp</location>
     </error-page>
-
-
 </web-app>
