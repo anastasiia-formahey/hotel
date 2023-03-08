@@ -7,6 +7,9 @@ import com.anastasiia.dao.RequestDAO;
 import com.anastasiia.dto.ApplicationDTO;
 import com.anastasiia.dto.RequestDTO;
 import com.anastasiia.entity.Request;
+import com.anastasiia.exceptions.DAOException;
+import com.anastasiia.exceptions.ServiceException;
+import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
@@ -26,33 +29,39 @@ public class RequestService {
      * @param requestDTO RequestDTO object
      * @param applicationDTO ApplicationDTO object
      */
-    public void insertRequest(RequestDTO requestDTO, ApplicationDTO applicationDTO){
+    public boolean insertRequest(RequestDTO requestDTO, ApplicationDTO applicationDTO) throws ServiceException {
+        boolean flag = false;
         try {
-            requestDAO.insertRequest(dtoToEntity(requestDTO));
-            applicationDAO.updateStatus(requestDTO.getApplicationId(), Status.REVIEWED);
-        } catch (SQLException e) {
-            log.error(e);
-            throw new RuntimeException(e);
+            flag = requestDAO.insertRequest(dtoToEntity(requestDTO));
+            if(flag){
+                applicationDAO.updateStatus(requestDTO.getApplicationId(), Status.REVIEWED);
+                for(RequestDTO.RequestElement requestElement: requestDTO.getRequestElements()){
+                    occupancyOfRoomDAO.insertOccupancyOfRoom(
+                            requestElement.getRoom().getId(),
+                            applicationDTO.getUserDTO().getId(),
+                            requestElement.getCheckInDate(),
+                            requestElement.getCheckOutDate(),
+                            Status.NOT_CONFIRMED
+                    );
+                }
+            } else throw new ServiceException(JspAttributes.REQUEST_EXIST);
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
         }
-
-        for(RequestDTO.RequestElement requestElement: requestDTO.getRequestElements()){
-            occupancyOfRoomDAO.insertOccupancyOfRoom(
-                    requestElement.getRoom().getId(),
-                    applicationDTO.getUserDTO().getId(),
-                    requestElement.getCheckInDate(),
-                    requestElement.getCheckOutDate(),
-                    Status.NOT_CONFIRMED
-            );
-        }
-
+        return flag;
     }
 
     /**
      * @param id Application identity
      * @return RequestDTO object
      */
-    public RequestDTO getRequestByApplicationId(int id){
-        return entityToDTO(requestDAO.selectByApplicationId(id));
+    public RequestDTO getRequestByApplicationId(int id) throws ServiceException {
+        try {
+            return entityToDTO(requestDAO.selectByApplicationId(id));
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            throw new ServiceException(e);
+        }
     }
 
     /**
@@ -60,7 +69,7 @@ public class RequestService {
      * @param requests list of Request entity objects
      * @return RequestDTO object
      */
-    public RequestDTO entityToDTO(List<Request> requests){
+    public RequestDTO entityToDTO(List<Request> requests) throws ServiceException {
         RequestDTO requestDTO = new RequestDTO();
         requestDTO.setApplicationId(requests.get(0).getApplicationId());
         for (Request request: requests) {
@@ -93,13 +102,13 @@ public class RequestService {
      * Method updates Status to <b>CONFIRMED</b> by Application identity
      * @param applicationId Application identity
      */
-    public void updateStatus(int applicationId) {
+    public void updateStatus(int applicationId) throws ServiceException {
         try {
             requestDAO.updateStatus(applicationId, Status.CONFIRMED);
             applicationDAO.updateStatus(applicationId, Status.CONFIRMED);
-        } catch (SQLException e) {
-            log.error(e);
-            throw new RuntimeException(e);
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            throw new ServiceException(e);
         }
     }
 }

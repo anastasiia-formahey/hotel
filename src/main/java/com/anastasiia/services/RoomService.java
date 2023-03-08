@@ -5,6 +5,9 @@ import com.anastasiia.dao.OccupancyOfRoomDAO;
 import com.anastasiia.dao.RoomDAO;
 import com.anastasiia.dto.RoomDTO;
 import com.anastasiia.entity.Room;
+import com.anastasiia.exceptions.DAOException;
+import com.anastasiia.exceptions.NoResultException;
+import com.anastasiia.exceptions.ServiceException;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Status;
@@ -20,47 +23,33 @@ import java.util.stream.Collectors;
 public class RoomService {
     private static final Logger log = Logger.getLogger(RoomService.class);
     private final RoomDAO roomDAO = new RoomDAO(DBManager.getInstance());
-    private final OccupancyOfRoomDAO occupancyOfRoomDAO = new OccupancyOfRoomDAO(DBManager.getInstance());
-
-    public List<Integer> getCapacityOfRoom(){
-        //todo delete this method
-        ArrayList <Integer> list = new ArrayList<>();
-        list.add(1);
-        list.add(2);
-        list.add(3);
-        list.add(4);
-        list.add(6);
-        list.add(8);
-        return list;
-    }
 
     /**
      * @param roomDTO <code>RoomDTO</code> object to insert
      * @return <code>Room</code> identity as int number, 0 - if object was not insert
      */
-    public int insertRoom(RoomDTO roomDTO){
-       return roomDAO.insertRoom(dtoToEntity(roomDTO));
+    public int insertRoom(RoomDTO roomDTO) throws ServiceException {
+        try {
+            return roomDAO.insertRoom(dtoToEntity(roomDTO));
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            throw new ServiceException(JspAttributes.ROOM_ADD_EXCEPTION);
+        }
     }
 
     /**
      * Method updates the Room object. Gets parameter from the request
-     * @param request HttpServletRequest request
+     * @param room RoomDTO object to edit
      */
-    public void editRoom(HttpServletRequest request){
-        RoomDTO room = new RoomDTO();
-        RoomDTO roomEdit = (RoomDTO) request.getSession().getAttribute("roomEdit");
-        room.setNumberOfPerson(Integer.parseInt(request.getParameter("numberOfPerson")));
-        room.setPrice(Double.parseDouble(request.getParameter("price")));
-        room.setClassOfRoom(ClassOfRoom.valueOf(request.getParameter("classOfRoom")));
-        String image = request.getParameter("image");
-        if(image.isEmpty() || image.equals(" ")){
-            image = roomEdit.getImage();
+    public void editRoom(RoomDTO room) throws ServiceException {
+        try {
+            roomDAO.updateRoom(dtoToEntity(room));
+            new FeatureService().updateFeatures(dtoToEntity(room));
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            throw new ServiceException(JspAttributes.ROOM_EDIT_EXCEPTION);
         }
-        room.setImage(image);
-        room.setId(roomEdit.getId());
-        room.setFeatures(new FeatureService().getFeaturesForRoom(request));
-        roomDAO.updateRoom(dtoToEntity(room));
-        new FeatureService().updateFeatures(dtoToEntity(room));
+
     }
 
     /**
@@ -70,12 +59,17 @@ public class RoomService {
      * @param orderBy parameter for sorting records, default value = id
      * @return list of <code>RoomDTO</code> objects with certain number of records
      */
-    public List<RoomDTO> selectAllRooms(int startPage, int amount, String orderBy){
+    public List<RoomDTO> selectAllRooms(int startPage, int amount, String orderBy) throws ServiceException {
         startPage = startPage * Pagination.RECORDS_PER_PAGE - amount;
         if (orderBy == null){
             orderBy="id";
         }
-        return selectAllRoomsDTO(roomDAO.selectAllRooms(startPage, amount, orderBy));
+        try {
+            return selectAllRoomsDTO(roomDAO.selectAllRooms(startPage, amount, orderBy));
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            throw new ServiceException(e);
+        }
     }
 
     /**
@@ -87,8 +81,21 @@ public class RoomService {
         return rooms.stream().map(this::entityToDTO).collect(Collectors.toList());
     }
 
-    public List<Room> selectAllRooms(){
-        return roomDAO.selectAllRooms();
+    public List<Room> selectAllRooms() throws ServiceException {
+        try {
+            return roomDAO.selectAllRooms();
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            throw new ServiceException(e);
+        }
+    }
+    public int countAllRooms(){
+        try {
+            return roomDAO.countAllRooms();
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            return 0;
+        }
     }
 
     /**
@@ -96,20 +103,32 @@ public class RoomService {
      * @param request HttpServletRequest request
      * @return list of RoomDTO objects
      */
-    public List<RoomDTO> findRoomForBooking(HttpServletRequest request){
-        return roomDAO.selectRoomsForBooking(
-                Integer.parseInt(request.getParameter(JspAttributes.NUMBER_OF_PERSON)),
-                Date.valueOf(request.getParameter(JspAttributes.CHECK_IN_DATE)),
-                Date.valueOf(request.getParameter(JspAttributes.CHECK_OUT_DATE)))
-                .stream().map(this::entityToDTO).collect(Collectors.toList());
+    public List<RoomDTO> findRoomForBooking(HttpServletRequest request) throws ServiceException {
+        try {
+            List<RoomDTO> roomDTOList = roomDAO.selectRoomsForBooking(
+                    Integer.parseInt(request.getParameter(JspAttributes.NUMBER_OF_PERSON)),
+                    Date.valueOf(request.getParameter(JspAttributes.CHECK_IN_DATE)),
+                    Date.valueOf(request.getParameter(JspAttributes.CHECK_OUT_DATE)))
+                    .stream().map(this::entityToDTO).collect(Collectors.toList());
+            if(roomDTOList.isEmpty()) throw new NoResultException(JspAttributes.NO_RESULT_MESSAGE);
+            else return roomDTOList;
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            throw new ServiceException(e);
+        }
     }
 
     /**
      * @param id Room identity
      * @return RoomDTO object
      */
-    public RoomDTO findRoomById(int id){
-        return entityToDTO(roomDAO.findRoomById(id));
+    public RoomDTO findRoomById(int id) throws ServiceException {
+        try {
+            return entityToDTO(roomDAO.findRoomById(id));
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            throw new ServiceException(e);
+        }
     }
 
     /**
@@ -149,7 +168,12 @@ public class RoomService {
      * @return HashMap where <b>key</b> - <code>Room</code> identity,
      *      <b>value</b> - <code>Status</code> of <code>Room</code> on specified date
      */
-    public Map<Integer, Status> getRoomMap(Date dateOfOccupancy) {
-        return roomDAO.selectRoomsForMap(dateOfOccupancy);
+    public Map<Integer, Status> getRoomMap(Date dateOfOccupancy) throws ServiceException {
+        try {
+            return roomDAO.selectRoomsForMap(dateOfOccupancy);
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            throw new ServiceException(e);
+        }
     }
 }

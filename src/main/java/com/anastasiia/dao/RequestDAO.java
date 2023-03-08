@@ -1,6 +1,9 @@
 package com.anastasiia.dao;
 
 import com.anastasiia.entity.Request;
+import com.anastasiia.entity.Room;
+import com.anastasiia.exceptions.DAOException;
+import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
@@ -25,29 +28,52 @@ public class RequestDAO {
     /**
      * Method inserts new <code>Request</code> objects
      * @param requests list of <code>Request</code> objects to insert
-     * @throws SQLException
      */
-    public void insertRequest(List<Request> requests) throws SQLException {
+    public boolean insertRequest(List<Request> requests) throws DAOException {
         log.debug("Method starts");
+        boolean isSuccess = false;
+        ResultSet resultSet;
+        Room room = null;
         try (Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_REQUEST)
+        PreparedStatement preparedStatementCheckExist = connection.prepareStatement(SqlQuery.SQL_SELECT_ROOM_FROM_OCCUPANCY_OF_ROOM);
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_REQUEST);
         ){
             connection.setAutoCommit(false);
             connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
             log.trace("Transactions");
             for (Request request: requests) {
-                preparedStatement.setInt(1,request.getApplicationId());
-                preparedStatement.setDate(2, request.getCheckInDate());
-                preparedStatement.setDate(3, request.getCheckOutDate());
-                preparedStatement.setInt(4, request.getRoomId());
-                preparedStatement.executeUpdate();
+                preparedStatementCheckExist.setInt(1, request.getRoomId());
+                preparedStatementCheckExist.setDate(2, request.getCheckInDate());
+                preparedStatementCheckExist.setInt(3, request.getRoomId());
+                preparedStatementCheckExist.setDate(4, request.getCheckOutDate());
+                resultSet = preparedStatementCheckExist.executeQuery();
+                if (resultSet.next()){
+                    room = new Room();
+                    room.setId(resultSet.getInt("id"));
+                    room.setNumberOfPerson(resultSet.getInt("number_of_person"));
+                    room.setPrice(resultSet.getDouble("price"));
+                    room.setClassOfRoom(ClassOfRoom.valueOf(resultSet.getString("class_of_room")));
+                    room.setImage(resultSet.getString("image"));
+                }
+                if (room == null) {
+                    preparedStatement.setInt(1, request.getApplicationId());
+                    preparedStatement.setDate(2, request.getCheckInDate());
+                    preparedStatement.setDate(3, request.getCheckOutDate());
+                    preparedStatement.setInt(4, request.getRoomId());
+                    preparedStatement.executeUpdate();
+                    isSuccess = true;
+                }else {
+                    log.trace("Booking already exists");
+                    isSuccess = false;
+                }
             }
             connection.commit();
         } catch (SQLException ex){
            log.error("Cannot execute the query ==> " + ex);
-            throw new SQLException(ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
+        return isSuccess;
     }
 
     /**
@@ -55,7 +81,7 @@ public class RequestDAO {
      * @param applicationId <code>Application</code> identity
      * @param status <code>Status</code> object to update (<tt>CONFIRMED</tt>, <tt>NOT_CONFIRMED</tt>)
      */
-    public void updateStatus(int applicationId, Status status) {
+    public void updateStatus(int applicationId, Status status) throws DAOException {
         log.debug("Method starts");
         try (Connection connection = dataSource.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_REQUEST_STATUS)
@@ -66,6 +92,7 @@ public class RequestDAO {
             connection.commit();
         } catch (SQLException e) {
             log.error("Cannot execute the query ==> " + e);
+            throw new DAOException(e);
         }
         log.debug("Method finished");
     }
@@ -75,7 +102,7 @@ public class RequestDAO {
      * @param id <code>Application</code> identity
      * @return list of <code>Request</code> objects
      */
-    public List<Request> selectByApplicationId(int id){
+    public List<Request> selectByApplicationId(int id) throws DAOException {
         log.debug("Method starts");
         List<Request> requests = new ArrayList<>();
         ResultSet resultSet;
@@ -96,6 +123,7 @@ public class RequestDAO {
            }
         } catch (SQLException ex){
              log.error("Cannot execute the query ==> " + ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
         return requests;

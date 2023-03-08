@@ -3,6 +3,7 @@ package com.anastasiia.dao;
 import com.anastasiia.entity.EntityMapper;
 import com.anastasiia.entity.OccupancyOfRoom;
 import com.anastasiia.entity.User;
+import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.utils.Role;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
@@ -32,7 +33,7 @@ public class OccupancyOfRoomDAO {
      * @param checkOut the date checking out
      * @param status <code>Status</code> object
      */
-    public void insertOccupancyOfRoom(int roomId, int clientId, Date checkIn, Date checkOut, Status status){
+    public void insertOccupancyOfRoom(int roomId, int clientId, Date checkIn, Date checkOut, Status status) throws DAOException {
        log.debug("Method starts");
         try(Connection connection = dataSource.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_OCCUPANCY_OF_ROOM)
@@ -46,6 +47,7 @@ public class OccupancyOfRoomDAO {
                 connection.commit();
         }catch (SQLException ex){
              log.error("Cannot execute the query ==> " + ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
     }
@@ -58,7 +60,7 @@ public class OccupancyOfRoomDAO {
      * @param checkIn the date checking in
      * @param checkOut the date checking out
      */
-    public void updateStatus(int roomId, Status status, Date checkIn, Date checkOut){
+    public void updateStatus(int roomId, Status status, Date checkIn, Date checkOut) throws DAOException {
         log.debug("Method starts");
         try(Connection connection = dataSource.getConnection();
         PreparedStatement  preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_OCCUPANCY_OF_ROOM_STATUS)
@@ -71,6 +73,7 @@ public class OccupancyOfRoomDAO {
             connection.commit();
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
     }
@@ -86,7 +89,7 @@ public class OccupancyOfRoomDAO {
      * @return <b>true</b> - if the record exists according to the given parameters,
      * <p><b>false</b> - if the record does not exist</p>
      */
-    public boolean isExist(int roomId, int clientId, Date checkIn, Date checkOut){
+    public boolean isExist(int roomId, int clientId, Date checkIn, Date checkOut) throws DAOException {
         log.debug("Method starts");
         ResultSet resultSet;
         OccupancyOfRoom occupancyOfRoom = null;
@@ -104,6 +107,7 @@ public class OccupancyOfRoomDAO {
             resultSet.close();
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
         return occupancyOfRoom != null;
@@ -118,7 +122,7 @@ public class OccupancyOfRoomDAO {
      * @return <code>Status</code> object (<tt>NOT_CONFIRMED</tt>, <tt>BOOKED</tt>, <tt>PAID</tt>,
      * <tt>BUSY</tt>, <tt>CANCELED</tt>)
      */
-    public Status getStatus(int roomId, Date date) {
+    public Status getStatus(int roomId, Date date) throws DAOException {
         log.debug("Method starts");
         ResultSet resultSet;
         OccupancyOfRoom occupancyOfRoom = null;
@@ -134,6 +138,7 @@ public class OccupancyOfRoomDAO {
             resultSet.close();
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
         return occupancyOfRoom != null ? occupancyOfRoom.getStatus() : Status.FREE;
@@ -147,7 +152,7 @@ public class OccupancyOfRoomDAO {
      * @return HashMap <<code>OccupancyOfRoom</code>, <code>User</code>> - map
      * <code>OccupancyOfRoom</code> objects by specific <code>User</code>
      */
-    public Map<OccupancyOfRoom, User> selectByRoomId(int roomId, Date date) {
+    public Map<OccupancyOfRoom, User> selectByRoomId(int roomId, Date date) throws DAOException {
         log.debug("Method starts");
         Map<OccupancyOfRoom, User> occupancyOfRoomUserMap = new HashMap<>();
         ResultSet resultSet;
@@ -171,6 +176,7 @@ public class OccupancyOfRoomDAO {
             resultSet.close();
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
         return occupancyOfRoomUserMap;
@@ -187,9 +193,8 @@ public class OccupancyOfRoomDAO {
          * @return <code>OccupancyOfRoom</code> object
          */
         @Override
-        public OccupancyOfRoom mapRow(ResultSet resultSet) {
+        public OccupancyOfRoom mapRow(ResultSet resultSet) throws SQLException {
             OccupancyOfRoom occupancyOfRoom;
-            try {
                 occupancyOfRoom = new OccupancyOfRoom(
                         resultSet.getInt(Fields.OCCUPANCY_OF_ROOM_ROOM_ID),
                         resultSet.getInt(Fields.OCCUPANCY_OF_ROOM_CLIENT_ID),
@@ -197,9 +202,6 @@ public class OccupancyOfRoomDAO {
                         resultSet.getDate(Fields.OCCUPANCY_OF_ROOM_CHECK_OUT),
                         Status.valueOf(resultSet.getString(Fields.OCCUPANCY_OF_ROOM_STATUS))
                 );
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
             return occupancyOfRoom;
         }
     }

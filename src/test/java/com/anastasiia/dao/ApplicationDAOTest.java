@@ -2,6 +2,7 @@ package com.anastasiia.dao;
 
 import com.anastasiia.dto.UserDTO;
 import com.anastasiia.entity.Application;
+import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.Status;
 import org.junit.jupiter.api.Test;
@@ -59,7 +60,7 @@ class ApplicationDAOTest {
     }
 
     @Test
-    void selectAllApplications() throws SQLException {
+    void selectAllApplications() throws SQLException, DAOException {
         DataSource dataSource = mock(DataSource.class);
         ApplicationDAO applicationDAO = new ApplicationDAO(dataSource);
         try(PreparedStatement preparedStatement = prepareMock(dataSource)){
@@ -72,7 +73,7 @@ class ApplicationDAOTest {
     }
 
     @Test
-    void testSelectAllApplications() throws SQLException {
+    void testSelectAllApplications() throws SQLException, DAOException {
         DataSource dataSource = mock(DataSource.class);
         ApplicationDAO applicationDAO = new ApplicationDAO(dataSource);
         try(PreparedStatement preparedStatement = prepareMock(dataSource)){
@@ -85,7 +86,7 @@ class ApplicationDAOTest {
     }
 
     @Test
-    void testSelectAllApplications1() throws SQLException {
+    void testSelectAllApplications1() throws SQLException, DAOException {
         DataSource dataSource = mock(DataSource.class);
         ApplicationDAO applicationDAO = new ApplicationDAO(dataSource);
         try(PreparedStatement preparedStatement = prepareMock(dataSource)){
@@ -98,7 +99,7 @@ class ApplicationDAOTest {
     }
 
     @Test
-    void testSelectAllApplications2() throws SQLException {
+    void testSelectAllApplications2() throws SQLException, DAOException {
         DataSource dataSource = mock(DataSource.class);
         ApplicationDAO applicationDAO = new ApplicationDAO(dataSource);
         try(PreparedStatement preparedStatement = prepareMock(dataSource)){

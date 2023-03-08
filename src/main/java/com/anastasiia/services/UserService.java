@@ -4,10 +4,12 @@ import com.anastasiia.dao.DBManager;
 import com.anastasiia.dao.UserDAO;
 import com.anastasiia.dto.UserDTO;
 import com.anastasiia.entity.User;
+import com.anastasiia.exceptions.DAOException;
+import com.anastasiia.exceptions.InvalidUserException;
+import com.anastasiia.exceptions.ServiceException;
+import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Role;
 import org.apache.log4j.Logger;
-
-import java.sql.SQLException;
 
 /**
  * UserService - class mediates communication between a controller and DAO/repository layer
@@ -22,8 +24,16 @@ public class UserService {
      * @param email user email
      * @return <b>true</b> if user with this email is exist
      */
-    public boolean validateUserByEmail(String email){
-        return userDAO.findUserByEmail(email) != null;
+    public boolean validateUserByEmail(String email) throws InvalidUserException {
+        try {
+            user = userDAO.findUserByEmail(email);
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause: " +e.getMessage());
+            throw new InvalidUserException(e.getMessage());
+        }
+        if (user != null){
+            throw new InvalidUserException(JspAttributes.EMAIL_EXISTS);
+        }else return true;
     }
 
     /**
@@ -32,12 +42,17 @@ public class UserService {
      * @param password user password
      * @return <b>true</b> if user with this email is exist and password is correct
      */
-    public boolean validateUserByEmailAndPassword(String email, String password){
-        user = userDAO.findUserByEmail(email);
-        if(user !=null) {
-            return PasswordEncoder.encode(password).equals(user.getPassword());
+    public UserDTO validateUserByEmailAndPassword(String email, String password) throws InvalidUserException {
+        try {
+            user = userDAO.findUserByEmail(email);
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause: " +e.getMessage());
+            throw new InvalidUserException(e);
+        }
+        if(user !=null && PasswordEncoder.encode(password).equals(user.getPassword())) {
+            return entityToDTO(user);
 
-        }else return false;
+        }else throw new InvalidUserException(JspAttributes.WRONG_EMAIL_OR_PASSWORD);
     }
 
     /**
@@ -45,8 +60,13 @@ public class UserService {
      * @param email user email
      * @return Role object (<code>MANGER, CLIENT, UNREGISTERED</code>)
      */
-    public Role getRole(String email) {
-        user = userDAO.findUserByEmail(email);
+    public Role getRole(String email) throws ServiceException {
+        try {
+            user = userDAO.findUserByEmail(email);
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause: " +e.getMessage());
+            throw new ServiceException(e);
+        }
         return user.getRole();
     }
 
@@ -55,8 +75,13 @@ public class UserService {
      * @param email user email
      * @return UserDTO object
      */
-    public UserDTO getUser(String email) {
-        user = userDAO.findUserByEmail(email);
+    public UserDTO getUser(String email) throws ServiceException {
+        try {
+            user = userDAO.findUserByEmail(email);
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause: " +e.getMessage());
+            throw new ServiceException(e);
+        }
         return entityToDTO(user);
     }
     /**
@@ -64,11 +89,12 @@ public class UserService {
      * @param id user identity
      * @return UserDTO object
      */
-    public UserDTO getUser(int id) {
+    public UserDTO getUser(int id) throws ServiceException {
         try {
             user = userDAO.findUserById(id);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause: " +e.getMessage());
+            throw new ServiceException(e);
         }
         return entityToDTO(user);
     }
@@ -77,12 +103,14 @@ public class UserService {
      * Method inserts new User
      * @param user User entity object
      */
-    public void insertUser(User user) {
+    public boolean insertUser(User user) throws ServiceException {
         try {
             userDAO.insertUser(user);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause: " +e.getMessage());
+            throw new ServiceException(e);
         }
+        return true;
     }
 
     /**
@@ -105,7 +133,7 @@ public class UserService {
      * @param userDTO UserDTO object
      * @return User entity
      */
-    public User dtoToEntity(UserDTO userDTO){
+    public User dtoToEntity(UserDTO userDTO) throws ServiceException {
         return getUser(userDTO.getEmail());
     }
 }

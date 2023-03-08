@@ -4,10 +4,13 @@ import com.anastasiia.dao.ApplicationDAO;
 import com.anastasiia.dao.DBManager;
 import com.anastasiia.dto.ApplicationDTO;
 import com.anastasiia.entity.Application;
+import com.anastasiia.exceptions.DAOException;
+import com.anastasiia.exceptions.ServiceException;
+import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,6 +20,7 @@ import java.util.stream.Collectors;
 public class ApplicationService {
     private static final Logger log = Logger.getLogger(ApplicationService.class);
     private final ApplicationDAO applicationDAO = new ApplicationDAO(DBManager.getInstance());
+
 
     /**
      * Method generates Application entity object from ApplicationDTO object
@@ -42,7 +46,11 @@ public class ApplicationService {
     public ApplicationDTO entityToDTO(Application application){
         ApplicationDTO applicationDTO = new ApplicationDTO();
         applicationDTO.setId(application.getId());
-        applicationDTO.setUserDTO(new UserService().getUser(application.getClientId()));
+        try {
+            applicationDTO.setUserDTO(new UserService().getUser(application.getClientId()));
+        } catch (ServiceException e) {
+            log.error("ServiceException was caught. Cause : "+ e);
+        }
         applicationDTO.setClassOfRoom(application.getClassOfRoom());
         applicationDTO.setNumberOfGuests(application.getNumberOfGuests());
         applicationDTO.setLengthOfStay(application.getLengthOfStay());
@@ -54,11 +62,11 @@ public class ApplicationService {
      * Method generate Application entity and inserts this object
      * @param applicationDTO ApplicationDTO object
      */
-    public void insertApplication(ApplicationDTO applicationDTO){
+    public void insertApplication(ApplicationDTO applicationDTO) throws ServiceException {
         try {
             applicationDAO.insertApplication(dtoToEntity(applicationDTO));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (DAOException e) {
+            throw new ServiceException(JspAttributes.ADD_APPLICATION_EXCEPTION);
         }
 
     }
@@ -67,12 +75,12 @@ public class ApplicationService {
      * Method selects all Application objects and generates list of ApplicationDTO objects
      * @return list of ApplicationDTO objects
      */
-    public List<ApplicationDTO> selectAll(){
+    public int applicationCountAll(){
         try {
-            return applicationDAO.selectAllApplications()
-                    .stream().map(this::entityToDTO).collect(Collectors.toList());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            return applicationDAO.applicationCountAll();
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            return 0;
         }
     }
 
@@ -82,8 +90,13 @@ public class ApplicationService {
      * @return list of ApplicationDTO objects by specific user
      */
     public List<ApplicationDTO> selectAll(int id){
-        return applicationDAO.selectAllApplications(id)
-                .stream().map(this::entityToDTO).collect(Collectors.toList());
+        try {
+            return applicationDAO.selectAllApplications(id)
+                    .stream().map(this::entityToDTO).collect(Collectors.toList());
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            return new ArrayList<>();
+        }
     }
 
     /**
@@ -96,8 +109,13 @@ public class ApplicationService {
      */
     public List<ApplicationDTO> selectAll(int currentPage, int recordsPerPage, String orderBy){
         currentPage = currentPage * Pagination.RECORDS_PER_PAGE - recordsPerPage;
-        return applicationDAO.selectAllApplications(currentPage,recordsPerPage,orderBy)
-                .stream().map(this::entityToDTO).collect(Collectors.toList());
+        try {
+            return applicationDAO.selectAllApplications(currentPage,recordsPerPage,orderBy)
+                    .stream().map(this::entityToDTO).collect(Collectors.toList());
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            return new ArrayList<>();
+        }
     }
 
     /**
@@ -111,8 +129,13 @@ public class ApplicationService {
      */
     public List<ApplicationDTO> selectAll(int currentPage, int recordsPerPage, String orderBy, int id){
         currentPage = currentPage * Pagination.RECORDS_PER_PAGE - recordsPerPage;
-        return applicationDAO.selectAllApplications(currentPage,recordsPerPage,orderBy,id)
-                .stream().map(this::entityToDTO).collect(Collectors.toList());
+        try {
+            return applicationDAO.selectAllApplications(currentPage,recordsPerPage,orderBy,id)
+                    .stream().map(this::entityToDTO).collect(Collectors.toList());
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            return new ArrayList<>();
+        }
     }
 
     /**
@@ -122,7 +145,6 @@ public class ApplicationService {
      * @return ApplicationDTO object, returns empty ApplicationDTO object if list does not contain object with specified id
      */
     public ApplicationDTO get(List<ApplicationDTO> applicationDTOList, int id){
-        applicationDTOList.forEach(log::debug);
         return applicationDTOList.stream()
                 .filter(applicationDTO -> id==(applicationDTO.getId()))
                 .findAny().orElse(new ApplicationDTO());
@@ -134,7 +156,12 @@ public class ApplicationService {
      * @return amount of records by specific <Code>status</Code>
      */
     public int applicationCountByStatus(Status status){
-        return applicationDAO.applicationCountByStatus(status);
+        try {
+            return applicationDAO.applicationCountByStatus(status);
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            return 0;
+        }
     }
 }
 

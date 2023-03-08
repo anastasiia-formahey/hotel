@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="ptg" uri="/WEB-INF/price.tld" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setLocale value="${sessionScope.locale}"/>
@@ -37,7 +38,7 @@
             </div>
 
             <div class="text-end d-flex" style="padding-right: 10px">
-                <a href="${pageContext.request.contextPath}/manager/?command=logout" class="btn btn-outline-warning me-2"><fmt:message key="header.logout"/></a>
+                <a href="${pageContext.request.contextPath}/?command=logout" class="btn btn-outline-warning me-2"><fmt:message key="header.logout"/></a>
             </div>
             <div class="locale">
                 <form action="${pageContext.request.contextPath}/locale/" method="get">
@@ -75,7 +76,7 @@
                     </div>
                     <div class="form-floating mb-2">
                         <input type="text" name="price" class="form-control" id="price"
-                               value="${sessionScope.room.getPrice()}" readonly>
+                               value="<ptg:price value="${sessionScope.room.getPrice()}"/>" readonly>
                         <label for="price"><fmt:message key="form.price"/></label>
                     </div>
                     <div class="form-floating mb-2">
@@ -90,9 +91,10 @@
                         <label for="features"><fmt:message key="features"/></label>
                     </div>
             </div>
+            </div>
         </div>
     </div>
-</div>
+    </div>
 </main>
 <%@ include file="/jspf/footer.jspf" %>
 </body>

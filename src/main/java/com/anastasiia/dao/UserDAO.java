@@ -2,6 +2,7 @@ package com.anastasiia.dao;
 
 import com.anastasiia.entity.EntityMapper;
 import com.anastasiia.entity.User;
+import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.utils.Role;
 import org.apache.log4j.Logger;
 
@@ -20,9 +21,8 @@ public class UserDAO {
     /**
      * Method inserts a new record into the table
      * @param user <code>User</code> object to insert
-     * @throws SQLException
      */
-    public void insertUser(User user) throws SQLException {
+    public void insertUser(User user) throws DAOException {
         log.debug("Method starts");
         try(Connection connection = dataSource.getConnection();
         PreparedStatement  preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_USER)
@@ -37,7 +37,7 @@ public class UserDAO {
 
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
-            throw new SQLException(ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
     }
@@ -46,9 +46,8 @@ public class UserDAO {
      * Method selects a record by <code>User</code> identity from the table
      * @param id <code>User</code> identity
      * @return <code>User</code> object
-     * @throws SQLException
      */
-    public User findUserById(int id) throws SQLException {
+    public User findUserById(int id) throws DAOException {
         log.debug("Method starts");
         User user = null;
         ResultSet resultSet;
@@ -63,7 +62,7 @@ public class UserDAO {
             resultSet.close();
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
-            throw new SQLException(ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
         return user;
@@ -74,7 +73,7 @@ public class UserDAO {
      * @param email <code>User</code> email
      * @return <code>User</code> object
      */
-    public User findUserByEmail(String email) {
+    public User findUserByEmail(String email) throws DAOException {
         log.debug("Method starts");
         User user = null;
         ResultSet resultSet;
@@ -89,6 +88,7 @@ public class UserDAO {
             resultSet.close();
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
         return user;
@@ -104,8 +104,8 @@ public class UserDAO {
          * @param resultSet <code>ResultSet</code> object
          * @return <code>User</code> object
          */
-        public User mapRow(ResultSet resultSet) {
-            try{
+        public User mapRow(ResultSet resultSet) throws SQLException {
+
                 User user = new User();
                         user.setId(resultSet.getInt(Fields.USER_ID));
                         user.setFirstName(resultSet.getString(Fields.USER_FIRST_NAME));
@@ -114,9 +114,7 @@ public class UserDAO {
                         user.setPassword(resultSet.getString(Fields.USER_PASSWORD));
                         user.setRole(Role.valueOf(resultSet.getString(Fields.USER_ROLE)));
                 return user;
-            } catch (SQLException e) {
-                throw new IllegalStateException(e);
-            }
+
         }
     }
 }

@@ -1,5 +1,6 @@
-package com.anastasiia.web.command.common;
+package com.anastasiia.web.command.client;
 
+import com.anastasiia.exceptions.ServiceException;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Pages;
 import com.anastasiia.web.command.Command;
@@ -8,14 +9,12 @@ import com.anastasiia.web.command.CommandResult;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class SignUpPageCommand implements Command {
+public class FindRoomPageCommand implements Command {
     @Override
-    public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
+    public CommandResult execute(HttpServletRequest request, HttpServletResponse response) throws ServiceException {
         request.setAttribute(JspAttributes.EXCEPTION_MESSAGE, request.getSession().getAttribute(JspAttributes.EXCEPTION_MESSAGE));
-        request.setAttribute(JspAttributes.ERROR, request.getSession().getAttribute(JspAttributes.ERROR));
-
-        request.getSession().removeAttribute(JspAttributes.ERROR);
         request.getSession().removeAttribute(JspAttributes.EXCEPTION_MESSAGE);
-        return new CommandResult(Pages.SIGN_UP, false);
+
+        return new CommandResult(Pages.CLIENT_ROOMS_FOR_BOOKING, false);
     }
 }

@@ -1,6 +1,7 @@
 package com.anastasiia.dao;
 
 import com.anastasiia.entity.Request;
+import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.utils.Status;
 import org.junit.jupiter.api.Test;
 
@@ -61,7 +62,7 @@ class RequestDAOTest {
     }
 
     @Test
-    void selectByApplicationId() throws SQLException {
+    void selectByApplicationId() throws SQLException, DAOException {
         DataSource dataSource = mock(DataSource.class);
         RequestDAO requestDAO = new RequestDAO(dataSource);
         try(PreparedStatement preparedStatement = prepareMock(dataSource)){

@@ -2,6 +2,7 @@ package com.anastasiia.dao;
 
 import com.anastasiia.entity.Application;
 import com.anastasiia.entity.EntityMapper;
+import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
@@ -26,7 +27,7 @@ public class ApplicationDAO {
     /**
      * Method inserts new object into table
      * @param application object to insert */
-    public void insertApplication(Application application) throws SQLException {
+    public void insertApplication(Application application) throws DAOException {
         log.debug("Method starts");
         try(Connection connection = dataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_APPLICATION)
@@ -42,7 +43,7 @@ public class ApplicationDAO {
             log.debug("Application has inserted");
         } catch (SQLException e) {
             log.error("Cannot execute the query ==> " + e);
-            throw new SQLException(e);
+            throw new DAOException(e);
         }
         log.debug("Method finished");
 
@@ -51,9 +52,8 @@ public class ApplicationDAO {
     /**
      * Method selects all records from the table
      * @return list of applications
-     * @throws SQLException
      */
-    public List<Application> selectAllApplications() throws SQLException {
+    public List<Application> selectAllApplications() throws DAOException {
         log.debug("Method starts");
         ResultSet resultSet;
         ArrayList <Application> listOfApplications = new ArrayList<>();
@@ -66,7 +66,7 @@ public class ApplicationDAO {
             }
         }catch (SQLException e){
             log.error("Cannot execute the query ==> " + e);
-            throw new SQLException(e);
+            throw new DAOException(e);
         }
         log.debug("Method finished");
         return listOfApplications;
@@ -77,7 +77,7 @@ public class ApplicationDAO {
      * @param id user identity
      * @return list of applications by specific user
      */
-    public List<Application> selectAllApplications(int id){
+    public List<Application> selectAllApplications(int id) throws DAOException{
         log.debug("Method starts");
         ResultSet resultSet;
         ArrayList <Application> listOfApplications = new ArrayList<>();
@@ -92,6 +92,7 @@ public class ApplicationDAO {
             }
         }catch (SQLException e){
             log.error("Cannot execute the query ==> " + e);
+            throw new DAOException(e);
         }
         log.debug("Method finished");
         return listOfApplications;
@@ -105,7 +106,7 @@ public class ApplicationDAO {
      * @param orderBy parameter for sorting records
      * @return list of applications with certain number of records
      */
-    public List<Application> selectAllApplications(int currentPage, int amount, String orderBy){
+    public List<Application> selectAllApplications(int currentPage, int amount, String orderBy) throws DAOException{
         log.debug("Method starts");
         ResultSet resultSet;
         ArrayList <Application> listOfApplications = new ArrayList<>();
@@ -119,6 +120,7 @@ public class ApplicationDAO {
             }
         }catch (SQLException e){
            log.error("Cannot execute the query ==> " + e);
+            throw new DAOException(e);
         }
         log.debug("Method finished");
         return listOfApplications;
@@ -133,7 +135,7 @@ public class ApplicationDAO {
      * @param id user identity
      * @return list of applications with certain number of records by specific user
      */
-    public List<Application> selectAllApplications(int currentPage, int amount, String orderBy, int id){
+    public List<Application> selectAllApplications(int currentPage, int amount, String orderBy, int id) throws DAOException{
         log.debug("Method starts");
         ResultSet resultSet;
         ArrayList <Application> listOfApplications = new ArrayList<>();
@@ -147,6 +149,7 @@ public class ApplicationDAO {
             }
         }catch (SQLException e){
             log.error("Cannot execute the query ==> " + e);
+            throw new DAOException(e);
         }
         log.debug("Method finished");
         return listOfApplications;
@@ -156,9 +159,8 @@ public class ApplicationDAO {
      * Method updates status of a record in table
      * @param applicationId application identity
      * @param status application status to update
-     * @throws SQLException
      */
-    public void updateStatus(int applicationId, Status status) throws SQLException {
+    public void updateStatus(int applicationId, Status status) throws DAOException {
         log.debug("Method starts");
         try(Connection connection = dataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_APPLICATION_STATUS)
@@ -169,9 +171,31 @@ public class ApplicationDAO {
             connection.commit();
         } catch (SQLException e) {
             log.error("Cannot execute the query ==> " + e);
-            throw new SQLException(e);
+            throw new DAOException(e);
         }
         log.debug("Method finished");
+    }
+
+    /**
+     * Method counts common amount of records
+     * @return common amount of records
+     */
+    public int applicationCountAll() throws DAOException{
+        log.debug("Method starts");
+        ResultSet resultSet;
+        int countResult= 0;
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.COUNT_ALL_APPLICATION)){
+            resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                countResult = resultSet.getInt("COUNT(id)");
+            }
+        }catch (SQLException e){
+            log.error("Cannot execute the query ==> " + e);
+            throw new DAOException(e);
+        }
+        log.debug("Method finished");
+        return countResult;
     }
 
     /**
@@ -179,7 +203,7 @@ public class ApplicationDAO {
      * @param status object of class <Code>Status<Code/>
      * @return amount of records by specific <Code>status</Code>
      */
-    public int applicationCountByStatus(Status status) {
+    public int applicationCountByStatus(Status status) throws DAOException{
         log.debug("Method starts");
         ResultSet resultSet;
         int countResult= 0;
@@ -192,6 +216,7 @@ public class ApplicationDAO {
             }
         }catch (SQLException e){
             log.error("Cannot execute the query ==> " + e);
+            throw new DAOException(e);
         }
         log.debug("Method finished");
         return countResult;
@@ -208,7 +233,7 @@ public class ApplicationDAO {
          * @param resultSet <code>ResultSet</code> object
          * @return <code>Application</code> object
          */
-        public Application mapRow(ResultSet resultSet){
+        public Application mapRow(ResultSet resultSet) throws DAOException {
             try {
                 Application application = new Application();
                 application.setId(resultSet.getInt(Fields.APPLICATION_ID));
@@ -219,7 +244,7 @@ public class ApplicationDAO {
                 application.setStatus(Status.valueOf(resultSet.getString(Fields.APPLICATION_STATUS)));
                 return application;
             } catch (SQLException e) {
-                throw new IllegalStateException(e);
+                throw new DAOException(e);
             }
         }
 }

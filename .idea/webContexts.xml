@@ -4,11 +4,13 @@
     <option name="state">
       <map>
         <entry key="file://$PROJECT_DIR$/src/main/webapp/client/home.jsp" value="file://$PROJECT_DIR$/src/main/webapp/client" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/client/roomsForBooking.jsp" value="file://$PROJECT_DIR$/src/main/webapp/client" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/client/viewApplications.jsp" value="file://$PROJECT_DIR$/src/main/webapp/client" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/login.jsp" value="file://$PROJECT_DIR$/src/main/webapp" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/manager/addRoom.jsp" value="file://$PROJECT_DIR$/src/main/webapp/manager" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/manager/reviewApplications.jsp" value="file://$PROJECT_DIR$/src/main/webapp/manager" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/manager/rooms.jsp" value="file://$PROJECT_DIR$/src/main/webapp/manager" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/manager/viewRoom.jsp" value="file://$PROJECT_DIR$/src/main/webapp/manager" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/welcome.jsp" value="file://$PROJECT_DIR$/src/main/webapp" />
       </map>
     </option>

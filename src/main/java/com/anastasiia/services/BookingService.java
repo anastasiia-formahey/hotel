@@ -8,6 +8,9 @@ import com.anastasiia.dto.BookingDTO;
 import com.anastasiia.dto.RequestDTO;
 import com.anastasiia.dto.UserDTO;
 import com.anastasiia.entity.Booking;
+import com.anastasiia.exceptions.DAOException;
+import com.anastasiia.exceptions.ServiceException;
+import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
@@ -36,18 +39,23 @@ public class BookingService {
      */
     public BookingDTO entityToDTO(Booking booking){
         BookingDTO bookingDTO = new BookingDTO();
-        bookingDTO.setId(booking.getId());
-        bookingDTO.setRoomId(booking.getRoomId());
-        bookingDTO.setNumberOfPerson(new RoomService()
-                .findRoomById(booking.getRoomId())
-                .getNumberOfPerson());
-        bookingDTO.setUser(new UserService().getUser(booking.getClientId()));
-        bookingDTO.setCheckInDate(booking.getCheckInDate());
-        bookingDTO.setCheckOutDate(booking.getCheckOutDate());
-        bookingDTO.setPrice(booking.getPrice());
-        bookingDTO.setDateOfBooking(booking.getDateOfBooking());
-        bookingDTO.setStatusOfBooking(booking.getStatusOfBooking());
-        bookingDTO.setBookingExpirationDate(booking.getBookingExpirationDate());
+        try {
+            bookingDTO.setId(booking.getId());
+            bookingDTO.setRoomId(booking.getRoomId());
+            bookingDTO.setNumberOfPerson(new RoomService()
+                    .findRoomById(booking.getRoomId())
+                    .getNumberOfPerson());
+            bookingDTO.setUser(new UserService().getUser(booking.getClientId()));
+            bookingDTO.setCheckInDate(booking.getCheckInDate());
+            bookingDTO.setCheckOutDate(booking.getCheckOutDate());
+            bookingDTO.setPrice(booking.getPrice());
+            bookingDTO.setDateOfBooking(booking.getDateOfBooking());
+            bookingDTO.setStatusOfBooking(booking.getStatusOfBooking());
+            bookingDTO.setBookingExpirationDate(booking.getBookingExpirationDate());
+        } catch (ServiceException e) {
+            log.error("ServiceException was caught. Cause : "+ e);
+        }
+
         return bookingDTO;
     }
 
@@ -58,15 +66,20 @@ public class BookingService {
      */
     public Booking dtoToEntity(BookingDTO bookingDTO){
         Booking booking = new Booking();
-        booking.setId(bookingDTO.getId());
-        booking.setRoomId(bookingDTO.getRoom().getId());
-        booking.setClientId(userService.dtoToEntity(bookingDTO.getUser()).getId());
-        booking.setCheckInDate(bookingDTO.getCheckInDate());
-        booking.setCheckOutDate(bookingDTO.getCheckOutDate());
-        booking.setPrice(bookingDTO.getPrice());
-        booking.setDateOfBooking(bookingDTO.getDateOfBooking());
-        booking.setStatusOfBooking(bookingDTO.getStatusOfBooking());
-        booking.setBookingExpirationDate();
+
+        try {
+            booking.setId(bookingDTO.getId());
+            booking.setRoomId(bookingDTO.getRoom().getId());
+            booking.setClientId(userService.dtoToEntity(bookingDTO.getUser()).getId());
+            booking.setCheckInDate(bookingDTO.getCheckInDate());
+            booking.setCheckOutDate(bookingDTO.getCheckOutDate());
+            booking.setPrice(bookingDTO.getPrice());
+            booking.setDateOfBooking(bookingDTO.getDateOfBooking());
+            booking.setStatusOfBooking(bookingDTO.getStatusOfBooking());
+            booking.setBookingExpirationDate();
+        }catch (ServiceException e){
+            log.error("ServiceException was caught. Cause : "+ e);
+        }
         return booking;
     }
 
@@ -79,20 +92,21 @@ public class BookingService {
         List<Booking> bookings;
         try {
             bookings = bookingDAO.selectAll();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        for (Booking booking:bookings) {
-            log.debug(withDrawnBooking(booking));
-            if(!withDrawnBooking(booking)
-                    && booking.getStatusOfBooking().equals(Status.BOOKED)
-            || !withDrawnBooking(booking)
-                    && booking.getStatusOfBooking().equals(Status.NOT_CONFIRMED)){
-                updateStatus(booking.getId(), booking.getRoomId(),
-                        booking.getCheckInDate(), booking.getCheckOutDate(), Status.CANCELED);
-            }
+            for (Booking booking:bookings) {
+                log.debug(withDrawnBooking(booking));
+                if(!withDrawnBooking(booking)
+                        && booking.getStatusOfBooking().equals(Status.BOOKED)
+                        || !withDrawnBooking(booking)
+                        && booking.getStatusOfBooking().equals(Status.NOT_CONFIRMED)){
+                    updateStatus(booking.getId(), booking.getRoomId(),
+                            booking.getCheckInDate(), booking.getCheckOutDate(), Status.CANCELED);
+                }
 
+            }
+        } catch (ServiceException | DAOException e) {
+            log.error("Exception was caught. Cause : "+ e);
         }
+
     }
 
     /**
@@ -102,29 +116,28 @@ public class BookingService {
      *                  <p><b>false</b> if inserted bookings has created by client
      * @return true - if objects were inserted
      */
-    public boolean insertBooking(List <BookingDTO> bookingDTOS, boolean isConfirm){
+    public boolean insertBooking(List <BookingDTO> bookingDTOS, boolean isConfirm) throws ServiceException {
         boolean isSuccess = false;
         List<Booking> bookings = bookingDTOS.stream()
                 .map(this::dtoToEntity)
                 .collect(Collectors.toList());
-
         try {
             isSuccess = isConfirm
                     ? bookingDAO.insertBooking(bookings, true)
                     : bookingDAO.insertBooking(bookings);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        if (isSuccess){
-            for (Booking booking: bookings){
-                new OccupancyOfRoomService().insertOccupancyOfRoom(
-                        booking.getRoomId(),
-                        booking.getClientId(),
-                        booking.getCheckInDate(),
-                        booking.getCheckOutDate(),
-                        Status.BOOKED
-                );
-            }
+            if (isSuccess){
+                for (Booking booking: bookings){
+                    new OccupancyOfRoomService().insertOccupancyOfRoom(
+                            booking.getRoomId(),
+                            booking.getClientId(),
+                            booking.getCheckInDate(),
+                            booking.getCheckOutDate(),
+                            Status.BOOKED
+                    );
+                }
+            } else throw new ServiceException(JspAttributes.BOOKING_EXIST);
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
         }
         return isSuccess;
     }
@@ -133,16 +146,18 @@ public class BookingService {
      * Method selects all Booking objects from the table
      * @return list of BookingDTO objects
      */
-    public List<BookingDTO> selectAllBooking(){
+    public List<BookingDTO> selectAllBooking() throws ServiceException {
         checkBooking();
         List<Booking> listOfBooking;
         try {
             listOfBooking = bookingDAO.selectAll();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            return listOfBooking
+                    .stream().map(this::entityToDTO).collect(Collectors.toList());
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            throw new ServiceException(e);
         }
-        return listOfBooking
-                .stream().map(this::entityToDTO).collect(Collectors.toList());
+
     }
 
     /**
@@ -150,11 +165,18 @@ public class BookingService {
      * @param userId User identity
      * @return list of BookingDTO objects by specified User
      */
-    public List<BookingDTO> selectAllBooking(int userId){
+    public List<BookingDTO> selectAllBooking(int userId) throws ServiceException {
         checkBooking();
-        List<Booking> listOfBooking = bookingDAO.selectAllByUserId(userId);
-        return listOfBooking
-                .stream().map(this::entityToDTO).collect(Collectors.toList());
+        List<Booking> listOfBooking = null;
+        try {
+            listOfBooking = bookingDAO.selectAllByUserId(userId);
+            return listOfBooking
+                    .stream().map(this::entityToDTO).collect(Collectors.toList());
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            throw new ServiceException(e);
+        }
+
     }
 
     /**
@@ -165,12 +187,18 @@ public class BookingService {
      * @param orderBy parameter for sorting records
      * @return list of BookingDTO objects with certain number of records
      */
-    public List<BookingDTO> selectAllBooking(int currentPage, int recordsPerPage, String orderBy){
+    public List<BookingDTO> selectAllBooking(int currentPage, int recordsPerPage, String orderBy) throws ServiceException {
         checkBooking();
         currentPage = currentPage * Pagination.RECORDS_PER_PAGE - recordsPerPage;
-        List<Booking> listOfBooking = bookingDAO.selectAll(currentPage,  recordsPerPage, orderBy);
-        return listOfBooking
-                .stream().map(this::entityToDTO).collect(Collectors.toList());
+        List<Booking> listOfBooking = null;
+        try {
+            listOfBooking = bookingDAO.selectAll(currentPage,  recordsPerPage, orderBy);
+            return listOfBooking
+                    .stream().map(this::entityToDTO).collect(Collectors.toList());
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+
     }
 
     /**
@@ -182,12 +210,19 @@ public class BookingService {
      * @param userId User identity
      * @return list of BookingDTO objects with certain number of records by specified User
      */
-    public List<BookingDTO> selectAllBooking(int currentPage, int recordsPerPage, String orderBy,int userId){
+    public List<BookingDTO> selectAllBooking(int currentPage, int recordsPerPage, String orderBy,int userId) throws ServiceException {
         checkBooking();
         currentPage = currentPage * Pagination.RECORDS_PER_PAGE - recordsPerPage;
-        List<Booking> listOfBooking = bookingDAO.selectAllByUserId( currentPage, recordsPerPage, orderBy,userId);
-        return listOfBooking
-                .stream().map(this::entityToDTO).collect(Collectors.toList());
+        List<Booking> listOfBooking = null;
+        try {
+            listOfBooking = bookingDAO.selectAllByUserId( currentPage, recordsPerPage, orderBy,userId);
+            return listOfBooking
+                    .stream().map(this::entityToDTO).collect(Collectors.toList());
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            throw new ServiceException(e);
+        }
+
     }
 
     /**
@@ -198,13 +233,15 @@ public class BookingService {
      * @param checkOut the date checking out
      * @param status Status object to update (<code>BOOKED, PAID, BUSY, CANCELED</code>)
      */
-    public void updateStatus(int bookingId, int roomId, java.sql.Date checkIn, java.sql.Date checkOut, Status status){
+    public void updateStatus(int bookingId, int roomId, java.sql.Date checkIn, java.sql.Date checkOut, Status status) throws ServiceException {
         try {
             bookingDAO.updateStatus(bookingId, status);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            occupancyOfRoomDAO.updateStatus(roomId,status, checkIn,checkOut);
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            throw new ServiceException(e);
         }
-        occupancyOfRoomDAO.updateStatus(roomId,status, checkIn,checkOut);
+
     }
 
     /**
@@ -258,6 +295,31 @@ public class BookingService {
             bookingDTOS.add(bookingDTO);
         }
         return bookingDTOS;
+    }
+    /**
+     * Method counts common amount of records
+     * @return common amount of records
+     */
+    public int countAllBooking(){
+        try{
+            return bookingDAO.countAllBooking();
+        }catch (DAOException e){
+            log.error("DAOException was caught. Cause : "+ e);
+            return 0;
+        }
+    }
+    /**
+     * Method counts common amount of records by specified user
+     * @param userId User identity
+     * @return common amount of records by specified user
+     */
+    public int countAllBookingByUserId(int userId){
+        try{
+            return bookingDAO.countAllBooking(userId);
+        }catch (DAOException e){
+            log.error("DAOException was caught. Cause : "+ e);
+            return 0;
+        }
     }
 
 }

@@ -2,6 +2,7 @@ package com.anastasiia.dao;
 
 import com.anastasiia.entity.Feature;
 import com.anastasiia.entity.Room;
+import com.anastasiia.exceptions.DAOException;
 import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
@@ -35,7 +36,7 @@ class FeaturesDAOTest {
         when(resultSet.getString("name")).thenReturn("wifi");
     }
     @Test
-    void selectAll() throws SQLException {
+    void selectAll() throws SQLException, DAOException {
         DataSource dataSource = mock(DataSource.class);
         FeaturesDAO featuresDAO = new FeaturesDAO(dataSource);
         try(PreparedStatement preparedStatement = prepareMock(dataSource)){
@@ -47,7 +48,7 @@ class FeaturesDAOTest {
         }
     }
     @Test
-    void selectAllById() throws SQLException {
+    void selectAllById() throws SQLException, DAOException {
         DataSource dataSource = mock(DataSource.class);
         FeaturesDAO featuresDAO = new FeaturesDAO(dataSource);
         try(PreparedStatement preparedStatement = prepareMock(dataSource)){

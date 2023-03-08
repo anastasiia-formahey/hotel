@@ -12,6 +12,7 @@ public class LocaleCommand implements Command {
     private static final Logger log = Logger.getLogger(LocaleCommand.class);
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
+
         log.debug("Method starts");
         String language = request.getParameter(JspAttributes.LOCALE);
         request.getSession().setAttribute(JspAttributes.LOCALE, language);

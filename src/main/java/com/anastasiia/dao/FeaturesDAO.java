@@ -2,6 +2,7 @@ package com.anastasiia.dao;
 
 import com.anastasiia.entity.Feature;
 import com.anastasiia.entity.Room;
+import com.anastasiia.exceptions.DAOException;
 import org.apache.log4j.Logger;
 
 import javax.sql.DataSource;
@@ -24,7 +25,7 @@ public class FeaturesDAO {
      * @return list of <code>Feature</code> objects
      * @throws SQLException
      */
-    public List<Feature> selectAll() throws SQLException {
+    public List<Feature> selectAll() throws DAOException {
         log.debug("Method starts");
         List <Feature> features = new ArrayList<>();
         ResultSet resultSet;
@@ -37,7 +38,7 @@ public class FeaturesDAO {
             }
         } catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
-            throw new SQLException(ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
         return features;
@@ -49,7 +50,7 @@ public class FeaturesDAO {
      * @param feature <code>Feature</code> object
      * @throws SQLException
      */
-    public void insertRoomFeatures(Room room, Feature feature) throws SQLException {
+    public void insertRoomFeatures(Room room, Feature feature) throws DAOException {
         log.debug("Method starts");
         try(Connection connection = dataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_ROOM_FEATURES)
@@ -60,7 +61,7 @@ public class FeaturesDAO {
             connection.commit();
         }catch (SQLException ex){
                 log.error("Cannot execute the query ==> " + ex);
-                throw new SQLException(ex);
+                throw new DAOException(ex);
             }
             log.debug("Method finished");
 
@@ -71,7 +72,7 @@ public class FeaturesDAO {
      * @param id <code>Room</code> identity
      * @return list of <code>Feature</code> objects for specific <code>Room</code>
      */
-    public List<Feature> selectAll(int id){
+    public List<Feature> selectAll(int id) throws DAOException {
         log.debug("Method starts");
         List <Feature> features = new ArrayList<>();
         ResultSet resultSet;
@@ -89,6 +90,7 @@ public class FeaturesDAO {
             }
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
         return features;
@@ -100,7 +102,7 @@ public class FeaturesDAO {
      * @param features list of <code>Feature</code> objects to update
      * @throws SQLException
      */
-    public void updateRoomFeatures(Room room, List<Feature> features) throws SQLException {
+    public void updateRoomFeatures(Room room, List<Feature> features) throws DAOException {
         log.debug("Method starts");
         try(Connection connection = dataSource.getConnection();
             PreparedStatement  preparedStatement1 = connection.prepareStatement(SqlQuery.SQL_DELETE_FEATURES);
@@ -119,7 +121,7 @@ public class FeaturesDAO {
             connection.commit();
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
-            throw new SQLException(ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
     }

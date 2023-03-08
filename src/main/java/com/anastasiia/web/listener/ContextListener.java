@@ -1,5 +1,6 @@
 package com.anastasiia.web.listener;
 
+import com.anastasiia.web.context.AppContext;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -22,6 +23,7 @@ public class ContextListener implements ServletContextListener {
         log("Servlet context initialization starts");
 
         ServletContext servletContext = event.getServletContext();
+        AppContext.createAppContext(servletContext);
         initLog4J(servletContext);
         initCommandContainer();
         initI18N(servletContext);

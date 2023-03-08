@@ -21,6 +21,7 @@ public interface SqlQuery {
     String SQL_SELECT_ROOM_BY_ID = "SELECT * FROM room WHERE id=?";
     String SQL_UPDATE_ROOM_BY_ID
             = "UPDATE room SET number_of_person=? ,price=? ,class_of_room=? ,image=? WHERE id=?";
+    String COUNT_ALL_ROOMS = "SELECT COUNT(id) FROM room";
 
     //application
     String SQL_INSERT_APPLICATION
@@ -29,6 +30,7 @@ public interface SqlQuery {
     String SQL_SELECT_ALL_APPLICATIONS_BY_USER_ID = "SELECT * FROM application WHERE client_id=?";
     String SQL_UPDATE_APPLICATION_STATUS = "UPDATE application SET status=? WHERE id=?";
     String COUNT_APPLICATION_BY_STATUS = "SELECT COUNT(id) FROM application WHERE status=?";
+    String COUNT_ALL_APPLICATION = "SELECT COUNT(id) FROM application";
 
     //request
     String SQL_UPDATE_REQUEST_STATUS = "UPDATE request SET status=? WHERE application_id=?";
@@ -42,6 +44,8 @@ public interface SqlQuery {
     String SQL_SELECT_ALL_BOOKINGS_BY_USER_ID = "SELECT * FROM booking WHERE client_id=? AND status!='CANCELED'";
     String SQL_UPDATE_BOOKING_STATUS
             = "UPDATE booking SET status=? WHERE id=?";
+    String COUNT_ALL_BOOKING = "SELECT COUNT(id) FROM booking WHERE status!='CANCELED'";
+    String COUNT_ALL_BOOKING_BY_USER_ID = "SELECT COUNT(id) FROM booking WHERE client_id=? AND status!='CANCELED'";
 
     //features
     String SELECT_ALL_FEATURES = "SELECT * FROM features";

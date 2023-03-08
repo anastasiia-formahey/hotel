@@ -15,6 +15,45 @@ public interface JspAttributes {
     String ERROR = "error";
     String IS_SUCCESS = "isSuccess";
     String CONFIRM = "confirm";
+    String EXCEPTION_MESSAGE = "exception";
+    String INFO_MESSAGE = "infoMessage";
+    String SUCCESS_MESSAGE = "successMessage";
+    /*** Message - All fields have to be filled*/
+    String FIELD_EXCEPTION = "fieldException";
+    /*** Message - All fields with numbers have to be more than 0*/
+    String NUMBER_EXCEPTION = "numberException";
+    /*** Message - Invalid date*/
+    String INVALID_DATE_EXCEPTION = "invalidDateException";
+    /*** Message - The nearest date for booking should be no earlier than 1 day before check-in*/
+    String INCORRECT_BOOK_DATE_EXCEPTION = "incorrectBookDateException";
+    /*** Message - Email field has to be filled*/
+    String EMAIL_EXCEPTION = "emailException";
+    /*** Message - Invalid email. Email has to be in format user@gmail.com*/
+    String INVALID_EMAIL_EXCEPTION = "invalidEmailException";
+    /*** Message - Password field has to be filled*/
+    String PASSWORD_EXCEPTION = "passwordException";
+    /*** Message - Invalid password. Password has to contain only letter and number, length 4-20 symbols*/
+    String INVALID_PASSWORD_EXCEPTION = "invalidPasswordException";
+    /*** Message - Nothing was found for your request. Try changing the search parameters*/
+    String NO_RESULT_MESSAGE = "noResult";
+    /*** Message - Wrong email or password*/
+    String WRONG_EMAIL_OR_PASSWORD = "wrongEmailOrPassword";
+    /*** Message - The request has not been sent to the user, a reservation already exists for the selected dates*/
+    String REQUEST_EXIST = "requestExist";
+    /*** Message - The application has not been sent. Try again later*/
+    String ADD_APPLICATION_EXCEPTION = "addApplicationException";
+    String BOOKING_EXIST = "bookingExist";
+    String ROOM_ADD_EXCEPTION = "roomAddException";
+    String CHECK_IN_EXCEPTION = "checkInException";
+
+    String ROOM_EDIT_EXCEPTION = "roomEditException";
+    String CHECK_IN_SUCCESS = "checkInSuccess";
+
+    String APPLICATION_ADDED = "applicationAdded";
+    String BOOKING_ADDED = "bookingAdded";
+    String ROOM_ADDED = "roomAdded";
+    String ROOM_EDIT_SUCCESS = "roomEditSuccess";
+
 
     //general
     String LOCALE = "locale";
@@ -68,6 +107,5 @@ public interface JspAttributes {
     //occupancyOfRoom
     String OCCUPANCY_OF_ROOM = "occupancyOfRoom";
     String DATE_OF_OCCUPANCY = "dateOfOccupancy";
-    String APPLICATION_ADDED = "applicationAdded";
     String APPLICATION_ID = "applicationId";
 }

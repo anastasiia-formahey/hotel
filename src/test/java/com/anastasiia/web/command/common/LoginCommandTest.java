@@ -36,7 +36,7 @@ class LoginCommandTest {
         request = mock(HttpServletRequest.class);
         session = mock(HttpSession.class);
         userService = mock(UserService.class);
-        loginCommand = new LoginCommand();
+        //loginCommand = new LoginCommand();
     }
     @Test
     void execute() throws SQLException {

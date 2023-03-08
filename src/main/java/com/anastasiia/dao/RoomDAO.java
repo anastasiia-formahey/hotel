@@ -2,6 +2,7 @@ package com.anastasiia.dao;
 
 import com.anastasiia.entity.EntityMapper;
 import com.anastasiia.entity.Room;
+import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
@@ -30,7 +31,7 @@ public class RoomDAO {
      * @param room <code>Room</code> object to insert
      * @return <code>Room</code> identity as int number, 0 - if object was not insert
      */
-    public int insertRoom(Room room){
+    public int insertRoom(Room room) throws DAOException {
         log.debug("Method starts");
         ResultSet resultSet;
         try(Connection connection = dataSource.getConnection();
@@ -50,7 +51,7 @@ public class RoomDAO {
             connection.commit();
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
-            return 0;
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
         return room.getId();
@@ -60,7 +61,7 @@ public class RoomDAO {
      * Method selects all records from the table
      * @return list of <code>Room</code> objects
      */
-    public List<Room> selectAllRooms() {
+    public List<Room> selectAllRooms() throws DAOException {
         log.debug("Method starts");
         ArrayList<Room> listOfRooms = new ArrayList<>();
         ResultSet resultSet;
@@ -74,6 +75,7 @@ public class RoomDAO {
             resultSet.close();
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
         return listOfRooms;
@@ -85,7 +87,7 @@ public class RoomDAO {
      * @return HashMap where <b>key</b> - <code>Room</code> identity,
      * <b>value</b> - <code>Status</code> of <code>Room</code> on specified date
      */
-    public Map<Integer, Status> selectRoomsForMap(Date date) {
+    public Map<Integer, Status> selectRoomsForMap(Date date) throws DAOException {
         log.debug("Method starts");
         Map<Integer, Status> idStatusMap = new HashMap<>();
         ArrayList <Integer> distinctList = new ArrayList<>();
@@ -113,6 +115,7 @@ public class RoomDAO {
 
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
         return idStatusMap;
@@ -123,7 +126,7 @@ public class RoomDAO {
      * @param id <code>Room</code> identity
      * @return <code>Room</code> object
      */
-    public Room findRoomById(int id) {
+    public Room findRoomById(int id) throws DAOException {
         log.debug("Method starts");
         Room room = null;
         ResultSet resultSet;
@@ -138,6 +141,7 @@ public class RoomDAO {
             resultSet.close();
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
         return room;
@@ -147,7 +151,7 @@ public class RoomDAO {
      * Method updates the record in the table
      * @param room <code>Room</code> object to update
      */
-    public void updateRoom(Room room){
+    public void updateRoom(Room room) throws DAOException {
         log.debug("Method starts");
         try(Connection connection = dataSource.getConnection();
         PreparedStatement  preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_ROOM_BY_ID)
@@ -163,8 +167,7 @@ public class RoomDAO {
 
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
-        }finally {
-           log.trace("Close connection with DBManager");
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
     }
@@ -176,7 +179,7 @@ public class RoomDAO {
      * @param orderBy parameter for sorting records
      * @return list of <code>Room</code> objects with certain number of records
      */
-    public List<Room> selectAllRooms(int startPage, int amount, String orderBy) {
+    public List<Room> selectAllRooms(int startPage, int amount, String orderBy) throws DAOException {
         log.debug("Method starts");
         ArrayList<Room> listOfRooms = new ArrayList<>();
         ResultSet resultSet;
@@ -191,6 +194,7 @@ public class RoomDAO {
             resultSet.close();
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
         return listOfRooms;
@@ -203,7 +207,7 @@ public class RoomDAO {
      * @param checkOutDate date to check out
      * @return list of <code>Room</code> objects that can be booked on the dates indicated
      */
-    public List<Room> selectRoomsForBooking(int numberOfPerson,Date checkInDate,Date checkOutDate) {
+    public List<Room> selectRoomsForBooking(int numberOfPerson,Date checkInDate,Date checkOutDate) throws DAOException {
         log.debug("Method starts");
         ArrayList<Room> listOfRooms = new ArrayList<>();
         ResultSet resultSet;
@@ -222,9 +226,31 @@ public class RoomDAO {
 
         }catch (SQLException ex){
            log.error("Cannot execute the query ==> " + ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
         return listOfRooms;
+    }
+    /**
+     * Method counts common amount of records
+     * @return common amount of records
+     */
+    public int countAllRooms() throws DAOException{
+        int countResult = 0;
+        ResultSet resultSet;
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.COUNT_ALL_ROOMS)
+        ) {
+            resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                countResult = resultSet.getInt("COUNT(id)");
+            }
+
+        } catch (SQLException e) {
+            log.error("Cannot execute the query ==> " + e);
+            throw new DAOException(e);
+        }
+        return countResult;
     }
 
     /**
@@ -238,9 +264,8 @@ public class RoomDAO {
          * @param resultSet <code>ResultSet</code> object
          * @return <code>Room</code> object
          */
-        public Room mapRow(ResultSet resultSet) {
+        public Room mapRow(ResultSet resultSet) throws SQLException {
             log.debug("Mapper starts");
-            try{
                 Room room = new Room();
                 room.setId(resultSet.getInt(Fields.ROOM_ID));
                 room.setNumberOfPerson(resultSet.getInt(Fields.ROOM_NUMBER_OF_PERSON));
@@ -249,9 +274,7 @@ public class RoomDAO {
                 room.setImage(resultSet.getString(Fields.ROOM_IMAGE));
                 log.debug("Mapper finished");
                 return room;
-            } catch (SQLException e) {
-                throw new IllegalStateException(e);
-            }
+
         }
     }
 }

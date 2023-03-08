@@ -2,6 +2,7 @@ package com.anastasiia.dao;
 
 import com.anastasiia.entity.Application;
 import com.anastasiia.entity.Room;
+import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.Status;
 import org.junit.jupiter.api.Test;
@@ -41,7 +42,7 @@ class RoomDAOTest {
     }
 
     @Test
-    void selectAllRooms() throws SQLException {
+    void selectAllRooms() throws SQLException, DAOException {
         DataSource dataSource = mock(DataSource.class);
         RoomDAO roomDAO = new RoomDAO(dataSource);
         try(PreparedStatement preparedStatement = prepareMock(dataSource)){
@@ -54,7 +55,7 @@ class RoomDAOTest {
     }
 
     @Test
-    void findRoomById() throws SQLException {
+    void findRoomById() throws SQLException, DAOException {
         DataSource dataSource = mock(DataSource.class);
         RoomDAO roomDAO = new RoomDAO(dataSource);
         try(PreparedStatement preparedStatement = prepareMock(dataSource)){
@@ -80,7 +81,7 @@ class RoomDAOTest {
     }
 
     @Test
-    void testSelectAllRooms() throws SQLException {
+    void testSelectAllRooms() throws SQLException, DAOException {
         DataSource dataSource = mock(DataSource.class);
         RoomDAO roomDAO = new RoomDAO(dataSource);
         try(PreparedStatement preparedStatement = prepareMock(dataSource)){
@@ -93,7 +94,7 @@ class RoomDAOTest {
     }
 
     @Test
-    void selectRoomsForBooking() throws SQLException {
+    void selectRoomsForBooking() throws SQLException, DAOException {
         DataSource dataSource = mock(DataSource.class);
         RoomDAO roomDAO = new RoomDAO(dataSource);
         try(PreparedStatement preparedStatement = prepareMock(dataSource)){

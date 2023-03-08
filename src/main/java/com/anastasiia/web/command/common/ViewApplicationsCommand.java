@@ -8,6 +8,7 @@ import com.anastasiia.services.Pagination;
 import com.anastasiia.utils.*;
 import com.anastasiia.web.command.Command;
 import com.anastasiia.web.command.CommandResult;
+import com.anastasiia.web.context.AppContext;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,10 +16,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public class ViewApplicationsCommand implements Command {
-    ApplicationService applicationService = new ApplicationService();
+    ApplicationService applicationService;
     private static final Logger log = Logger.getLogger(ViewApplicationsCommand.class);
+
+    public ViewApplicationsCommand(AppContext appContext) {
+        applicationService = appContext.getApplicationService();
+    }
+
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute(JspAttributes.EXCEPTION_MESSAGE, request.getSession().getAttribute(JspAttributes.EXCEPTION_MESSAGE));
+        request.getSession().removeAttribute(JspAttributes.EXCEPTION_MESSAGE);
+        request.setAttribute(JspAttributes.INFO_MESSAGE, request.getSession().getAttribute(JspAttributes.INFO_MESSAGE));
+        request.getSession().removeAttribute(JspAttributes.INFO_MESSAGE);
+        request.setAttribute(JspAttributes.SUCCESS_MESSAGE, request.getSession().getAttribute(JspAttributes.SUCCESS_MESSAGE));
+        request.getSession().removeAttribute(JspAttributes.SUCCESS_MESSAGE);
+
         log.debug("Method starts");
         List<ApplicationDTO> applicationList;
         String page;
@@ -26,20 +39,18 @@ public class ViewApplicationsCommand implements Command {
         String orderBy = request.getParameter(JspAttributes.ORDER_BY);
         UserDTO userDTO = (UserDTO) request.getSession().getAttribute(JspAttributes.USER);
         int rows = request.getSession().getAttribute(JspAttributes.ROLE).equals(Role.MANAGER)
-                ? applicationService.selectAll().size()
+                ? applicationService.applicationCountAll()
                 : applicationService.selectAll(userDTO.getId()).size();
         request.getSession().setAttribute(JspAttributes.ROWS, rows);
-        if (orderBy == null){
-            orderBy= Fields.USER_ID;
-        }
+        if (orderBy == null) orderBy= Fields.APPLICATION_ID;
         Pagination.setPagination(request);
         switch ((Role)request.getSession().getAttribute(JspAttributes.ROLE)){
-            case CLIENT : { applicationList = applicationService.selectAll(
-                    currentPage, Pagination.RECORDS_PER_PAGE, orderBy,userDTO.getId());
+            case CLIENT : {
+                applicationList = applicationService.selectAll(currentPage, Pagination.RECORDS_PER_PAGE, orderBy,userDTO.getId());
                 page = Pages.CLIENT_VIEW_APPLICATIONS;
                 break;
             }
-            case MANAGER:{
+            case MANAGER : {
                 request.getSession().setAttribute(JspAttributes.APPLICATION_COUNT, applicationService.applicationCountByStatus(Status.NEW));
                 applicationList = applicationService.selectAll(currentPage, Pagination.RECORDS_PER_PAGE, orderBy);
                 page = Pages.MANAGER_VIEW_APPLICATIONS;

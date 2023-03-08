@@ -5,6 +5,8 @@ import com.anastasiia.dao.FeaturesDAO;
 import com.anastasiia.dto.RoomDTO;
 import com.anastasiia.entity.Feature;
 import com.anastasiia.entity.Room;
+import com.anastasiia.exceptions.DAOException;
+import com.anastasiia.exceptions.ServiceException;
 import com.anastasiia.utils.JspAttributes;
 import org.apache.log4j.Logger;
 
@@ -29,8 +31,9 @@ public class FeatureService {
     public List<Feature> getListOfFeatures(){
         try {
             return featuresDAO.selectAll();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            return new ArrayList<>();
         }
     }
 
@@ -39,8 +42,13 @@ public class FeatureService {
      * @param id <code>Room</code> identity
      * @return list of <code>Feature</code> objects for specific <code>Room</code>
      */
-    public List<Feature> getListOfFeatures(int id){
-        return featuresDAO.selectAll(id);
+    public List<Feature> getListOfFeatures(int id) {
+        try {
+            return featuresDAO.selectAll(id);
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+            return new ArrayList<>();
+        }
     }
 
     /**
@@ -87,12 +95,12 @@ public class FeatureService {
      * @param room <code>RoomDTO</code> object
      * @param features list of <code>Feature</code> objects
      */
-    public void insertRoomFeatures(RoomDTO room, List<Feature> features){
+    public void insertRoomFeatures(RoomDTO room, List<Feature> features) throws ServiceException {
         for (Feature feature: features) {
             try {
                 featuresDAO.insertRoomFeatures(roomService.dtoToEntity(room), feature);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+            } catch (DAOException e) {
+                throw new ServiceException(e);
             }
         }
     }
@@ -101,11 +109,11 @@ public class FeatureService {
      * Method updates <code>Feature</code> objects by specific <code>Room</code>
      * @param room <code>Room</code> object
      */
-    public void updateFeatures(Room room){
+    public void updateFeatures(Room room) throws ServiceException {
         try {
             featuresDAO.updateRoomFeatures(room, room.getFeatures());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
         }
     }
 }

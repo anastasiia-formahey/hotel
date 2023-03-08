@@ -1,6 +1,7 @@
 package com.anastasiia.dao;
 
 import com.anastasiia.entity.Booking;
+import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.Status;
 import org.junit.jupiter.api.Test;
@@ -111,7 +112,7 @@ class BookingDAOTest {
     }
 
     @Test
-    void selectAll() throws SQLException {
+    void selectAll() throws SQLException, DAOException {
         DataSource dataSource = mock(DataSource.class);
         BookingDAO bookingDAO = new BookingDAO(dataSource);
         try(PreparedStatement preparedStatement = prepareMock(dataSource)){
@@ -124,7 +125,7 @@ class BookingDAOTest {
         }
     }
     @Test
-    void selectAll2() throws SQLException {
+    void selectAll2() throws SQLException, DAOException {
         DataSource dataSource = mock(DataSource.class);
         BookingDAO bookingDAO = new BookingDAO(dataSource);
         try(PreparedStatement preparedStatement = prepareMock(dataSource)){
@@ -136,7 +137,7 @@ class BookingDAOTest {
         }
     }
     @Test
-    void selectAllByUserId() throws SQLException {
+    void selectAllByUserId() throws SQLException, DAOException {
         DataSource dataSource = mock(DataSource.class);
         BookingDAO bookingDAO = new BookingDAO(dataSource);
         try(PreparedStatement preparedStatement = prepareMock(dataSource)){
@@ -149,7 +150,7 @@ class BookingDAOTest {
     }
 
     @Test
-    void selectAllByUserId2() throws SQLException {
+    void selectAllByUserId2() throws SQLException, DAOException {
         DataSource dataSource = mock(DataSource.class);
         BookingDAO bookingDAO = new BookingDAO(dataSource);
         try(PreparedStatement preparedStatement = prepareMock(dataSource)){

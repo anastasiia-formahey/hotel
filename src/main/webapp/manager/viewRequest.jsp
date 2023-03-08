@@ -1,4 +1,5 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="ptg" uri="/WEB-INF/price.tld" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -38,7 +39,7 @@
             </div>
 
             <div class="text-end d-flex" style="padding-right: 10px">
-                <a href="${pageContext.request.contextPath}/manager/?command=logout" class="btn btn-outline-warning me-2"><fmt:message key="header.logout"/></a>
+                <a href="${pageContext.request.contextPath}/?command=logout" class="btn btn-outline-warning me-2"><fmt:message key="header.logout"/></a>
             </div>
             <div class="locale">
                 <form action="${pageContext.request.contextPath}/locale/" method="get">
@@ -107,7 +108,7 @@
 
                                     <div class="form-floating mb-2">
                                         <input type="text" name="price" class="form-control" id="price"
-                                               value="${booking.getPrice()}" readonly>
+                                               value="<ptg:price value="${booking.getPrice()}"/>" readonly>
                                         <label for="price"><fmt:message key="form.price"/>/<fmt:message key="uah"/></label>
                                     </div>
                                 </div>

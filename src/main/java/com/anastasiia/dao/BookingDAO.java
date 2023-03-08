@@ -3,6 +3,7 @@ package com.anastasiia.dao;
 import com.anastasiia.entity.Booking;
 import com.anastasiia.entity.EntityMapper;
 import com.anastasiia.entity.Room;
+import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
@@ -28,7 +29,7 @@ public class BookingDAO {
      * @return true - if objects were inserted
      * @throws SQLException
      */
-    public boolean insertBooking(List<Booking> bookings) throws SQLException {
+    public boolean insertBooking(List<Booking> bookings) throws DAOException {
         log.debug("Method starts");
         Room room = null;
         boolean isSuccess = false;
@@ -71,7 +72,7 @@ public class BookingDAO {
             }
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
-            throw new SQLException(ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
         return isSuccess;
@@ -84,7 +85,7 @@ public class BookingDAO {
      * @return true - if objects were inserted
      * @throws SQLException
      */
-    public boolean insertBooking(List<Booking> bookings, boolean isConfirm) throws SQLException {
+    public boolean insertBooking(List<Booking> bookings, boolean isConfirm) throws DAOException {
         log.debug("Method starts");
        boolean isSuccess = false;
         try (Connection connection = dataSource.getConnection();
@@ -106,7 +107,7 @@ public class BookingDAO {
             connection.commit();
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
-            throw new SQLException(ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
         return isSuccess;
@@ -118,7 +119,7 @@ public class BookingDAO {
      * @param status booking status to update
      * @throws SQLException
      */
-    public void updateStatus(int bookingId, Status status) throws SQLException {
+    public void updateStatus(int bookingId, Status status) throws DAOException {
         log.debug("Method starts");
         try(Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_BOOKING_STATUS)
@@ -129,7 +130,7 @@ public class BookingDAO {
             connection.commit();
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
-            throw new SQLException(ex);
+            throw new DAOException(ex);
         }
         log.debug("Method finished");
     }
@@ -139,7 +140,7 @@ public class BookingDAO {
      * @return list of objects <code>Booking.class</code>
      * @throws SQLException
      */
-    public List<Booking> selectAll() throws SQLException {
+    public List<Booking> selectAll() throws DAOException {
         log.debug("Method starts");
         ArrayList<Booking> listOfBookings = new ArrayList<>();
         ResultSet resultSet;
@@ -152,7 +153,7 @@ public class BookingDAO {
             }
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
-            throw  new SQLException(ex);
+            throw  new DAOException(ex);
         }
         log.debug("Method finished");
         return listOfBookings;
@@ -165,7 +166,7 @@ public class BookingDAO {
      * @param orderBy parameter for sorting records
      * @return list of objects <code>Booking.class</code> with certain number of records
      */
-    public List<Booking> selectAll(int currentPage, int amount, String orderBy) {
+    public List<Booking> selectAll(int currentPage, int amount, String orderBy) throws DAOException {
         log.debug("Method starts");
         ArrayList<Booking> listOfBookings = new ArrayList<>();
         ResultSet resultSet;
@@ -180,6 +181,7 @@ public class BookingDAO {
             }
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
+            throw  new DAOException(ex);
         }log.debug("Method finished");
         return listOfBookings;
     }
@@ -189,7 +191,7 @@ public class BookingDAO {
      * @param userId user identity
      * @return list of objects <code>Booking.class</code> by specific user
      */
-    public List<Booking> selectAllByUserId(int userId) {
+    public List<Booking> selectAllByUserId(int userId) throws DAOException {
         log.debug("Method starts");
         ArrayList<Booking> listOfBookings = new ArrayList<>();
         ResultSet resultSet;
@@ -204,6 +206,7 @@ public class BookingDAO {
             }
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
+            throw  new DAOException(ex);
         }log.debug("Method finished");
         return listOfBookings;
     }
@@ -216,7 +219,7 @@ public class BookingDAO {
      * @param userId user identity
      * @return list of objects <code>Booking.class</code> with certain number of records by specific user
      */
-    public List<Booking> selectAllByUserId(int currentPage, int amount, String orderBy,int userId) {
+    public List<Booking> selectAllByUserId(int currentPage, int amount, String orderBy,int userId) throws DAOException {
         log.debug("Method starts");
         ArrayList<Booking> listOfBookings = new ArrayList<>();
         ResultSet resultSet;
@@ -232,10 +235,57 @@ public class BookingDAO {
             }
         }catch (SQLException ex){
             log.error("Cannot execute the query ==> " + ex);
+            throw  new DAOException(ex);
         }
         log.debug("Method finished");
         return listOfBookings;
     }
+
+    /**
+     * Method counts common amount of records
+     * @return common amount of records
+     */
+    public int countAllBooking() throws DAOException {
+        log.debug("Method starts");
+        ResultSet resultSet;
+        int countResult= 0;
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.COUNT_ALL_BOOKING)){
+            resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                countResult = resultSet.getInt("COUNT(id)");
+            }
+        }catch (SQLException e){
+            log.error("Cannot execute the query ==> " + e);
+            throw new DAOException(e);
+        }
+        log.debug("Method finished");
+        return countResult;
+    }
+    /**
+     * Method counts common amount of records by specified user
+     * @param userId User identity
+     * @return common amount of records by specified user
+     */
+    public int countAllBooking(int userId) throws DAOException {
+        log.debug("Method starts");
+        ResultSet resultSet;
+        int countResult= 0;
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.COUNT_ALL_BOOKING_BY_USER_ID)){
+            preparedStatement.setInt(1, userId);
+            resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                countResult = resultSet.getInt("COUNT(id)");
+            }
+        }catch (SQLException e){
+            log.error("Cannot execute the query ==> " + e);
+            throw new DAOException(e);
+        }
+        log.debug("Method finished");
+        return countResult;
+    }
+
     /**
      * <Code>BookingMapper</Code> class that help to create object of <Code>Booking.class</Code>
      * from <code>ResultSet</code>
@@ -247,9 +297,9 @@ public class BookingDAO {
          * @param resultSet <code>ResultSet</code> object
          * @return <code>Booking</code> object
          */
-        public Booking mapRow(ResultSet resultSet) {
+        public Booking mapRow(ResultSet resultSet) throws SQLException {
             log.debug("Mapper starts");
-            try{
+
                 Booking booking = new Booking();
                 booking.setId(resultSet.getInt(Fields.BOOKING_ID));
                 booking.setRoomId(resultSet.getInt(Fields.BOOKING_ROOM_ID));
@@ -261,9 +311,7 @@ public class BookingDAO {
                 booking.setStatusOfBooking(Status.valueOf(resultSet.getString(Fields.BOOKING_STATUS)));
                 log.debug("Mapper finished");
                 return booking;
-            } catch (SQLException e) {
-                throw new IllegalStateException(e);
-            }
+
         }
     }
 }

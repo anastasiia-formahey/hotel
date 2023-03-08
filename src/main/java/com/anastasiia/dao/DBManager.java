@@ -21,11 +21,9 @@ public class DBManager {
     private DBManager(){}
 
     public static synchronized DataSource getInstance(){
-        log.debug("Method starts");
         if(dataSource == null){
             dataSource = new DBManager().getDataSource();
         }
-        log.debug("Method finished");
         return dataSource;
     }
 

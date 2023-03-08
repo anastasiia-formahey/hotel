@@ -1,6 +1,7 @@
 package com.anastasiia.dao;
 
 import com.anastasiia.entity.Room;
+import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.utils.Status;
 import org.junit.jupiter.api.Test;
 
@@ -56,7 +57,7 @@ class OccupancyOfRoomDAOTest {
     }
 
     @Test
-    void isExist() throws SQLException {
+    void isExist() throws SQLException, DAOException {
         DataSource dataSource = mock(DataSource.class);
         OccupancyOfRoomDAO occupancyOfRoomDAO = new OccupancyOfRoomDAO(dataSource);
         try(PreparedStatement preparedStatement = prepareMock(dataSource)){
@@ -69,7 +70,7 @@ class OccupancyOfRoomDAOTest {
     }
 
     @Test
-    void getStatus() throws SQLException {
+    void getStatus() throws SQLException, DAOException {
         DataSource dataSource = mock(DataSource.class);
         OccupancyOfRoomDAO occupancyOfRoomDAO = new OccupancyOfRoomDAO(dataSource);
         try(PreparedStatement preparedStatement = prepareMock(dataSource)){

@@ -2,6 +2,8 @@ package com.anastasiia.services;
 
 import com.anastasiia.dao.UserDAO;
 import com.anastasiia.entity.User;
+import com.anastasiia.exceptions.InvalidUserException;
+import com.anastasiia.exceptions.ServiceException;
 import com.anastasiia.utils.Role;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,18 +33,18 @@ class UserServiceTest {
     }
 
     @Test
-    void validateUserByEmail() {
+    void validateUserByEmail() throws InvalidUserException {
         assertEquals(false,userService.validateUserByEmail("test@gmail.com"));
     }
 
     @Test
-    void validateUserByEmailAndPassword() {
+    void validateUserByEmailAndPassword() throws InvalidUserException {
         assertEquals(false,
                 userService.validateUserByEmailAndPassword("test@gmail.com", "MTExMQ=="));
     }
 
     @Test
-    void getRole() {
+    void getRole() throws ServiceException {
         assertEquals(null,
                 userService.getRole("test@gmail.com"));
 

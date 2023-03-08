@@ -1,5 +1,6 @@
 package com.anastasiia.web;
 
+import com.anastasiia.exceptions.ServiceException;
 import com.anastasiia.web.command.Command;
 import com.anastasiia.web.command.CommandContainer;
 import com.anastasiia.web.command.CommandResult;
@@ -39,7 +40,12 @@ public class Controller extends HttpServlet{
         Command command = CommandContainer.get(commandName);
         log.trace("Obtained command => " + command);
 
-        CommandResult commandResult = command.execute(request, response);
+        CommandResult commandResult = null;
+        try {
+            commandResult = command.execute(request, response);
+        } catch (ServiceException e) {
+            throw new RuntimeException(e);
+        }
 
         log.trace("Forward address => " + commandResult.getPage());
 
