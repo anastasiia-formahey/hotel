@@ -42,7 +42,7 @@ public class OccupancyOfRoomDAO {
                 preparedStatement.setInt(2, clientId);
                 preparedStatement.setDate(3, checkIn);
                 preparedStatement.setDate(4, checkOut);
-                preparedStatement.setString(5, status.name());
+                preparedStatement.setInt(5, status.getStatusId());
                 preparedStatement.executeUpdate();
                 connection.commit();
         }catch (SQLException ex){
@@ -65,7 +65,7 @@ public class OccupancyOfRoomDAO {
         try(Connection connection = dataSource.getConnection();
         PreparedStatement  preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_OCCUPANCY_OF_ROOM_STATUS)
         ) {
-            preparedStatement.setString(1, status.name());
+            preparedStatement.setInt(1, status.getStatusId());
             preparedStatement.setInt(2, roomId);
             preparedStatement.setDate(3, checkIn);
             preparedStatement.setDate(4, checkOut);

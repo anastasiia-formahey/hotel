@@ -61,7 +61,7 @@ public class BookingDAO {
                     preparedStatement.setDate(4, booking.getCheckOutDate());
                     preparedStatement.setDouble(5, booking.getPrice());
                     preparedStatement.setDate(6, booking.getDateOfBooking());
-                    preparedStatement.setString(7, booking.getStatusOfBooking().name());
+                    preparedStatement.setInt(7, booking.getStatusOfBooking().getStatusId());
                     preparedStatement.executeUpdate();
                     isSuccess = true;
                     connection.commit();
@@ -100,7 +100,7 @@ public class BookingDAO {
                     preparedStatement.setDate(4, booking.getCheckOutDate());
                     preparedStatement.setDouble(5, booking.getPrice());
                     preparedStatement.setDate(6, booking.getDateOfBooking());
-                    preparedStatement.setString(7, booking.getStatusOfBooking().name());
+                    preparedStatement.setInt(7, booking.getStatusOfBooking().getStatusId());
                     preparedStatement.executeUpdate();
             }
             isSuccess = true;
@@ -124,7 +124,7 @@ public class BookingDAO {
         try(Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_BOOKING_STATUS)
                 ) {
-             preparedStatement.setString(1,status.name());
+             preparedStatement.setInt(1,status.getStatusId());
             preparedStatement.setInt(2,bookingId);
             preparedStatement.executeUpdate();
             connection.commit();

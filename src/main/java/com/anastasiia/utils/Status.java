@@ -2,17 +2,25 @@ package com.anastasiia.utils;
 
 public enum Status {
     //Room
-    FREE,
-    BOOKED,
-    BUSY,
-    UNAVAILABLE,
-    //Booking
-    PAID,
-    CANCELED,
+    FREE(1),
+    BOOKED(2),
+    BUSY(3),
+    UNAVAILABLE(4),
     //Application
-    REVIEWED,
-    NEW,
+    NEW(5),
+    REVIEWED(6),
     //Request
-    CONFIRMED,
-    NOT_CONFIRMED
+    NOT_CONFIRMED(7),
+    CONFIRMED(8),
+    //Booking
+    PAID(9),
+    CANCELED(10);
+
+    private final int id;
+    Status(int id) {
+        this.id = id;
+    }
+    public int getStatusId(){
+        return id;
+    }
 }

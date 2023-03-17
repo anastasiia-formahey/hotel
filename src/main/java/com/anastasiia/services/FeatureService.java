@@ -10,10 +10,7 @@ import com.anastasiia.exceptions.ServiceException;
 import com.anastasiia.utils.JspAttributes;
 import org.apache.log4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -53,13 +50,12 @@ public class FeatureService {
 
     /**
      * Method selects all <code>Feature</code> objects form the request which selected
-     * @param request HttpServletRequest request
+     * @param list array of features from request
      * @return list of selected <code>Feature</code> objects
      */
-    public List<Feature> getFeaturesForRoom(HttpServletRequest request){
+    public List<Feature> getFeaturesForRoom(String[] list){
         List<Feature> featuresList = getListOfFeatures();
         List<Feature> featuresSelected = new ArrayList<>();
-        String[] list = request.getParameterValues(JspAttributes.FEATURES);
         for (Object selected: list) {
             for (Feature feature: featuresList) {
                 if(feature.getId() == Integer.parseInt(selected.toString())){

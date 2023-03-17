@@ -2,11 +2,12 @@ package com.anastasiia.dto;
 
 import com.anastasiia.utils.Status;
 
+import java.io.Serializable;
 import java.sql.Date;
 /**
  * <code>OccupancyOfRoomDTO</code> - class implements data transfer object for <code>OccupancyOfRoom entity</code>
  */
-public class OccupancyOfRoomDTO {
+public class OccupancyOfRoomDTO implements Serializable {
     private int roomId;
     private UserDTO client;
     private Date checkInDate;

@@ -5,17 +5,18 @@ import com.anastasiia.services.UserService;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.Status;
 
+import java.io.Serializable;
+
 /**
  * <code>ApplicationDTO</code> - class implements data transfer object for <code>Application entity</code>
  */
-public class ApplicationDTO {
+public class ApplicationDTO implements Serializable {
     private int id;
     private UserDTO userDTO;
     private int numberOfGuests;
     private ClassOfRoom classOfRoom;
     private int lengthOfStay;
     private Status status;
-
 
     public int getId() {
         return id;

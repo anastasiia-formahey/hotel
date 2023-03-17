@@ -119,4 +119,32 @@ class ApplicationDAOTest {
             assertDoesNotThrow(()->applicationDAO.updateStatus(1, Status.CONFIRMED));
         }
     }
+
+    @Test
+    void applicationCountAll() throws SQLException, DAOException {
+        DataSource dataSource = mock(DataSource.class);
+        ApplicationDAO applicationDAO = new ApplicationDAO(dataSource);
+        try(PreparedStatement preparedStatement = prepareMock(dataSource)){
+            ResultSet resultSet = mock(ResultSet.class);
+            when(preparedStatement.executeQuery()).thenReturn(resultSet);
+            when(resultSet.next()).thenReturn(true).thenReturn(false);
+            when(resultSet.getInt("COUNT(id)")).thenReturn(5);
+            int result = applicationDAO.applicationCountAll();
+            assertEquals(5, result);
+        }
+    }
+
+    @Test
+    void applicationCountByStatus() throws SQLException, DAOException {
+        DataSource dataSource = mock(DataSource.class);
+        ApplicationDAO applicationDAO = new ApplicationDAO(dataSource);
+        try(PreparedStatement preparedStatement = prepareMock(dataSource)){
+            ResultSet resultSet = mock(ResultSet.class);
+            when(preparedStatement.executeQuery()).thenReturn(resultSet);
+            when(resultSet.next()).thenReturn(true).thenReturn(false);
+            when(resultSet.getInt("COUNT(id)")).thenReturn(5);
+            int result = applicationDAO.applicationCountByStatus(Status.CONFIRMED);
+            assertEquals(5, result);
+        }
+    }
 }

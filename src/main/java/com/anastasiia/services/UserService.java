@@ -11,6 +11,8 @@ import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Role;
 import org.apache.log4j.Logger;
 
+import javax.sql.DataSource;
+
 /**
  * UserService - class mediates communication between a controller and DAO/repository layer
  */
@@ -51,7 +53,6 @@ public class UserService {
         }
         if(user !=null && PasswordEncoder.encode(password).equals(user.getPassword())) {
             return entityToDTO(user);
-
         }else throw new InvalidUserException(JspAttributes.WRONG_EMAIL_OR_PASSWORD);
     }
 
@@ -71,21 +72,7 @@ public class UserService {
     }
 
     /**
-     * Method gets User by user email
-     * @param email user email
-     * @return UserDTO object
-     */
-    public UserDTO getUser(String email) throws ServiceException {
-        try {
-            user = userDAO.findUserByEmail(email);
-        } catch (DAOException e) {
-            log.error("DAOException was caught. Cause: " +e.getMessage());
-            throw new ServiceException(e);
-        }
-        return entityToDTO(user);
-    }
-    /**
-     * Method gets User by user emaiidentityl
+     * Method gets User by user email identity
      * @param id user identity
      * @return UserDTO object
      */
@@ -134,6 +121,10 @@ public class UserService {
      * @return User entity
      */
     public User dtoToEntity(UserDTO userDTO) throws ServiceException {
-        return getUser(userDTO.getEmail());
+        try {
+            return userDAO.findUserById(userDTO.getId());
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
     }
 }

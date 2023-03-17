@@ -14,6 +14,7 @@ import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.sql.DataSource;
 import java.sql.Date;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class RoomService {
     private static final Logger log = Logger.getLogger(RoomService.class);
     private final RoomDAO roomDAO = new RoomDAO(DBManager.getInstance());
+
 
     /**
      * @param roomDTO <code>RoomDTO</code> object to insert
@@ -100,15 +102,15 @@ public class RoomService {
 
     /**
      * Method search free rooms to book on specified dated
-     * @param request HttpServletRequest request
+     * @param numberOfPerson <code>Room</code> field number of person
+     * @param checkIn date to check in
+     * @param checkOut date to check out
      * @return list of RoomDTO objects
      */
-    public List<RoomDTO> findRoomForBooking(HttpServletRequest request) throws ServiceException {
+    public List<RoomDTO> findRoomForBooking(int numberOfPerson, Date checkIn, Date checkOut) throws ServiceException {
         try {
-            List<RoomDTO> roomDTOList = roomDAO.selectRoomsForBooking(
-                    Integer.parseInt(request.getParameter(JspAttributes.NUMBER_OF_PERSON)),
-                    Date.valueOf(request.getParameter(JspAttributes.CHECK_IN_DATE)),
-                    Date.valueOf(request.getParameter(JspAttributes.CHECK_OUT_DATE)))
+            List<RoomDTO> roomDTOList =
+                    roomDAO.selectRoomsForBooking(numberOfPerson, checkIn, checkOut)
                     .stream().map(this::entityToDTO).collect(Collectors.toList());
             if(roomDTOList.isEmpty()) throw new NoResultException(JspAttributes.NO_RESULT_MESSAGE);
             else return roomDTOList;

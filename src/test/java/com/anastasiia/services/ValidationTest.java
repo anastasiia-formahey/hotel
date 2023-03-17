@@ -26,13 +26,11 @@ class ValidationTest {
 
     @Test
     void validEmailFalse() throws ValidationException {
-        String result = validation.validEmail("@testgmail.com");
-        assertEquals("@testgmail.com", result);
+        assertThrows(ValidationException.class, ()-> validation.validEmail("@testgmail.com"));
     }
     @Test
     void validEmailFalse1() throws ValidationException {
-        String result = validation.validEmail(null);
-        assertEquals(null, result);
+        assertThrows(ValidationException.class, ()-> validation.validEmail(null));
     }
 
     @Test
@@ -42,13 +40,11 @@ class ValidationTest {
     }
     @Test
     void validPasswordFalse() throws ValidationException {
-        String result = validation.validPassword(null);
-        assertEquals(false, result);
+        assertThrows(ValidationException.class, ()-> validation.validPassword(null));
     }
     @Test
     void validPasswordFalse1() throws ValidationException {
-        String result = validation.validPassword("");
-        assertEquals(false, result);
+        assertThrows(ValidationException.class, ()-> validation.validPassword(""));
     }
 
     @Test
@@ -60,9 +56,33 @@ class ValidationTest {
 
     @Test
     void validField1() throws ValidationException {
-        assertDoesNotThrow(()-> validation.validField(Date.valueOf("2023-03-06"),Date.valueOf("2023-03-07")));
+        assertDoesNotThrow(()-> Validation.validField(Date.valueOf("2024-03-10"),Date.valueOf("2024-03-11")));
         assertThrows(ValidationException.class, ()-> Validation.validField(Date.valueOf("2023-03-07"),Date.valueOf("2023-03-06")));
-        assertThrows(ValidationException.class, ()-> Validation.validField(Date.valueOf("2023-03-06"),Date.valueOf("2023-03-06")));
+        assertThrows(ValidationException.class, ()-> Validation.validField(Date.valueOf("2023-03-07"),Date.valueOf("2023-03-06")));
+    }
+
+    @Test
+    void validIntField() throws ValidationException {
+        assertThrows(ValidationException.class, ()-> Validation.validIntField(""));
+        assertThrows(ValidationException.class, ()-> Validation.validIntField(null));
+        assertThrows(ValidationException.class, ()-> Validation.validIntField("0"));
+        assertEquals(1, Validation.validIntField("1"));
+    }
+
+    @Test
+    void validDate() throws ValidationException {
+        assertThrows(ValidationException.class, ()-> Validation.validDate(""));
+        assertThrows(ValidationException.class, ()-> Validation.validDate(null));
+        assertThrows(ValidationException.class, ()-> Validation.validDate("02.02.2023"));
+        assertEquals(Date.valueOf("2023-03-08"), Validation.validDate("2023-03-08"));
+    }
+
+    @Test
+    void validDateToCheckIn() {
+        assertDoesNotThrow(()-> Validation.validDateToCheckIn(Date.valueOf("2024-03-08"),Date.valueOf("2024-03-09")));
+        assertThrows(ValidationException.class, ()-> Validation.validDateToCheckIn(Date.valueOf("2023-03-07"),Date.valueOf("2023-03-08")));
+        assertThrows(ValidationException.class, ()-> Validation.validDateToCheckIn(Date.valueOf("2023-03-07"),Date.valueOf("2023-03-08")));
+
     }
 
     @AfterEach

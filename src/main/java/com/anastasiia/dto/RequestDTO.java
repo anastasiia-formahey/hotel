@@ -4,13 +4,14 @@ import com.anastasiia.entity.Room;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 /**
  * <code>RequestDTO</code> - class implements data transfer object for <code>Request entity</code>
  */
-public class RequestDTO {
+public class RequestDTO implements Serializable {
 
     private static final Logger log = Logger.getLogger(RequestDTO.class);
     private int applicationId;

@@ -1,5 +1,6 @@
 package com.anastasiia.services;
 
+import com.anastasiia.dao.DBManager;
 import com.anastasiia.dto.RequestDTO;
 import com.anastasiia.dto.RoomDTO;
 import com.anastasiia.entity.Request;
@@ -8,12 +9,16 @@ import com.anastasiia.utils.Status;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 
+import javax.sql.DataSource;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 
 class RequestServiceTest {
     RequestService requestService;
@@ -23,7 +28,6 @@ class RequestServiceTest {
 
     @BeforeEach
     void setUp() {
-        requestService = new RequestService();
         roomDTO = new RoomDTO();
         roomDTO.setId(1);
         roomDTO.setClassOfRoom(ClassOfRoom.LUX);
@@ -38,14 +42,19 @@ class RequestServiceTest {
     }
     @Test
     void dtoToEntity() {
-        request.setApplicationId(2);
-        request.setCheckInDate(Date.valueOf("2023-02-25"));
-        request.setCheckOutDate(Date.valueOf("2023-02-27"));
-        request.setRoomId(1);
-        request.setStatus(Status.NOT_CONFIRMED);
-        List <Request> requests = new ArrayList<>();
-        requests.add(request);
-        assertEquals(requests.toString(), requestService.dtoToEntity(requestDTO).toString());
+        DataSource dataSource = mock(DataSource.class);
+        try (MockedStatic<DBManager> dbManagerMockedStatic = mockStatic(DBManager.class)) {
+            dbManagerMockedStatic.when(DBManager::getInstance).thenReturn(dataSource);
+            requestService = new RequestService();
+            request.setApplicationId(2);
+            request.setCheckInDate(Date.valueOf("2023-02-25"));
+            request.setCheckOutDate(Date.valueOf("2023-02-27"));
+            request.setRoomId(1);
+            request.setStatus(Status.NOT_CONFIRMED);
+            List<Request> requests = new ArrayList<>();
+            requests.add(request);
+            assertEquals(requests.toString(), requestService.dtoToEntity(requestDTO).toString());
+        }
     }
 
     @AfterEach
@@ -55,7 +64,11 @@ class RequestServiceTest {
     }
 
     @Test
-    void entityToDTO() {
+    void getRequestByApplicationId() {
 
+    }
+
+    @Test
+    void updateStatus() {
     }
 }

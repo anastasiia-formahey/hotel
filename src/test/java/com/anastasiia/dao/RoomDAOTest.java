@@ -39,6 +39,7 @@ class RoomDAOTest {
     }
     @Test
     void insertRoom() {
+
     }
 
     @Test
@@ -103,6 +104,20 @@ class RoomDAOTest {
             resultSetMock(resultSet);
             List<Room> roomList = roomDAO.selectRoomsForBooking(2, Date.valueOf("2023-02-25"), Date.valueOf("2023-02-27"));
             assertEquals(1, roomList.size());
+        }
+    }
+
+    @Test
+    void countAllRooms() throws SQLException, DAOException {
+        DataSource dataSource = mock(DataSource.class);
+        RoomDAO roomDAO = new RoomDAO(dataSource);
+        try(PreparedStatement preparedStatement = prepareMock(dataSource)){
+            ResultSet resultSet = mock(ResultSet.class);
+            when(preparedStatement.executeQuery()).thenReturn(resultSet);
+            when(resultSet.next()).thenReturn(true).thenReturn(false);
+            when(resultSet.getInt("COUNT(id)")).thenReturn(5);
+            int result = roomDAO.countAllRooms();
+            assertEquals(5, result);
         }
     }
 }

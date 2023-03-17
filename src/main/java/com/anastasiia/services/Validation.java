@@ -80,9 +80,9 @@ public class Validation {
     }
 
     public static void validDateToCheckIn(Date checkIn, Date checkOut) throws ValidationException{
-        if(checkIn.compareTo(new Date(Calendar.getInstance().getTime().getTime())) <1)
+        if(checkIn.before(new Date(Calendar.getInstance().getTime().getTime())))
             throw new ValidationException(JspAttributes.CHECK_IN_EXCEPTION);
-        if(checkOut.compareTo(new Date(Calendar.getInstance().getTime().getTime())) >=1)
+        if(checkOut.before(new Date(Calendar.getInstance().getTime().getTime())))
             throw new ValidationException(JspAttributes.CHECK_IN_EXCEPTION);
     }
 }

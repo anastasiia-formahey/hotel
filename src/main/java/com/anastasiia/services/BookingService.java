@@ -1,9 +1,6 @@
 package com.anastasiia.services;
 
-import com.anastasiia.dao.BookingDAO;
-import com.anastasiia.dao.DBManager;
-import com.anastasiia.dao.OccupancyOfRoomDAO;
-import com.anastasiia.dao.RoomDAO;
+import com.anastasiia.dao.*;
 import com.anastasiia.dto.BookingDTO;
 import com.anastasiia.dto.RequestDTO;
 import com.anastasiia.dto.UserDTO;
@@ -14,6 +11,7 @@ import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -28,6 +26,7 @@ import java.util.stream.Collectors;
  */
 public class BookingService {
     private static final Logger log = Logger.getLogger(BookingService.class);
+
     private final BookingDAO bookingDAO = new BookingDAO(DBManager.getInstance());
     private final OccupancyOfRoomDAO occupancyOfRoomDAO = new OccupancyOfRoomDAO(DBManager.getInstance());
    private final UserService userService = new UserService();
@@ -140,43 +139,6 @@ public class BookingService {
             log.error("DAOException was caught. Cause : "+ e);
         }
         return isSuccess;
-    }
-
-    /**
-     * Method selects all Booking objects from the table
-     * @return list of BookingDTO objects
-     */
-    public List<BookingDTO> selectAllBooking() throws ServiceException {
-        checkBooking();
-        List<Booking> listOfBooking;
-        try {
-            listOfBooking = bookingDAO.selectAll();
-            return listOfBooking
-                    .stream().map(this::entityToDTO).collect(Collectors.toList());
-        } catch (DAOException e) {
-            log.error("DAOException was caught. Cause : "+ e);
-            throw new ServiceException(e);
-        }
-
-    }
-
-    /**
-     * Method selects all Booking objects from the table by user identity
-     * @param userId User identity
-     * @return list of BookingDTO objects by specified User
-     */
-    public List<BookingDTO> selectAllBooking(int userId) throws ServiceException {
-        checkBooking();
-        List<Booking> listOfBooking = null;
-        try {
-            listOfBooking = bookingDAO.selectAllByUserId(userId);
-            return listOfBooking
-                    .stream().map(this::entityToDTO).collect(Collectors.toList());
-        } catch (DAOException e) {
-            log.error("DAOException was caught. Cause : "+ e);
-            throw new ServiceException(e);
-        }
-
     }
 
     /**

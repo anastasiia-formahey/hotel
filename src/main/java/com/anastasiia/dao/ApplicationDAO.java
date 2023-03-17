@@ -27,7 +27,7 @@ public class ApplicationDAO {
     /**
      * Method inserts new object into table
      * @param application object to insert */
-    public void insertApplication(Application application) throws DAOException {
+    public boolean insertApplication(Application application) throws DAOException {
         log.debug("Method starts");
         try(Connection connection = dataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_APPLICATION)
@@ -36,7 +36,7 @@ public class ApplicationDAO {
             preparedStatement.setInt(2, application.getNumberOfGuests());
             preparedStatement.setString(3, application.getClassOfRoom().name());
             preparedStatement.setInt(4, application.getLengthOfStay());
-            preparedStatement.setString(5, application.getStatus().name());
+            preparedStatement.setInt(5, application.getStatus().getStatusId());
 
             preparedStatement.executeUpdate();
             connection.commit();
@@ -46,7 +46,7 @@ public class ApplicationDAO {
             throw new DAOException(e);
         }
         log.debug("Method finished");
-
+        return true;
     }
 
     /**
@@ -165,7 +165,7 @@ public class ApplicationDAO {
         try(Connection connection = dataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_APPLICATION_STATUS)
         ) {
-            preparedStatement.setString(1, status.name());
+            preparedStatement.setInt(1, status.getStatusId());
             preparedStatement.setInt(2, applicationId);
             preparedStatement.executeUpdate();
             connection.commit();
@@ -209,7 +209,7 @@ public class ApplicationDAO {
         int countResult= 0;
         try(Connection connection = dataSource.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.COUNT_APPLICATION_BY_STATUS)){
-            preparedStatement.setString(1, status.name());
+            preparedStatement.setInt(1, status.getStatusId());
             resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){
                 countResult = resultSet.getInt("COUNT(id)");

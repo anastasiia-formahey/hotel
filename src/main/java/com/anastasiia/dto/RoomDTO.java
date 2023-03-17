@@ -6,12 +6,13 @@ import com.anastasiia.services.RoomService;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.Status;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * <code>RoomDTO</code> - class implements data transfer object for <code>Room entity</code>
  */
-public class RoomDTO {
+public class RoomDTO implements Serializable {
     private int id;
     private int numberOfPerson;
     private double price;

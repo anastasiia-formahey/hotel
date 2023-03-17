@@ -1,5 +1,6 @@
 package com.anastasiia.services;
 
+import com.anastasiia.dao.DBManager;
 import com.anastasiia.dto.BookingDTO;
 import com.anastasiia.dto.RequestDTO;
 import com.anastasiia.dto.RoomDTO;
@@ -10,12 +11,16 @@ import com.anastasiia.utils.Status;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 
+import javax.sql.DataSource;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 class BookingServiceTest {
 
@@ -24,9 +29,9 @@ class BookingServiceTest {
     RequestDTO requestDTO;
     UserDTO userDTO;
     RoomDTO roomDTO;
+
     @BeforeEach
     void setUp() {
-        bookingService = new BookingService();
         booking = new Booking();
         booking.setId(1);
         booking.setRoomId(1);
@@ -48,29 +53,31 @@ class BookingServiceTest {
         requestDTO.setRequestElements(roomDTO, Date.valueOf("2023-02-25"), Date.valueOf("2023-02-27"));
     }
 
-    @AfterEach
-    void tearDown() {
-        bookingService = null;
-        booking = null;
-        requestDTO=null;
-        userDTO=null;
-        roomDTO=null;
-    }
-
     @Test
     void withDrawnBooking() {
-        assertFalse(bookingService.withDrawnBooking(booking));
-        booking.setDateOfBooking(Date.valueOf("2023-02-20"));
-        booking.setBookingExpirationDate();
+        DataSource dataSource = mock(DataSource.class);
+        try (MockedStatic<DBManager> dbManagerMockedStatic = mockStatic(DBManager.class)) {
+            dbManagerMockedStatic.when(DBManager::getInstance).thenReturn(dataSource);
+
+            bookingService = new BookingService();
+            assertFalse(bookingService.withDrawnBooking(booking));
+            booking.setDateOfBooking(Date.valueOf("2023-02-20"));
+            booking.setBookingExpirationDate();
+        }
     }
 
     @Test
     void getTotalCost() {
-        assertEquals(2000.0,
-                bookingService.getTotalCost(
-                        1000.0,
-                        Date.valueOf("2023-02-02"),
-                        Date.valueOf("2023-02-04")));
+        DataSource dataSource = mock(DataSource.class);
+        try (MockedStatic<DBManager> dbManagerMockedStatic = mockStatic(DBManager.class)) {
+            dbManagerMockedStatic.when(DBManager::getInstance).thenReturn(dataSource);
+            bookingService = new BookingService();
+            assertEquals(2000.0,
+                    bookingService.getTotalCost(
+                            1000.0,
+                            Date.valueOf("2023-02-02"),
+                            Date.valueOf("2023-02-04")));
+        }
     }
 
     @Test
@@ -84,10 +91,15 @@ class BookingServiceTest {
         bookingDTO.setCheckInDate(Date.valueOf("2023-02-25"));
         bookingDTO.setCheckOutDate(Date.valueOf("2023-02-27"));
         bookingDTO.setPrice(100.0);
-        bookingDTO.setDateOfBooking(bookingService.getCurrentDate());
+        bookingDTO.setDateOfBooking(Date.valueOf("2023-02-20"));
         bookingDTO.setStatusOfBooking(Status.BOOKED);
         List<BookingDTO> bookingDTOS = new ArrayList<>();
         bookingDTOS.add(bookingDTO);
-        assertEquals(bookingDTOS.toString(), bookingService.getBookingFromRequest(requestDTO,userDTO).toString());
+        DataSource dataSource = mock(DataSource.class);
+        try (MockedStatic<DBManager> dbManagerMockedStatic = mockStatic(DBManager.class)) {
+            dbManagerMockedStatic.when(DBManager::getInstance).thenReturn(dataSource);
+            bookingService = new BookingService();
+            assertEquals(bookingDTOS.toString(), bookingService.getBookingFromRequest(requestDTO, userDTO).toString());
+        }
     }
 }

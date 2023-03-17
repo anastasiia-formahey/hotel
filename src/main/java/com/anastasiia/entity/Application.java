@@ -3,13 +3,14 @@ package com.anastasiia.entity;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.Status;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.sql.Date;
 
 /**
  * <code>Application</code> - class entity for table 'application'
  */
-public class Application extends Entity {
+public class Application implements Serializable {
     private int id;
     private int clientId;
     private int numberOfGuests;
@@ -27,12 +28,11 @@ public class Application extends Entity {
         this.lengthOfStay = lengthOfStay;
     }
 
-    @Override
+
     public int getId() {
         return id;
     }
 
-    @Override
     public void setId(int id) {
         this.id = id;
     }

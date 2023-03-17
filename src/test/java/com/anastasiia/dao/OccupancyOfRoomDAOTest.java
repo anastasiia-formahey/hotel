@@ -1,12 +1,16 @@
 package com.anastasiia.dao;
 
+import com.anastasiia.entity.OccupancyOfRoom;
 import com.anastasiia.entity.Room;
+import com.anastasiia.entity.User;
 import com.anastasiia.exceptions.DAOException;
+import com.anastasiia.utils.Role;
 import com.anastasiia.utils.Status;
 import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.isA;
@@ -79,6 +83,25 @@ class OccupancyOfRoomDAOTest {
             resultSetMock(resultSet);
             assertEquals(Status.FREE,
                     occupancyOfRoomDAO.getStatus(1,Date.valueOf("2023-02-25")));
+        }
+    }
+
+    @Test
+    void selectByRoomId() throws SQLException, DAOException {
+        DataSource dataSource = mock(DataSource.class);
+        OccupancyOfRoomDAO occupancyOfRoomDAO = new OccupancyOfRoomDAO(dataSource);
+        try(PreparedStatement preparedStatement = prepareMock(dataSource)){
+            ResultSet resultSet = mock(ResultSet.class);
+            when(preparedStatement.executeQuery()).thenReturn(resultSet);
+            resultSetMock(resultSet);
+            when(resultSet.getInt(Fields.OCCUPANCY_OF_ROOM_CLIENT_ID)).thenReturn(1);
+            when(resultSet.getString(Fields.USER_FIRST_NAME)).thenReturn("Test");
+            when(resultSet.getString(Fields.USER_LAST_NAME)).thenReturn("Test");
+            when(resultSet.getString(Fields.USER_EMAIL)).thenReturn("test@gmail.com");
+            when(resultSet.getString(Fields.USER_ROLE)).thenReturn(String.valueOf(Role.CLIENT));
+            Map<OccupancyOfRoom, User> occupancyOfRoomUserMap = occupancyOfRoomDAO.selectByRoomId(1,Date.valueOf("2023-02-25"));
+            assertEquals(1,
+                    occupancyOfRoomUserMap.size());
         }
     }
 }

@@ -54,7 +54,11 @@ public class FindRoomCommand implements Command {
             case CLIENT: {
                 page = Pages.CLIENT_ROOMS_FOR_BOOKING;
                 try {
-                    roomDTOList = roomService.findRoomForBooking(request);
+                    roomDTOList = roomService.findRoomForBooking(
+                            Integer.parseInt(request.getParameter(JspAttributes.NUMBER_OF_PERSON)),
+                            Date.valueOf(request.getParameter(JspAttributes.CHECK_IN_DATE)),
+                            Date.valueOf(request.getParameter(JspAttributes.CHECK_OUT_DATE))
+                    );
                     request.getSession().setAttribute(JspAttributes.ROOMS, roomDTOList);
                 }catch (NoResultException e) {
                     log.error("NoResultException was caught. Cause : "+ e);
@@ -69,7 +73,10 @@ public class FindRoomCommand implements Command {
             case MANAGER:{
                 page = Pages.MANAGER_REVIEW_APPLICATIONS;
                 try {
-                    roomDTOList = roomService.findRoomForBooking(request);
+                    roomDTOList = roomService.findRoomForBooking(
+                            Integer.parseInt(request.getParameter(JspAttributes.NUMBER_OF_PERSON)),
+                            Date.valueOf(request.getParameter(JspAttributes.CHECK_IN_DATE)),
+                            Date.valueOf(request.getParameter(JspAttributes.CHECK_OUT_DATE)));
                     request.getSession().setAttribute(JspAttributes.ROOMS, roomDTOList);
                 }catch (NoResultException e) {
                     log.error("NoResultException was caught. Cause : "+ e);

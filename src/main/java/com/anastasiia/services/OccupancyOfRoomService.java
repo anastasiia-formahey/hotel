@@ -11,6 +11,7 @@ import com.anastasiia.exceptions.ServiceException;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
+import javax.sql.DataSource;
 import java.sql.Date;
 import java.util.Map;
 /**
@@ -21,6 +22,7 @@ public class OccupancyOfRoomService {
     private final OccupancyOfRoomDAO occupancyOfRoomDAO = new OccupancyOfRoomDAO(DBManager.getInstance());
 
     private final UserService userService = new UserService();
+
 
     /**
      *

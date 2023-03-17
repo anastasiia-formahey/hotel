@@ -6,11 +6,12 @@ import com.anastasiia.services.RoomService;
 import com.anastasiia.services.UserService;
 import com.anastasiia.utils.Status;
 
+import java.io.Serializable;
 import java.sql.Date;
 /**
  * <code>BookingDTO</code> - class implements data transfer object for <code>Booking entity</code>
  */
-public class BookingDTO {
+public class BookingDTO implements Serializable {
     private int id;
     private int roomId;
     private RoomDTO room;

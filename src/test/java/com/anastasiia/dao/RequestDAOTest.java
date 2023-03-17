@@ -35,19 +35,26 @@ class RequestDAOTest {
         when(resultSet.getInt("room_id")).thenReturn(1);
         when(resultSet.getString("status")).thenReturn(Status.NEW.name());
     }
+    private void resultSetMockRooms(ResultSet resultSet) throws SQLException {
+        when(resultSet.next()).thenReturn(false);
+
+    }
     @Test
     void insertRequest() throws SQLException {
         Request request = new Request();
         request.setRoomId(1);
         request.setStatus(Status.NOT_CONFIRMED);
-        request.setCheckInDate(Date.valueOf("2023-02-25"));
-        request.setCheckOutDate(Date.valueOf("2023-02-28"));
+        request.setCheckInDate(Date.valueOf("2024-02-25"));
+        request.setCheckOutDate(Date.valueOf("2024-02-28"));
         request.setApplicationId(2);
         List<Request> requestList = new ArrayList<>();
         requestList.add(request);
         DataSource dataSource = mock(DataSource.class);
         RequestDAO requestDAO = new RequestDAO(dataSource);
-        try(PreparedStatement ignored = prepareMock(dataSource)){
+        try(PreparedStatement preparedStatement = prepareMock(dataSource)){
+            ResultSet resultSet = mock(ResultSet.class);
+            when(preparedStatement.executeQuery()).thenReturn(resultSet);
+            resultSetMockRooms(resultSet);
             assertDoesNotThrow(()->requestDAO.insertRequest(requestList));
         }
     }

@@ -1,20 +1,20 @@
 package com.anastasiia.dto;
 
-public class FeaturesDTO {
+import java.io.Serializable;
+
+public class FeaturesDTO implements Serializable {
     private int id;
     private String name;
-    private boolean isChecked = false;
+    private boolean isChecked;
 
     public FeaturesDTO(int id, String name, boolean isChecked) {
         this.id = id;
         this.name = name;
         this.isChecked = isChecked;
     }
-
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }

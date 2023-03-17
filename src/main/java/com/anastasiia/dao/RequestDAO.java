@@ -86,7 +86,7 @@ public class RequestDAO {
         try (Connection connection = dataSource.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_REQUEST_STATUS)
         ){
-            preparedStatement.setString(1, status.name());
+            preparedStatement.setInt(1, status.getStatusId());
             preparedStatement.setInt(2, applicationId);
             preparedStatement.executeUpdate();
             connection.commit();

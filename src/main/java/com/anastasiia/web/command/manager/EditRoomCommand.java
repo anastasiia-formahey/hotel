@@ -18,9 +18,11 @@ import javax.servlet.http.HttpServletResponse;
 public class EditRoomCommand implements Command {
     private static final Logger log = Logger.getLogger(EditRoomCommand.class);
     RoomService roomService;
+    FeatureService featureService;
 
     public EditRoomCommand(AppContext appContext) {
         roomService = appContext.getRoomService();
+        featureService = appContext.getFeatureService();
     }
 
     @Override
@@ -38,7 +40,7 @@ public class EditRoomCommand implements Command {
             }
             room.setImage(image);
             room.setId(roomEdit.getId());
-            room.setFeatures(new FeatureService().getFeaturesForRoom(request));
+            room.setFeatures(featureService.getFeaturesForRoom(request.getParameterValues(JspAttributes.FEATURES)));
             roomService.editRoom(room);
             request.getSession().setAttribute(JspAttributes.SUCCESS_MESSAGE, JspAttributes.ROOM_EDIT_SUCCESS);
         } catch (ServiceException e) {

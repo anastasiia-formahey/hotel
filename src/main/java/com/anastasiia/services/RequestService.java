@@ -13,6 +13,7 @@ import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ public class RequestService {
     private final RequestDAO requestDAO = new RequestDAO(DBManager.getInstance());
     private final ApplicationDAO applicationDAO = new ApplicationDAO(DBManager.getInstance());
     private final OccupancyOfRoomDAO occupancyOfRoomDAO = new OccupancyOfRoomDAO(DBManager.getInstance());
+
 
     /**
      * @param requestDTO RequestDTO object
