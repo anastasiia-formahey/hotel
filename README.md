@@ -18,4 +18,4 @@ Implement sorting for the list of rooms:
   displayed in the user&#39;s personal account. After the room is booked, the system issues an
   invoice to the customer, which must be paid within two days. If the bill is not paid, the
   reservation is automatically withdrawn.
-  ![](src/main/webapp/db.jpg)
+  ![](src/main/webapp/db_diagram.jpg)
