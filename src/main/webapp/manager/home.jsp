@@ -54,9 +54,9 @@
         </div>
     </div>
 </header>
-<main style="height: 68%">
-    <div class="container marketing" style="height: 100%">
-        <hr class="feature-divider">
+<main style="height: 70%">
+    <section>
+        <div class="container py-5">
         <c:if test="${exception ne null}">
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <strong><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-exclamation-octagon-fill" viewBox="0 0 16 16">
@@ -84,69 +84,160 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         </c:if>
-        <div class="card mb-3 p-4" style="height: 100%">
-            <div class="row g-0">
-                <div class="col-md-2">
-                    <div class="card-body">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor" class="bi bi-person-check" viewBox="0 0 16 16">
-                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514ZM11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"></path>
-                        <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"></path>
-                    </svg>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <div class="card-body text-center">
+                            <img src="../images/person-circle.svg" alt="avatar"
+                                 class="rounded-circle img-fluid" style="width: 140px">
+                            <h5 class="my-3">${sessionScope.user.getFirstName()} ${sessionScope.user.getLastName()}</h5>
+                            <p class="text-muted mb-3">${sessionScope.user.getEmail()}</p>
+                            <p class="text-muted mb-5">${sessionScope.user.getRole()}</p>
+                            <div class="d-flex justify-content-center mb-4">
+                                <div class="col-sm-6">
+                                <button class="btn btn-warning border-0" data-bs-toggle="modal" data-bs-target="#editProfile" data-bs-whatever="@mdo">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                    </svg>  <fmt:message key="editProfile"/>
+                                </button>
+                            </div>
+
+                                <div class="modal fade" id="editProfile" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header align-content-center">
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel"><fmt:message key="editProfile"/></h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <form class="needs-validation" novalidate action="${pageContext.request.contextPath}/manager/"  method="post">
+                                                <div class="modal-body">
+                                                    <input type="hidden" name="command" value="editProfile">
+                                                    <input type="hidden" name="id" value="${sessionScope.user.getId()}">
+                                                    <div class="form-floating mb-3">
+                                                        <div class="input-group">
+                                                            <span class="input-group-text" id="basic-addon6"><fmt:message key="label.first_name"/></span>
+                                                            <input type="text" name="firstName" class="form-control" id="firstName"  value="${sessionScope.user.getFirstName()}" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-floating mb-3">
+                                                        <div class="input-group">
+                                                            <span class="input-group-text" id="basic-addon2"><fmt:message key="label.last_name"/></span>
+                                                            <input type="text" name="lastName" class="form-control" id="lastName"  value="${sessionScope.user.getLastName()}" required>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-floating mb-3">
+                                                        <div class="input-group">
+                                                            <span class="input-group-text" id="basic-addon3"><fmt:message key="label.email"/></span>
+                                                            <input type="email" name="email" class="form-control" id="email" value="${sessionScope.user.getEmail()}" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><fmt:message key="close"/></button>
+                                                    <button class="btn btn-warning" type="submit"><fmt:message key="edit"/></button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <button class="btn btn-warning border-0" data-bs-toggle="modal" data-bs-target="#editPassword" data-bs-whatever="@mdo">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                        </svg> <fmt:message key="changePassword"/>
+                                    </button>
+                                </div>
+                                <div class="modal fade" id="editPassword" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header align-content-center">
+                                                <h1 class="modal-title fs-5" id="ModalLabel"><fmt:message key="changePassword"/></h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <form class="needs-validation" novalidate action="${pageContext.request.contextPath}/manager/"  method="post">
+                                                <div class="modal-body">
+                                                    <input type="hidden" name="command" value="editPassword">
+                                                    <input type="hidden" name="id" value="${sessionScope.user.getId()}">
+                                                    <div class="form-floating mb-3">
+                                                        <div class="input-group">
+                                                            <span class="input-group-text" id="basic-addon"><fmt:message key="label.password"/></span>
+                                                            <input type="password" name="password" class="form-control" id="password" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><fmt:message key="close"/></button>
+                                                    <button class="btn btn-warning" type="submit"><fmt:message key="edit"/></button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="card-body">
-                        <h5 class="card-title">${sessionScope.user.getFirstName()} ${sessionScope.user.getLastName()}</h5>
-                        <p class="card-text">${sessionScope.user.getRole()}</p>
-                        <p class="card-text">${sessionScope.user.getEmail()}</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <fmt:message key="occupancy.of.rooms"/>
-                            <form action="${pageContext.request.contextPath}/manager/" method="get"><div class="form-floating">
-                                <div class="input-group">
+                <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <fmt:message key="occupancy.of.rooms"/>
+                                <form action="${pageContext.request.contextPath}/manager/" method="get"><div class="form-floating">
+                                    <div class="input-group">
 
                                         <input type="hidden" name="command" value="getOccupancyOfRoom">
-                                <input type="date" class=" form-control" name="dateOfOccupancy" id="dateOfOccupancy"
-                                       value="${sessionScope.dateOfOccupancy}" required>
+                                        <input type="date" class=" form-control" name="dateOfOccupancy" id="dateOfOccupancy"
+                                               value="${sessionScope.dateOfOccupancy}" required>
                                         <button type="submit" class="btn btn-warning">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-search"
-                                                                                           viewBox="0 0 16 16">
-                                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
-                                        </svg>
+                                                 viewBox="0 0 16 16">
+                                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+                                            </svg>
                                         </button>
 
-                                </div>
-                            </div> </form></div>
-                        <div class="card-body">
+                                    </div>
+                                </div> </form></div>
+                            <div class="card-body" style="padding-top: 0;padding-bottom: 0;">
 
-                                <div class="row row-cols-sm-5 row-cols-sm-2 row-cols-md-5 p-5" style="width: 500px; margin-left: -29px;">
+                                <div class="row col-lg-5 p-4" style="width: 600px; margin-left: 0px;">
                                     <c:forEach items="${sessionScope.roomMap}" var="room" varStatus="loop">
                                         <div class="col" style="width: 17%; margin-bottom: 5px">
                                             <div class="card shadow-sm">
                                                 <a <c:if test="${room.getValue() ne 'FREE'}"> href="${pageContext.request.contextPath}/manager/?command=viewOccupancyOfRoom&numberOfRoom=${room.getKey()}&status=${room.getValue()}"</c:if> <tags:buttonByStatus value="${room.getValue()}"/>
                                                         data-bs-toggle="tooltip"
                                                         data-bs-title="<fmt:message key="room.number"/>${room.getKey()} <fmt:message key="form.status"/>&nbsp;:&nbsp;<fmt:message key="status.${room.getValue()}"/>" data-bs-content="${room.getValue()}"
-                                                >${room.getKey()}
+                                                >
+                                                    <c:if test="${room.getValue() eq 'FREE'}"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-door-open-fill" viewBox="0 0 16 16">
+                                                        <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15H1.5zM11 2h.5a.5.5 0 0 1 .5.5V15h-1V2zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1z"/>
+                                                    </svg></c:if>
+                                                    <c:if test="${room.getValue() ne 'FREE'}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-door-closed-fill" viewBox="0 0 16 16">
+                                                            <path d="M12 1a1 1 0 0 1 1 1v13h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V2a1 1 0 0 1 1-1h8zm-2 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                                        </svg>
+                                                    </c:if>
+                                                    <p class="mb-0">${room.getKey()}</p>
                                                 </a>
                                             </div>
                                         </div>
 
                                     </c:forEach>
                                 </div>
-                            <script>
-                                const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-                                const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-                            </script>
+                                <script>
+                                    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+                                    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+                                </script>
 
+                            </div>
                         </div>
-                    </div>
+
 
                 </div>
             </div>
         </div>
+    </section>
 
 
     </div>

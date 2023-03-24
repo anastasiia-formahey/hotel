@@ -125,7 +125,7 @@
                         <input type="hidden" name="checkIn" value="${booking.getCheckInDate()}">
                         <input type="hidden" name="checkOut" value="${booking.getCheckOutDate()}">
                     <tr>
-                        <th scope="row"><a href="${pageContext.request.contextPath}/client/?command=applicationFormPage">${booking.getId()}</a></th>
+                        <th scope="row">${booking.getId()}</th>
                         <td>${booking.getRoomId()}</td>
                         <td>${booking.getNumberOfPerson()}</td>
                         <td>${booking.getCheckInDate()}</td>

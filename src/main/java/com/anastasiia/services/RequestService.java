@@ -13,9 +13,9 @@ import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
-import javax.sql.DataSource;
-import java.sql.SQLException;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 /**
  * RequestService - class mediates communication between a controller and DAO/repository layer
@@ -104,13 +104,53 @@ public class RequestService {
      * Method updates Status to <b>CONFIRMED</b> by Application identity
      * @param applicationId Application identity
      */
-    public void updateStatus(int applicationId) throws ServiceException {
+    public void updateStatus(int applicationId, Status status) throws ServiceException {
         try {
-            requestDAO.updateStatus(applicationId, Status.CONFIRMED);
-            applicationDAO.updateStatus(applicationId, Status.CONFIRMED);
+            requestDAO.updateStatus(applicationId, status);
+            applicationDAO.updateStatus(applicationId, status);
         } catch (DAOException e) {
             log.error("DAOException was caught. Cause : "+ e);
             throw new ServiceException(e);
         }
     }
+
+    public void checkRequests(){
+        try {
+            List<Request> requestList = requestDAO.selectNotConfirmed();
+            for (Request request: requestList) {
+                if(withDrawnRequest(request)) updateStatus(request.getApplicationId(), Status.CANCELED);
+                occupancyOfRoomDAO.updateStatus(request.getRoomId(), Status.CANCELED,request.getCheckInDate(),request.getCheckOutDate());
+            }
+        } catch (DAOException e) {
+            log.error("DAOException was caught. Cause : "+ e);
+        }catch (ServiceException e){
+            log.error("ServiceException was caught. Cause : "+ e);
+        }
+
+    }
+    private boolean withDrawnRequest(Request request){
+        Date expirationDate = Date.valueOf(request.getCreatingDate().toLocalDate().plusDays(2));
+        if(request.getCheckInDate().before(expirationDate)){
+            expirationDate = request.getCheckInDate();
+        }
+        return expirationDate.before(new Date(Calendar.getInstance().getTime().getTime()));
+    }
+
+    public void cancelRequest(RequestDTO requestDTO) throws ServiceException {
+        if(requestDTO.getStatusOfRequest() != Status.CONFIRMED) {
+            updateStatus(requestDTO.getApplicationId(), Status.CANCELED);
+            for (RequestDTO.RequestElement requestElement : requestDTO.getRequestElements()) {
+                try {
+                    occupancyOfRoomDAO.updateStatus(
+                            requestElement.getRoom().getId(),
+                            Status.CANCELED,
+                            requestElement.getCheckInDate(),
+                            requestElement.getCheckOutDate());
+                } catch (DAOException e) {
+                    throw new ServiceException(e);
+                }
+            }
+        }else throw new ServiceException(JspAttributes.CANCEL_REQUEST_EXCEPTION);
+    }
+
 }

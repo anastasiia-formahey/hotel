@@ -3,21 +3,21 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <c:choose>
     <c:when test="${value == 'NEW'}">
-        class="btn btn-primary"
+        class="btn btn-outline-primary"
     </c:when>
     <c:when test="${value == 'FREE'}">
-        class="btn btn-success"
+        class="btn btn-outline-success"
     </c:when>
     <c:when test="${value == 'BUSY'}">
-        class="btn btn-danger"
+        class="btn btn-outline-danger"
     </c:when>
     <c:when test="${value == 'PAID'}">
-        class="btn btn-warning"
+        class="btn btn-outline-warning"
     </c:when>
     <c:when test="${value == 'BOOKED'}">
-        class="btn btn-warning"
+        class="btn btn-outline-warning"
     </c:when>
     <c:when test="${value == 'NOT_CONFIRMED'}">
-        class="btn btn-secondary"
+        class="btn btn-outline-secondary"
     </c:when>
 </c:choose>

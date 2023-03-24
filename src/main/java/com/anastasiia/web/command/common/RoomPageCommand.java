@@ -55,7 +55,10 @@ public class RoomPageCommand implements Command {
         orderBy = request.getParameter(JspAttributes.ORDER_BY);
         rows = roomService.countAllRooms();
         request.getSession().setAttribute(JspAttributes.ROWS, rows);
-        if (orderBy == null){orderBy= Fields.USER_ID;}
+        if (orderBy == null){
+            orderBy= Fields.USER_ID;
+            request.setAttribute(JspAttributes.ORDER_BY, orderBy);
+        }
         Pagination.setPagination(request);
         request.getSession().setAttribute(JspAttributes.CLASS_OF_ROOM, ClassOfRoom.values());
         try {

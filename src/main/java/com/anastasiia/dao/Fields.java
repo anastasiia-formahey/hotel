@@ -40,6 +40,8 @@ public interface Fields {
  String REQUEST_CHECK_OUT = "check_out_date";
  String REQUEST_ROOM_ID = "room_id";
  String REQUEST_STATUS = "status";
+ String REQUEST_STATUS_ID = "status_id";
+ String CREATING_DATE = "creating_date";
 
  //ROOM fields
  String ROOM_ID = "id";
@@ -59,4 +61,6 @@ public interface Fields {
  String USER_EMAIL = "email";
  String USER_PASSWORD = "password";
  String USER_ROLE = "role";
+
+ String STATUS_ID = "status_id";
 }

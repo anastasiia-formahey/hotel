@@ -54,6 +54,12 @@ public interface JspAttributes {
     String ROOM_ADDED = "roomAdded";
     String ROOM_EDIT_SUCCESS = "roomEditSuccess";
 
+    String CANCEL_REQUEST_EXCEPTION = "cannotCancelRequest";
+    String CANCEL_REQUEST_SUCCESS = "cancelRequestSuccess";
+    String EDIT_PROFILE_SUCCESS = "editProfileSuccess";
+    String EDIT_PASSWORD_SUCCESS = "editPasswordSuccess";
+    String SESSION_TIME_OUT = "sessionTimedOut";
+
 
     //general
     String LOCALE = "locale";

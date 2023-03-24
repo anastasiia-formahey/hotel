@@ -12,6 +12,7 @@ public class Request {
     private Date checkOutDate;
     private int roomId;
     private Status status;
+    private Date creatingDate;
 
     public Request(int applicationId, Date checkInDate, Date checkOutDate, int roomId, Status status) {
         this.applicationId = applicationId;
@@ -62,6 +63,14 @@ public class Request {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Date getCreatingDate() {
+        return creatingDate;
+    }
+
+    public void setCreatingDate(Date creatingDate) {
+        this.creatingDate = creatingDate;
     }
 
     @Override

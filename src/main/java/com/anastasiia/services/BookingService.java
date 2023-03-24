@@ -87,12 +87,11 @@ public class BookingService {
      * If Booking was not <code>PAID</code> within two days from creation,
      * Status changes to <code>CANCELED</code>
      */
-    private void checkBooking(){
+    public void checkBooking(){
         List<Booking> bookings;
         try {
             bookings = bookingDAO.selectAll();
             for (Booking booking:bookings) {
-                log.debug(withDrawnBooking(booking));
                 if(!withDrawnBooking(booking)
                         && booking.getStatusOfBooking().equals(Status.BOOKED)
                         || !withDrawnBooking(booking)

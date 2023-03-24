@@ -27,4 +27,7 @@
         <c:when test="${value == 'NOT_CONFIRMED'}">
                 class="badge bg-secondary"
         </c:when>
+        <c:when test="${value == 'CANCELED'}">
+                class="badge bg-secondary"
+        </c:when>
 </c:choose>

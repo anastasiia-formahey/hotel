@@ -56,7 +56,6 @@
                     <h1 class="modal-title fs-5" id="exampleModalLabel1"><fmt:message key="request"/>${application.getId()}</h1>
                 </div>
                 <form action="${pageContext.request.contextPath}/client/" method="post">
-                <input type="hidden" name="command" value="bookRoom">
                 <input type="hidden" name="confirm" value="true">
                 <input type="hidden" name="applicationId" value="${application.getId()}">
                 <c:forEach items="${sessionScope.bookingDTOS}" var="booking" varStatus="loop">
@@ -80,15 +79,15 @@
                                     </div>
 
                                     <div class="form-floating mb-2">
-                                        <input type="text" name="lengthOfStay" class="form-control" id="checkInModal"
+                                        <input type="text" name="checkInDate" class="form-control" id="checkInDate"
                                                value="${booking.getCheckInDate()}" readonly>
-                                        <label for="checkInModal"><fmt:message key="form.checkInDate"/></label>
+                                        <label for="checkInDate"><fmt:message key="form.checkInDate"/></label>
                                     </div>
 
                                     <div class="form-floating mb-2">
-                                        <input type="text" name="lengthOfStay" class="form-control" id="checkOutModal"
+                                        <input type="text" name="checkOutDate" class="form-control" id="checkOutDate"
                                                value="${booking.getCheckOutDate()}" readonly>
-                                        <label for="checkOutModal"><fmt:message key="form.checkOutDate"/></label>
+                                        <label for="checkOutDate"><fmt:message key="form.checkOutDate"/></label>
                                     </div>
 
                                     <div class="form-floating mb-2">
@@ -101,11 +100,11 @@
                     </div>
 
                 </c:forEach>
-                <div class="col-12">
-                     <button class="w-100 mb-2 btn btn-lg rounded-3 btn-warning" type="submit"><fmt:message key="confirm"/></button>
+                <div class="d-flex justify-content-end">
+                     <button class="m-2 btn btn-lg rounded-3 btn-success" type="submit" name="command" value="bookRoom"><fmt:message key="confirm"/></button>
+                    <button class="m-2 btn btn-lg rounded-3 btn-danger" type="submit" name="command" value="cancelRequest"><fmt:message key="cancel"/></button>
                 </div>
                 </form>
-
 
             </div>
         </div>

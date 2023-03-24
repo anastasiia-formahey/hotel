@@ -7,6 +7,8 @@ public interface SqlQuery {
             = "INSERT INTO `hotel`.`user` VALUES (DEFAULT, ?, ?, ?, ?, ?)";
     String SQL_FIND_USER_BY_EMAIL = "SELECT * FROM user WHERE email=?";
     String SQL_FIND_USER_BY_ID = "SELECT * FROM user WHERE id=?";
+    String SQL_UPDATE_USER = "UPDATE user SET first_name=?, last_name=?, email=? WHERE id=?";
+    String SQL_UPDATE_USER_PASSWORD = "UPDATE user SET password=? WHERE id=?";
 
     //room
     String SQL_INSERT_ROOM
@@ -29,27 +31,29 @@ public interface SqlQuery {
     //application
     String SQL_INSERT_APPLICATION
             = "INSERT INTO `hotel`.`application` VALUES (DEFAULT, ?, ?, ?, ?, ?)";
-    String SQL_SELECT_ALL_APPLICATIONS = "SELECT id, client_id, number_of_guests, apartment_class, length_of_stay, status\n" +
-            "FROM application join status on application.status_id = status.status_id";
-    String SQL_SELECT_ALL_APPLICATIONS_BY_USER_ID = "SELECT id, client_id, number_of_guests, apartment_class, length_of_stay, status\n" +
-            "FROM application join status on application.status_id = status.status_id WHERE client_id=?";
+    String SQL_SELECT_ALL_APPLICATIONS = "SELECT application.id, client_id, number_of_guests, apartment_class, length_of_stay, application.status_id, status\n" +
+            "            FROM hotel.application join hotel.status on application.status_id = status.status_id";
+    String SQL_SELECT_ALL_APPLICATIONS_BY_USER_ID = "SELECT application.id, client_id, number_of_guests, apartment_class, length_of_stay, application.status_id, status\n" +
+            "FROM hotel.application join hotel.status on application.status_id = status.status_id WHERE client_id=?";
     String SQL_UPDATE_APPLICATION_STATUS = "UPDATE application SET status_id=? WHERE id=?";
     String COUNT_APPLICATION_BY_STATUS = "SELECT COUNT(id) FROM application WHERE status_id=?";
     String COUNT_ALL_APPLICATION = "SELECT COUNT(id) FROM application";
 
     //request
     String SQL_UPDATE_REQUEST_STATUS = "UPDATE request SET status_id=? WHERE application_id=?";
-    String SQL_INSERT_REQUEST = "INSERT INTO request VALUES (?,?,?,?,DEFAULT)";
+    String SQL_INSERT_REQUEST = "INSERT INTO request VALUES (?,?,?,?,DEFAULT,?)";
     String SQL_SELECT_REQUEST_BY_APPLICATION_ID = "SELECT application_id, check_in_date, check_out_date,room_id, status\n" +
             "       FROM request join status on request.status_id = status.status_id   WHERE application_id=?";
+    String SQL_SELECT_REQUEST_NOT_CONFIRMED = "SELECT application_id, check_in_date, check_out_date, room_id, status.status_id, status, creating_date\n" +
+            " FROM hotel.request join hotel.status on request.status_id = status.status_id WHERE request.status_id = 7";
 
     //booking
     String SQL_INSERT_BOOKING
             = "INSERT INTO `hotel`.`booking` VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ? )";
-    String SQL_SELECT_ALL_BOOKINGS = "SELECT id, room_id, client_id, check_in_date, check_out_date, price, date_of_booking, status\n" +
-            "FROM booking join status on booking.status_id = status.status_id WHERE status!='CANCELED'";
-    String SQL_SELECT_ALL_BOOKINGS_BY_USER_ID = "SELECT id, room_id, client_id, check_in_date, check_out_date, price, date_of_booking, status\n" +
-            "FROM booking join status on booking.status_id = status.status_id WHERE client_id=? AND status!='CANCELED'";
+    String SQL_SELECT_ALL_BOOKINGS = "SELECT id, room_id, client_id, check_in_date, check_out_date, price, date_of_booking, booking.status_id, status\n" +
+            "FROM hotel.booking join hotel.status on  booking.status_id =  status.status_id WHERE status!='CANCELED'";
+    String SQL_SELECT_ALL_BOOKINGS_BY_USER_ID = "SELECT id, room_id, client_id, check_in_date, check_out_date, price, date_of_booking, booking.status_id, status\n" +
+            "FROM hotel.booking join hotel.status on  booking.status_id =  status.status_id WHERE client_id=? AND status!='CANCELED'";
     String SQL_UPDATE_BOOKING_STATUS
             = "UPDATE booking SET status_id=? WHERE id=?";
     String COUNT_ALL_BOOKING = "SELECT COUNT(id) FROM booking WHERE status_id!=10";

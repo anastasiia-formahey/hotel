@@ -8,11 +8,9 @@ import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -60,6 +58,7 @@ public class RequestDAO {
                     preparedStatement.setDate(2, request.getCheckInDate());
                     preparedStatement.setDate(3, request.getCheckOutDate());
                     preparedStatement.setInt(4, request.getRoomId());
+                    preparedStatement.setDate(5, new Date(Calendar.getInstance().getTime().getTime()));
                     preparedStatement.executeUpdate();
                     isSuccess = true;
                 }else {
@@ -117,8 +116,7 @@ public class RequestDAO {
                        resultSet.getDate(Fields.REQUEST_CHECK_IN),
                        resultSet.getDate(Fields.REQUEST_CHECK_OUT),
                        resultSet.getInt(Fields.REQUEST_ROOM_ID),
-                       Status.valueOf(resultSet.getString(Fields.REQUEST_STATUS))
-               );
+                       Status.valueOf(resultSet.getString(Fields.REQUEST_STATUS)));
                requests.add(request);
            }
         } catch (SQLException ex){
@@ -127,5 +125,28 @@ public class RequestDAO {
         }
         log.debug("Method finished");
         return requests;
+    }
+
+    public List<Request> selectNotConfirmed() throws DAOException {
+        List <Request> requestList = new ArrayList<>();
+        ResultSet resultSet;
+        try(Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_REQUEST_NOT_CONFIRMED)) {
+        resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                Request request = new Request(
+                        resultSet.getInt(Fields.REQUEST_APPLICATION_ID),
+                        resultSet.getDate(Fields.REQUEST_CHECK_IN),
+                        resultSet.getDate(Fields.REQUEST_CHECK_OUT),
+                        resultSet.getInt(Fields.REQUEST_ROOM_ID),
+                        Status.valueOf(resultSet.getString(Fields.REQUEST_STATUS)));
+                request.setCreatingDate(resultSet.getDate(Fields.CREATING_DATE));
+                requestList.add(request);
+            }
+        } catch (SQLException e) {
+            log.error("Cannot execute the query ==> " + e);
+            throw new DAOException(e);
+        }
+        return requestList;
     }
 }

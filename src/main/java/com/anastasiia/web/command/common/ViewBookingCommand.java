@@ -47,8 +47,9 @@ public class ViewBookingCommand implements Command {
                 : bookingService.countAllBookingByUserId(userDTO.getId());
         request.getSession().setAttribute(JspAttributes.ROWS, rows);
         if (orderBy == null){
-            orderBy= Fields.USER_ID;
+            orderBy= Fields.BOOKING_ID + " DESC";
         }
+        request.getSession().setAttribute(JspAttributes.ORDER_BY, orderBy);
         Pagination.setPagination(request);
         switch ((Role)request.getSession().getAttribute(JspAttributes.ROLE)){
             case CLIENT : {

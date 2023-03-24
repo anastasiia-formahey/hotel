@@ -79,7 +79,7 @@ class ValidationTest {
 
     @Test
     void validDateToCheckIn() {
-        assertDoesNotThrow(()-> Validation.validDateToCheckIn(Date.valueOf("2024-03-08"),Date.valueOf("2024-03-09")));
+        assertDoesNotThrow(()-> Validation.validDateToCheckIn(Date.valueOf("2023-03-24"),Date.valueOf("2023-03-25")));
         assertThrows(ValidationException.class, ()-> Validation.validDateToCheckIn(Date.valueOf("2023-03-07"),Date.valueOf("2023-03-08")));
         assertThrows(ValidationException.class, ()-> Validation.validDateToCheckIn(Date.valueOf("2023-03-07"),Date.valueOf("2023-03-08")));
 

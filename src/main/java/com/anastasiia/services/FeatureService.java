@@ -54,17 +54,21 @@ public class FeatureService {
      * @return list of selected <code>Feature</code> objects
      */
     public List<Feature> getFeaturesForRoom(String[] list){
-        List<Feature> featuresList = getListOfFeatures();
-        List<Feature> featuresSelected = new ArrayList<>();
-        for (Object selected: list) {
-            for (Feature feature: featuresList) {
-                if(feature.getId() == Integer.parseInt(selected.toString())){
-                    featuresSelected.add(feature);
+
+            List<Feature> featuresList = getListOfFeatures();
+            List<Feature> featuresSelected = new ArrayList<>();
+            try {
+                for (Object selected : list) {
+                for (Feature feature : featuresList) {
+                    if (feature.getId() == Integer.parseInt(selected.toString())) {
+                        featuresSelected.add(feature);
+                    }
                 }
             }
-
+        }catch (NullPointerException e){
+            log.error("NullPointerException was caught");
         }
-        return featuresSelected;
+            return featuresSelected;
     }
 
     /**

@@ -4,7 +4,6 @@ import com.anastasiia.web.command.client.*;
 import com.anastasiia.web.command.common.*;
 import com.anastasiia.web.command.manager.*;
 import com.anastasiia.web.context.AppContext;
-import jdk.nashorn.internal.objects.annotations.Getter;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
@@ -25,6 +24,8 @@ public class CommandContainer {
         commandMap.put("home", new HomeCommand(appContext));
         commandMap.put("login", new LoginCommand(appContext));
         commandMap.put("signUp", new SignUpCommand(appContext));
+        commandMap.put("editProfile", new EditProfile(appContext));
+        commandMap.put("editPassword", new EditPassword(appContext));
         commandMap.put("rooms", new RoomPageCommand(appContext));
         commandMap.put("addRoomPage", new AddRoomPageCommand(appContext));
         commandMap.put("addRoom", new AddRoomCommand(appContext));
@@ -45,6 +46,7 @@ public class CommandContainer {
         commandMap.put("deleteRoomFromReview", new DeleteRoomFromReviewCommand(appContext));
         commandMap.put("sendRequest", new SendRequestCommand(appContext));
         commandMap.put("getRequest", new GetRequestCommand(appContext));
+        commandMap.put("cancelRequest", new CancelRequestCommand(appContext));
         commandMap.put("getOccupancyOfRoom", new GetOccupancyOfRoom(appContext));
         commandMap.put("viewOccupancyOfRoom", new ViewOccupancyOfRoom(appContext));
         commandMap.put("checkInRoom", new CheckInRoom(appContext));

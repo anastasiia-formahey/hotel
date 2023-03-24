@@ -3,10 +3,7 @@ package com.anastasiia.web.command.common;
 import com.anastasiia.dto.UserDTO;
 import com.anastasiia.exceptions.ServiceException;
 import com.anastasiia.exceptions.ValidationException;
-import com.anastasiia.services.ApplicationService;
-import com.anastasiia.services.BookingService;
-import com.anastasiia.services.RoomService;
-import com.anastasiia.services.Validation;
+import com.anastasiia.services.*;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Pages;
 import com.anastasiia.utils.Role;
@@ -26,11 +23,13 @@ public class HomeCommand implements Command {
     ApplicationService applicationService;
     RoomService roomService;
     BookingService bookingService;
+    RequestService requestService;
 
     public HomeCommand(AppContext appContext) {
         applicationService = appContext.getApplicationService();
         roomService = appContext.getRoomService();
         bookingService = appContext.getBookingService();
+        requestService = appContext.getRequestService();
     }
 
     @Override
@@ -46,10 +45,13 @@ public class HomeCommand implements Command {
 
         switch (roleInSession){
             case CLIENT: {
+                bookingService.checkBooking();
                 homePage = Pages.CLIENT_HOME;
                 break;
             }
             case MANAGER: {
+                bookingService.checkBooking();
+                requestService.checkRequests();
                 homePage = Pages.MANAGER_HOME;
                 Date dateOfOccupancy = bookingService.getCurrentDate();
                 try{

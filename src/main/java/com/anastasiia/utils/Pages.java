@@ -15,6 +15,7 @@ public interface Pages {
 
     //client
     String CLIENT_HOME = "/client/home.jsp";
+    String CLIENT_HOME_COMMAND = "/client/?command=home";
     String CLIENT_ROOMS = "/client/rooms.jsp";
     String CLIENT_ROOMS_COMMAND = "/client/?command=rooms";
     String CLIENT_VIEW_ROOM =  "/client/viewRoom.jsp";

@@ -44,7 +44,7 @@ public class BookRoomCommand implements Command {
             bookingService.insertBooking(bookingDTOS, isConfirm);
                 if (request.getParameter(JspAttributes.APPLICATION_ID) != null) {
                     int applicationId = Validation.validIntField(request.getParameter(JspAttributes.APPLICATION_ID));
-                        requestService.updateStatus(applicationId);
+                        requestService.updateStatus(applicationId, Status.CONFIRMED);
                 }
             request.getSession().setAttribute(JspAttributes.SUCCESS_MESSAGE, JspAttributes.BOOKING_ADDED);
         }catch (ValidationException e) {

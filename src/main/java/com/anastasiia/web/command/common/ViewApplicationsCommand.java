@@ -42,7 +42,10 @@ public class ViewApplicationsCommand implements Command {
                 ? applicationService.applicationCountAll()
                 : applicationService.selectAll(userDTO.getId()).size();
         request.getSession().setAttribute(JspAttributes.ROWS, rows);
-        if (orderBy == null) orderBy= Fields.APPLICATION_ID;
+        if (orderBy == null){
+            orderBy= Fields.STATUS_ID;
+        }
+        request.getSession().setAttribute(JspAttributes.ORDER_BY, orderBy);
         Pagination.setPagination(request);
         switch ((Role)request.getSession().getAttribute(JspAttributes.ROLE)){
             case CLIENT : {

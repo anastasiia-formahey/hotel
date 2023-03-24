@@ -52,7 +52,8 @@ public class Validation {
             if(field.equals("")) throw new ValidationException(JspAttributes.FIELD_EXCEPTION);
             if(Integer.parseInt(field) <= 0 ) throw new ValidationException(JspAttributes.NUMBER_EXCEPTION);
             else return Integer.parseInt(field);
-        }catch (NullPointerException | NumberFormatException e){
+        }
+        catch (NullPointerException | NumberFormatException e){
             throw new ValidationException(JspAttributes.NUMBER_EXCEPTION);
         }
     }
@@ -80,9 +81,12 @@ public class Validation {
     }
 
     public static void validDateToCheckIn(Date checkIn, Date checkOut) throws ValidationException{
-        if(checkIn.before(new Date(Calendar.getInstance().getTime().getTime())))
-            throw new ValidationException(JspAttributes.CHECK_IN_EXCEPTION);
-        if(checkOut.before(new Date(Calendar.getInstance().getTime().getTime())))
-            throw new ValidationException(JspAttributes.CHECK_IN_EXCEPTION);
+        if(checkIn.after(new Date(Calendar.getInstance().getTime().getTime()))) {
+          throw new ValidationException(JspAttributes.CHECK_IN_EXCEPTION);
+        }
+        if(checkOut.before(new Date(Calendar.getInstance().getTime().getTime()))){
+           throw new ValidationException(JspAttributes.CHECK_IN_EXCEPTION);
+        }
+
     }
 }

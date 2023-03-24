@@ -26,12 +26,12 @@
                 </a>
                 <h1 class="fw-bold mb-0 fs-2"><fmt:message key="header.sign_up"/></h1>
                 <div class="locale">
-                    <form class="setlocale" action="locale/" method="get">
+                    <form action="${pageContext.request.contextPath}/locale/" method="get">
                         <input type="hidden" name="command" value="locale"/>
                         <select class="form-select-sm" id="locale" name="locale" onchange="submit()"
-                                style="background-color: white;color: black;">
-                            <option value="en" ${locale == 'en' ? 'selected' : ''}>EN</option>
-                            <option value="ua" ${locale == 'ua' ? 'selected' : ''}>UA</option>
+                                style="background-color: RGBA(33,37,41,var(--bs-bg-opacity,1))!important; color: white">
+                            <option value="en" ${locale == 'en' ? 'selected' : ''}><fmt:message key="lang.en"/></option>
+                            <option value="ua" ${locale == 'ua' ? 'selected' : ''}><fmt:message key="lang.ua"/></option>
                         </select>
                     </form>
                 </div>

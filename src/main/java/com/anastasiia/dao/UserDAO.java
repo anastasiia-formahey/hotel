@@ -93,6 +93,38 @@ public class UserDAO {
         log.debug("Method finished");
         return user;
     }
+
+    /**
+     * Method updates first name, last name and email columns in user table
+     * */
+    public void updateUser(String firstName, String lastName, String email, int id) throws DAOException {
+        try(Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_USER)){
+            preparedStatement.setString(1, firstName);
+            preparedStatement.setString(2, lastName);
+            preparedStatement.setString(3, email);
+            preparedStatement.setInt(4, id);
+            preparedStatement.executeUpdate();
+            connection.commit();
+
+        }catch (SQLException ex){
+            log.error("Cannot execute the query ==> " + ex);
+            throw new DAOException(ex);
+        }
+    }
+
+    public void updatePassword(String password, int id) throws DAOException {
+        try(Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_USER_PASSWORD)){
+            preparedStatement.setString(1, password);
+            preparedStatement.setInt(2, id);
+            preparedStatement.executeUpdate();
+            connection.commit();
+        }catch (SQLException ex){
+            log.error("Cannot execute the query ==> " + ex);
+            throw new DAOException(ex);
+        }
+    }
     /**
      * <Code>UserMapper</Code> class that help to create <Code>User</Code> object
      * from <code>ResultSet</code>

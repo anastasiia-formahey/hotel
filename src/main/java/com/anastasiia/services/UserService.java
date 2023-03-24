@@ -24,7 +24,7 @@ public class UserService {
     /**
      * method validate user email searching user in database
      * @param email user email
-     * @return <b>true</b> if user with this email is exist
+     * @return <b>true</b> if user with this email doesn't exist
      */
     public boolean validateUserByEmail(String email) throws InvalidUserException {
         try {
@@ -127,4 +127,24 @@ public class UserService {
             throw new ServiceException(e);
         }
     }
+
+    public void editUserProfile(String firstName, String lastName, String email, UserDTO userDTO) throws ServiceException {
+        try {
+            if(!userDTO.getEmail().equals(email)){
+                validateUserByEmail(email);
+            }
+            userDAO.updateUser(firstName, lastName, email, userDTO.getId());
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+    }
+    public void editPassword(String password, int id) throws ServiceException {
+        try {
+            Validation.validPassword(password);
+            userDAO.updatePassword(PasswordEncoder.encode(password), id);
+        } catch (DAOException e){
+            throw new ServiceException(e);
+        }
+    }
+
 }
