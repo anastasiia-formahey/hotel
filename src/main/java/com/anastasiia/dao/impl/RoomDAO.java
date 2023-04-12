@@ -1,5 +1,8 @@
-package com.anastasiia.dao;
+package com.anastasiia.dao.impl;
 
+import com.anastasiia.dao.Fields;
+import com.anastasiia.dao.IRoomDAO;
+import com.anastasiia.dao.SqlQuery;
 import com.anastasiia.entity.EntityMapper;
 import com.anastasiia.entity.Room;
 import com.anastasiia.exceptions.DAOException;
@@ -17,7 +20,7 @@ import java.util.Map;
 /**
  * <code>RoomDAO</code> - class implements data access object for <code>Room</code> entity
  */
-public class RoomDAO {
+public class RoomDAO implements IRoomDAO {
     private static final Logger log = Logger.getLogger(RoomDAO.class);
 
     private final DataSource dataSource;
@@ -265,14 +268,12 @@ public class RoomDAO {
          * @return <code>Room</code> object
          */
         public Room mapRow(ResultSet resultSet) throws SQLException {
-            log.debug("Mapper starts");
                 Room room = new Room();
                 room.setId(resultSet.getInt(Fields.ROOM_ID));
                 room.setNumberOfPerson(resultSet.getInt(Fields.ROOM_NUMBER_OF_PERSON));
                 room.setPrice(resultSet.getDouble(Fields.ROOM_PRICE));
                 room.setClassOfRoom(ClassOfRoom.valueOf(resultSet.getString(Fields.ROOM_CLASS_OF_ROOM)));
                 room.setImage(resultSet.getString(Fields.ROOM_IMAGE));
-                log.debug("Mapper finished");
                 return room;
 
         }

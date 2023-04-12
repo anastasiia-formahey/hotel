@@ -1,5 +1,6 @@
 package com.anastasiia.dao;
 
+import com.anastasiia.dao.impl.FeaturesDAO;
 import com.anastasiia.entity.Feature;
 import com.anastasiia.entity.Room;
 import com.anastasiia.exceptions.DAOException;

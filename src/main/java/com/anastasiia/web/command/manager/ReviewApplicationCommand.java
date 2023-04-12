@@ -3,7 +3,7 @@ package com.anastasiia.web.command.manager;
 import com.anastasiia.dto.ApplicationDTO;
 import com.anastasiia.dto.RequestDTO;
 import com.anastasiia.dto.RoomDTO;
-import com.anastasiia.services.ApplicationService;
+import com.anastasiia.services.impl.ApplicationService;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Pages;
 import com.anastasiia.web.command.Command;

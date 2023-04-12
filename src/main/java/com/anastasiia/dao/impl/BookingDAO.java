@@ -1,5 +1,8 @@
-package com.anastasiia.dao;
+package com.anastasiia.dao.impl;
 
+import com.anastasiia.dao.Fields;
+import com.anastasiia.dao.IBookingDAO;
+import com.anastasiia.dao.SqlQuery;
 import com.anastasiia.entity.Booking;
 import com.anastasiia.entity.EntityMapper;
 import com.anastasiia.entity.Room;
@@ -15,7 +18,7 @@ import java.util.List;
 /**
  *<Code>BookingDAO</Code> - class implements data access object for <code>Booking</code> entity
  * */
-public class BookingDAO {
+public class BookingDAO implements IBookingDAO {
 
     private static final Logger log = Logger.getLogger(BookingDAO.class);
     private final DataSource dataSource;
@@ -27,7 +30,7 @@ public class BookingDAO {
      * Method inserts new object into table
      * @param bookings list of objects <code>Booking.class</code> to insert
      * @return true - if objects were inserted
-     * @throws SQLException
+     * @throws DAOException
      */
     public boolean insertBooking(List<Booking> bookings) throws DAOException {
         log.debug("Method starts");
@@ -35,8 +38,8 @@ public class BookingDAO {
         boolean isSuccess = false;
         ResultSet resultSet;
         try (Connection connection = dataSource.getConnection();
-        PreparedStatement  preparedStatement1 = connection.prepareStatement(SqlQuery.SQL_SELECT_ROOM_FROM_OCCUPANCY_OF_ROOM);
-        PreparedStatement  preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_BOOKING)
+             PreparedStatement  preparedStatement1 = connection.prepareStatement(SqlQuery.SQL_SELECT_ROOM_FROM_OCCUPANCY_OF_ROOM);
+             PreparedStatement  preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_BOOKING)
         ){
             connection.setAutoCommit(false);
             connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
@@ -83,11 +86,11 @@ public class BookingDAO {
      * @param bookings list of objects <code>Booking.class</code> to insert
      * @param isConfirm <b>true</b> if inserted bookings are confirmation of request on application
      * @return true - if objects were inserted
-     * @throws SQLException
+     * @throws DAOException
      */
     public boolean insertBooking(List<Booking> bookings, boolean isConfirm) throws DAOException {
         log.debug("Method starts");
-       boolean isSuccess = false;
+       boolean isSuccess;
         try (Connection connection = dataSource.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_BOOKING)
         ){
@@ -117,7 +120,7 @@ public class BookingDAO {
      * Method updates status of a record in table
      * @param bookingId booking identity
      * @param status booking status to update
-     * @throws SQLException
+     * @throws DAOException
      */
     public void updateStatus(int bookingId, Status status) throws DAOException {
         log.debug("Method starts");
@@ -138,7 +141,7 @@ public class BookingDAO {
     /**
      * Method selects all records from the table
      * @return list of objects <code>Booking.class</code>
-     * @throws SQLException
+     * @throws DAOException
      */
     public List<Booking> selectAll() throws DAOException {
         log.debug("Method starts");
@@ -298,8 +301,6 @@ public class BookingDAO {
          * @return <code>Booking</code> object
          */
         public Booking mapRow(ResultSet resultSet) throws SQLException {
-            log.debug("Mapper starts");
-
                 Booking booking = new Booking();
                 booking.setId(resultSet.getInt(Fields.BOOKING_ID));
                 booking.setRoomId(resultSet.getInt(Fields.BOOKING_ROOM_ID));
@@ -309,7 +310,6 @@ public class BookingDAO {
                 booking.setPrice(resultSet.getDouble(Fields.BOOKING_PRICE));
                 booking.setDateOfBooking(resultSet.getDate(Fields.BOOKING_DATE_OF_BOOKING));
                 booking.setStatusOfBooking(Status.valueOf(resultSet.getString(Fields.BOOKING_STATUS)));
-                log.debug("Mapper finished");
                 return booking;
 
         }

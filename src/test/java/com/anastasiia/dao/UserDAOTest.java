@@ -1,5 +1,6 @@
 package com.anastasiia.dao;
 
+import com.anastasiia.dao.impl.UserDAO;
 import com.anastasiia.entity.User;
 import com.anastasiia.utils.Role;
 import org.junit.jupiter.api.Test;

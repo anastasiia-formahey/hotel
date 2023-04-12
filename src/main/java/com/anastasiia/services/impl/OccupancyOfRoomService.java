@@ -1,23 +1,22 @@
-package com.anastasiia.services;
+package com.anastasiia.services.impl;
 
 import com.anastasiia.dao.DBManager;
-import com.anastasiia.dao.OccupancyOfRoomDAO;
+import com.anastasiia.dao.impl.OccupancyOfRoomDAO;
 import com.anastasiia.dto.OccupancyOfRoomDTO;
-import com.anastasiia.dto.UserDTO;
 import com.anastasiia.entity.OccupancyOfRoom;
 import com.anastasiia.entity.User;
 import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.exceptions.ServiceException;
+import com.anastasiia.services.IOccupancyOfRoomService;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
-import javax.sql.DataSource;
 import java.sql.Date;
 import java.util.Map;
 /**
  * OccupancyOfRoomService - class mediates communication between a controller and DAO/repository layer
  */
-public class OccupancyOfRoomService {
+public class OccupancyOfRoomService implements IOccupancyOfRoomService {
     private static final Logger log = Logger.getLogger(OccupancyOfRoomService.class);
     private final OccupancyOfRoomDAO occupancyOfRoomDAO = new OccupancyOfRoomDAO(DBManager.getInstance());
 
@@ -53,7 +52,7 @@ public class OccupancyOfRoomService {
      * @return OccupancyOfRoomDTO object
      */
        public OccupancyOfRoomDTO getOccupancyOfRoomByRoomId(int roomId, Date date) throws ServiceException {
-           Map<OccupancyOfRoom, User> occupancyOfRoomUserMap = null;
+           Map<OccupancyOfRoom, User> occupancyOfRoomUserMap;
            try {
                occupancyOfRoomUserMap = occupancyOfRoomDAO.selectByRoomId(roomId,date);
                OccupancyOfRoomDTO occupancyOfRoomDTO = null;

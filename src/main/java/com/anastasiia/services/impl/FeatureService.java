@@ -1,13 +1,13 @@
-package com.anastasiia.services;
+package com.anastasiia.services.impl;
 
 import com.anastasiia.dao.DBManager;
-import com.anastasiia.dao.FeaturesDAO;
+import com.anastasiia.dao.impl.FeaturesDAO;
 import com.anastasiia.dto.RoomDTO;
 import com.anastasiia.entity.Feature;
 import com.anastasiia.entity.Room;
 import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.exceptions.ServiceException;
-import com.anastasiia.utils.JspAttributes;
+import com.anastasiia.services.IFeatureService;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * FeatureService - class mediates communication between a controller and DAO/repository layer
  */
-public class FeatureService {
+public class FeatureService implements IFeatureService {
 
     private static final Logger log = Logger.getLogger(FeatureService.class);
     private final FeaturesDAO featuresDAO = new FeaturesDAO(DBManager.getInstance());

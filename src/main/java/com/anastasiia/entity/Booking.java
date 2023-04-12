@@ -1,8 +1,5 @@
 package com.anastasiia.entity;
 
-import com.anastasiia.dto.BookingDTO;
-import com.anastasiia.services.RoomService;
-import com.anastasiia.services.UserService;
 import com.anastasiia.utils.Status;
 
 import java.sql.Date;

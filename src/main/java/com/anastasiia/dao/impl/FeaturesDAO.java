@@ -1,5 +1,8 @@
-package com.anastasiia.dao;
+package com.anastasiia.dao.impl;
 
+import com.anastasiia.dao.Fields;
+import com.anastasiia.dao.IFeaturesDAO;
+import com.anastasiia.dao.SqlQuery;
 import com.anastasiia.entity.Feature;
 import com.anastasiia.entity.Room;
 import com.anastasiia.exceptions.DAOException;
@@ -13,7 +16,7 @@ import java.util.List;
 /**
  * <Code>FeaturesDAO</Code> - class implements data access object for <code>Feature</code> entity
  */
-public class FeaturesDAO {
+public class FeaturesDAO implements IFeaturesDAO {
     private static final Logger log = Logger.getLogger(FeaturesDAO.class);
     private final DataSource dataSource;
     public FeaturesDAO(DataSource dataSource){
@@ -23,7 +26,7 @@ public class FeaturesDAO {
     /**
      * Method selects all records form the table
      * @return list of <code>Feature</code> objects
-     * @throws SQLException
+     * @throws DAOException
      */
     public List<Feature> selectAll() throws DAOException {
         log.debug("Method starts");
@@ -48,7 +51,7 @@ public class FeaturesDAO {
      * Method inserts new <code>Feature</code> object by specific <code>Room</code>
      * @param room <code>Room</code> object
      * @param feature <code>Feature</code> object
-     * @throws SQLException
+     * @throws DAOException
      */
     public void insertRoomFeatures(Room room, Feature feature) throws DAOException {
         log.debug("Method starts");
@@ -100,7 +103,7 @@ public class FeaturesDAO {
      * Method updates <code>Feature</code> objects by specific <code>Room</code>
      * @param room <code>Room</code> object
      * @param features list of <code>Feature</code> objects to update
-     * @throws SQLException
+     * @throws DAOException
      */
     public void updateRoomFeatures(Room room, List<Feature> features) throws DAOException {
         log.debug("Method starts");

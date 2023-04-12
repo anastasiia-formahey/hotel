@@ -1,23 +1,20 @@
 package com.anastasiia.services;
 
-import com.anastasiia.dao.ApplicationDAO;
+import com.anastasiia.dao.impl.ApplicationDAO;
 import com.anastasiia.dao.DBManager;
 import com.anastasiia.dao.Fields;
-import com.anastasiia.dao.UserDAO;
+import com.anastasiia.dao.impl.UserDAO;
 import com.anastasiia.dto.ApplicationDTO;
 import com.anastasiia.dto.UserDTO;
 import com.anastasiia.entity.Application;
-import com.anastasiia.entity.User;
-import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.exceptions.ServiceException;
+import com.anastasiia.services.impl.ApplicationService;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.Role;
 import com.anastasiia.utils.Status;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.MockedStatic;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.sql.DataSource;
 

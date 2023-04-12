@@ -20,8 +20,8 @@
   <input type="hidden" name="role" value="CLIENT">
   <div class="container">
     <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-        <img src="${pageContext.request.contextPath}/images/—Pngtree—watermelon%20logo_6945475.png" height="50px">
+      <a class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+        <img src="${pageContext.request.contextPath}/images/logo.png" height="50px">
       </a>
 
       <div class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">

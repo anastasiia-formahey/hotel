@@ -4,7 +4,7 @@ import com.anastasiia.dto.ApplicationDTO;
 import com.anastasiia.dto.UserDTO;
 import com.anastasiia.exceptions.ServiceException;
 import com.anastasiia.exceptions.ValidationException;
-import com.anastasiia.services.ApplicationService;
+import com.anastasiia.services.impl.ApplicationService;
 import com.anastasiia.services.Validation;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.JspAttributes;

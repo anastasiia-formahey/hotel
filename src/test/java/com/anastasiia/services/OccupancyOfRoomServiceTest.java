@@ -1,8 +1,9 @@
 package com.anastasiia.services;
 
 import com.anastasiia.dao.DBManager;
-import com.anastasiia.dao.OccupancyOfRoomDAO;
+import com.anastasiia.dao.impl.OccupancyOfRoomDAO;
 import com.anastasiia.exceptions.ServiceException;
+import com.anastasiia.services.impl.OccupancyOfRoomService;
 import com.anastasiia.utils.Status;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;

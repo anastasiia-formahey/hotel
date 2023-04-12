@@ -1,6 +1,5 @@
 package com.anastasiia.web.command.common;
 
-import com.anastasiia.services.UserService;
 import com.anastasiia.utils.Pages;
 import com.anastasiia.web.command.CommandResult;
 import org.junit.jupiter.api.AfterEach;

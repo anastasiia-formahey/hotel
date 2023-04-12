@@ -1,28 +1,29 @@
-package com.anastasiia.services;
+package com.anastasiia.services.impl;
 
 import com.anastasiia.dao.DBManager;
-import com.anastasiia.dao.UserDAO;
+import com.anastasiia.dao.impl.UserDAO;
 import com.anastasiia.dto.UserDTO;
 import com.anastasiia.entity.User;
 import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.exceptions.InvalidUserException;
 import com.anastasiia.exceptions.ServiceException;
+import com.anastasiia.services.IUserService;
+import com.anastasiia.services.PasswordEncoder;
+import com.anastasiia.services.Validation;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Role;
 import org.apache.log4j.Logger;
 
-import javax.sql.DataSource;
-
 /**
  * UserService - class mediates communication between a controller and DAO/repository layer
  */
-public class UserService {
+public class UserService implements IUserService {
     private static final Logger log = Logger.getLogger(UserService.class);
     private final UserDAO userDAO = new UserDAO(DBManager.getInstance());
     User user;
 
     /**
-     * method validate user email searching user in database
+     * Method validate user email searching user in database
      * @param email user email
      * @return <b>true</b> if user with this email doesn't exist
      */

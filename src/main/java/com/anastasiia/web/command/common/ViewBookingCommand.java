@@ -3,7 +3,7 @@ package com.anastasiia.web.command.common;
 import com.anastasiia.dto.BookingDTO;
 import com.anastasiia.dto.UserDTO;
 import com.anastasiia.exceptions.ServiceException;
-import com.anastasiia.services.BookingService;
+import com.anastasiia.services.impl.BookingService;
 import com.anastasiia.services.Pagination;
 import com.anastasiia.dao.Fields;
 import com.anastasiia.utils.JspAttributes;

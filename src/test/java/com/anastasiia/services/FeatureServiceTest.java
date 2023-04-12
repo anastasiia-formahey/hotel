@@ -3,6 +3,7 @@ package com.anastasiia.services;
 import com.anastasiia.dao.DBManager;
 import com.anastasiia.entity.Feature;
 import com.anastasiia.entity.Room;
+import com.anastasiia.services.impl.FeatureService;
 import com.anastasiia.utils.ClassOfRoom;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;

@@ -1,5 +1,8 @@
-package com.anastasiia.dao;
+package com.anastasiia.dao.impl;
 
+import com.anastasiia.dao.Fields;
+import com.anastasiia.dao.IOccupancyOfRoomDAO;
+import com.anastasiia.dao.SqlQuery;
 import com.anastasiia.entity.EntityMapper;
 import com.anastasiia.entity.OccupancyOfRoom;
 import com.anastasiia.entity.User;
@@ -16,7 +19,7 @@ import java.util.Map;
 /**
  * <code>OccupancyOfRoomDAO</code> class implements data access object for <code>OccupancyOfRoom</code> entity
  */
-public class OccupancyOfRoomDAO {
+public class OccupancyOfRoomDAO implements IOccupancyOfRoomDAO {
     private static final Logger log = Logger.getLogger(OccupancyOfRoomDAO.class);
 
     private final DataSource dataSource;

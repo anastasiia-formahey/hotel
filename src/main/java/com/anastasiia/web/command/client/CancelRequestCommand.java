@@ -2,8 +2,8 @@ package com.anastasiia.web.command.client;
 
 import com.anastasiia.dto.RequestDTO;
 import com.anastasiia.exceptions.ServiceException;
-import com.anastasiia.services.OccupancyOfRoomService;
-import com.anastasiia.services.RequestService;
+import com.anastasiia.services.impl.OccupancyOfRoomService;
+import com.anastasiia.services.impl.RequestService;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Pages;
 import com.anastasiia.web.command.Command;

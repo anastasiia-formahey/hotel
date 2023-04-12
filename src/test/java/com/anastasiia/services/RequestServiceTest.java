@@ -4,6 +4,7 @@ import com.anastasiia.dao.DBManager;
 import com.anastasiia.dto.RequestDTO;
 import com.anastasiia.dto.RoomDTO;
 import com.anastasiia.entity.Request;
+import com.anastasiia.services.impl.RequestService;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.Status;
 import org.junit.jupiter.api.AfterEach;

@@ -1,18 +1,19 @@
-package com.anastasiia.services;
+package com.anastasiia.services.impl;
 
 import com.anastasiia.dao.*;
+import com.anastasiia.dao.impl.BookingDAO;
+import com.anastasiia.dao.impl.OccupancyOfRoomDAO;
 import com.anastasiia.dto.BookingDTO;
 import com.anastasiia.dto.RequestDTO;
 import com.anastasiia.dto.UserDTO;
 import com.anastasiia.entity.Booking;
 import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.exceptions.ServiceException;
+import com.anastasiia.services.*;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
-import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 /**
  * BookingService - class mediates communication between a controller and DAO/repository layer
  */
-public class BookingService {
+public class BookingService implements IBookingService {
     private static final Logger log = Logger.getLogger(BookingService.class);
 
     private final BookingDAO bookingDAO = new BookingDAO(DBManager.getInstance());

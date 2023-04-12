@@ -4,7 +4,7 @@ import com.anastasiia.dto.ApplicationDTO;
 import com.anastasiia.dto.RequestDTO;
 import com.anastasiia.dto.RoomDTO;
 import com.anastasiia.exceptions.ServiceException;
-import com.anastasiia.services.RoomService;
+import com.anastasiia.services.impl.RoomService;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Pages;
 import com.anastasiia.web.command.Command;

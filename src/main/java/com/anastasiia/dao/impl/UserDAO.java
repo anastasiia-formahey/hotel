@@ -1,5 +1,8 @@
-package com.anastasiia.dao;
+package com.anastasiia.dao.impl;
 
+import com.anastasiia.dao.Fields;
+import com.anastasiia.dao.IUserDAO;
+import com.anastasiia.dao.SqlQuery;
 import com.anastasiia.entity.EntityMapper;
 import com.anastasiia.entity.User;
 import com.anastasiia.exceptions.DAOException;
@@ -11,7 +14,7 @@ import java.sql.*;
 /**
  * <code>UserDAO</code> - class implements data access object for <code>User</code> entity
  */
-public class UserDAO {
+public class UserDAO implements IUserDAO {
     private static final Logger log = Logger.getLogger(UserDAO.class);
     private final DataSource dataSource;
      public UserDAO(DataSource dataSource){
@@ -52,7 +55,7 @@ public class UserDAO {
         User user = null;
         ResultSet resultSet;
         try(Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_FIND_USER_BY_ID);
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_FIND_USER_BY_ID)
         ){
              preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
@@ -113,6 +116,11 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Method updates user password by user identity
+     * @param password new password to update
+     * @param id user identity
+     * */
     public void updatePassword(String password, int id) throws DAOException {
         try(Connection connection = dataSource.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_UPDATE_USER_PASSWORD)){
@@ -137,7 +145,6 @@ public class UserDAO {
          * @return <code>User</code> object
          */
         public User mapRow(ResultSet resultSet) throws SQLException {
-
                 User user = new User();
                         user.setId(resultSet.getInt(Fields.USER_ID));
                         user.setFirstName(resultSet.getString(Fields.USER_FIRST_NAME));

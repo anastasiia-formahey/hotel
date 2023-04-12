@@ -1,27 +1,25 @@
-package com.anastasiia.services;
+package com.anastasiia.services.impl;
 
 import com.anastasiia.dao.DBManager;
-import com.anastasiia.dao.OccupancyOfRoomDAO;
-import com.anastasiia.dao.RoomDAO;
+import com.anastasiia.dao.impl.RoomDAO;
 import com.anastasiia.dto.RoomDTO;
 import com.anastasiia.entity.Room;
 import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.exceptions.NoResultException;
 import com.anastasiia.exceptions.ServiceException;
-import com.anastasiia.utils.ClassOfRoom;
+import com.anastasiia.services.IRoomService;
+import com.anastasiia.services.Pagination;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.sql.DataSource;
 import java.sql.Date;
 import java.util.*;
 import java.util.stream.Collectors;
 /**
  * RoomService - class mediates communication between a controller and DAO/repository layer
  */
-public class RoomService {
+public class RoomService implements IRoomService {
     private static final Logger log = Logger.getLogger(RoomService.class);
     private final RoomDAO roomDAO = new RoomDAO(DBManager.getInstance());
 

@@ -1,7 +1,7 @@
 package com.anastasiia.web.command.manager;
 
 import com.anastasiia.exceptions.ServiceException;
-import com.anastasiia.services.RoomService;
+import com.anastasiia.services.impl.RoomService;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Pages;
 import com.anastasiia.web.command.Command;

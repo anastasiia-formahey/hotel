@@ -1,5 +1,6 @@
 package com.anastasiia.dao;
 
+import com.anastasiia.dao.impl.RequestDAO;
 import com.anastasiia.entity.Request;
 import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.utils.Status;

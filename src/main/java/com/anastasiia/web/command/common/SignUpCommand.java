@@ -4,7 +4,7 @@ import com.anastasiia.entity.User;
 import com.anastasiia.exceptions.ServiceException;
 import com.anastasiia.exceptions.ValidationException;
 import com.anastasiia.services.PasswordEncoder;
-import com.anastasiia.services.UserService;
+import com.anastasiia.services.impl.UserService;
 import com.anastasiia.dao.Fields;
 import com.anastasiia.services.Validation;
 import com.anastasiia.utils.JspAttributes;

@@ -2,7 +2,7 @@ package com.anastasiia.web.command.common;
 
 import com.anastasiia.dto.UserDTO;
 import com.anastasiia.exceptions.ServiceException;
-import com.anastasiia.services.UserService;
+import com.anastasiia.services.impl.UserService;
 import com.anastasiia.services.Validation;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Pages;

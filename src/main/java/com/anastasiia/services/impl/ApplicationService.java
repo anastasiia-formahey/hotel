@@ -1,16 +1,17 @@
-package com.anastasiia.services;
+package com.anastasiia.services.impl;
 
-import com.anastasiia.dao.ApplicationDAO;
+import com.anastasiia.dao.impl.ApplicationDAO;
 import com.anastasiia.dao.DBManager;
 import com.anastasiia.dto.ApplicationDTO;
 import com.anastasiia.entity.Application;
 import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.exceptions.ServiceException;
+import com.anastasiia.services.IApplicationService;
+import com.anastasiia.services.Pagination;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
 
-import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * ApplicationService - class mediates communication between a controller and DAO/repository layer
  */
-public class ApplicationService {
+public class ApplicationService implements IApplicationService {
     private static final Logger log = Logger.getLogger(ApplicationService.class);
     private final ApplicationDAO applicationDAO = new ApplicationDAO(DBManager.getInstance());
 

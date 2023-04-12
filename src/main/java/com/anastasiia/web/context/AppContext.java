@@ -1,7 +1,7 @@
 package com.anastasiia.web.context;
 
 import com.anastasiia.dao.DBManager;
-import com.anastasiia.services.*;
+import com.anastasiia.services.impl.*;
 
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;

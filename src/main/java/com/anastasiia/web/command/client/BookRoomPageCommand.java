@@ -3,9 +3,8 @@ package com.anastasiia.web.command.client;
 import com.anastasiia.dto.BookingDTO;
 import com.anastasiia.dto.RoomDTO;
 import com.anastasiia.dto.UserDTO;
-import com.anastasiia.exceptions.ServiceException;
 import com.anastasiia.exceptions.ValidationException;
-import com.anastasiia.services.BookingService;
+import com.anastasiia.services.impl.BookingService;
 import com.anastasiia.services.Validation;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Pages;
@@ -17,7 +16,6 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 

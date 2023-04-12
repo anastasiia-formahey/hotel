@@ -1,7 +1,5 @@
 package com.anastasiia.dto;
 
-import com.anastasiia.entity.User;
-import com.anastasiia.services.UserService;
 import com.anastasiia.utils.Role;
 import org.apache.log4j.Logger;
 

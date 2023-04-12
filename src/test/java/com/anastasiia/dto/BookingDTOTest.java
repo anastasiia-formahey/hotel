@@ -1,7 +1,7 @@
 package com.anastasiia.dto;
 
 import com.anastasiia.dao.DBManager;
-import com.anastasiia.services.BookingService;
+import com.anastasiia.services.impl.BookingService;
 import com.anastasiia.utils.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

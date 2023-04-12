@@ -18,8 +18,8 @@
 <header class="p-3 text-bg-dark">
   <div class="container">
     <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-        <img src="${pageContext.request.contextPath}/images/—Pngtree—watermelon%20logo_6945475.png" height="50px" alt="watermelon">
+      <a class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+        <img src="${pageContext.request.contextPath}/images/logo.png" height="50px">
       </a>
       <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
         <a href="${pageContext.request.contextPath}/user/?command=home" class="nav-link px-2 text-secondary"><fmt:message key="header.home"/></a>
@@ -101,10 +101,9 @@
                 <p class="card-text"> <b><fmt:message key="form.price"/></b> : ${room.getPrice()}, <b><fmt:message key="form.classOfRoom"/></b>: ${room.getClassOfRoom()}</p>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
-                    <button type="submit" name="command" value="viewRoom" class="btn btn-sm btn-outline-secondary"><fmt:message key="button.view"/></button>
-                    <button type="submit" name="command" value="bookRoom" class="btn btn-sm btn-outline-secondary" disabled><fmt:message key="button.book"/></button>
+                    <button type="submit" name="command" value="viewRoom" class="btn btn-sm btn-outline-dark"><fmt:message key="button.view"/></button>
+                    <button type="submit" name="command" value="bookRoom" class="btn btn-sm btn-outline-dark" disabled><fmt:message key="button.book"/></button>
                   </div>
-                  <small class="text-muted">9 mins</small>
                 </div>
               </div>
             </div>

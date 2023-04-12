@@ -1,6 +1,6 @@
 package com.anastasiia.dao;
 
-import com.anastasiia.dto.UserDTO;
+import com.anastasiia.dao.impl.ApplicationDAO;
 import com.anastasiia.entity.Application;
 import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.utils.ClassOfRoom;

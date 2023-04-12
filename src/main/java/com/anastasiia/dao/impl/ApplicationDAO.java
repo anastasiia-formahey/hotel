@@ -1,5 +1,8 @@
-package com.anastasiia.dao;
+package com.anastasiia.dao.impl;
 
+import com.anastasiia.dao.Fields;
+import com.anastasiia.dao.IApplicationDAO;
+import com.anastasiia.dao.SqlQuery;
 import com.anastasiia.entity.Application;
 import com.anastasiia.entity.EntityMapper;
 import com.anastasiia.exceptions.DAOException;
@@ -15,7 +18,7 @@ import java.util.List;
 /**
  *<Code>ApplicationDAO</Code> - class implements data access object for Application entity
  * */
-public class ApplicationDAO {
+public class ApplicationDAO implements IApplicationDAO {
 
     private static final Logger log = Logger.getLogger(ApplicationDAO.class);
     private final DataSource dataSource;
@@ -113,7 +116,6 @@ public class ApplicationDAO {
         try(Connection connection = dataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_APPLICATIONS+ " ORDER BY "+ orderBy + " LIMIT "+ currentPage +"," + amount)
         ){
-            log.debug(preparedStatement.executeQuery());
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
                listOfApplications.add(new ApplicationMapper().mapRow(resultSet));
@@ -233,8 +235,7 @@ public class ApplicationDAO {
          * @param resultSet <code>ResultSet</code> object
          * @return <code>Application</code> object
          */
-        public Application mapRow(ResultSet resultSet) throws DAOException {
-            try {
+        public Application mapRow(ResultSet resultSet) throws SQLException {
                 Application application = new Application();
                 application.setId(resultSet.getInt(Fields.APPLICATION_ID));
                 application.setClientId(resultSet.getInt(Fields.APPLICATION_CLIENT_ID));
@@ -243,9 +244,6 @@ public class ApplicationDAO {
                 application.setLengthOfStay(Integer.parseInt(resultSet.getString(Fields.APPLICATION_LENGTH_OF_STAY)));
                 application.setStatus(Status.valueOf(resultSet.getString(Fields.APPLICATION_STATUS)));
                 return application;
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
         }
 }
 }

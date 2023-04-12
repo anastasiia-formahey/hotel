@@ -1,7 +1,7 @@
 package com.anastasiia.dao;
 
+import com.anastasiia.dao.impl.OccupancyOfRoomDAO;
 import com.anastasiia.entity.OccupancyOfRoom;
-import com.anastasiia.entity.Room;
 import com.anastasiia.entity.User;
 import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.utils.Role;

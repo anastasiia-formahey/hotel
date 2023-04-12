@@ -1,10 +1,9 @@
 package com.anastasiia.dao;
 
-import com.anastasiia.entity.Application;
+import com.anastasiia.dao.impl.RoomDAO;
 import com.anastasiia.entity.Room;
 import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.utils.ClassOfRoom;
-import com.anastasiia.utils.Status;
 import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;

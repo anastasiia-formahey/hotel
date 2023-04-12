@@ -1,7 +1,5 @@
 package com.anastasiia.dto;
 
-import com.anastasiia.entity.Application;
-import com.anastasiia.services.UserService;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.Status;
 

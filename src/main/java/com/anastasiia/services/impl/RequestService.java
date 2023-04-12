@@ -1,14 +1,15 @@
-package com.anastasiia.services;
+package com.anastasiia.services.impl;
 
-import com.anastasiia.dao.ApplicationDAO;
+import com.anastasiia.dao.impl.ApplicationDAO;
 import com.anastasiia.dao.DBManager;
-import com.anastasiia.dao.OccupancyOfRoomDAO;
-import com.anastasiia.dao.RequestDAO;
+import com.anastasiia.dao.impl.OccupancyOfRoomDAO;
+import com.anastasiia.dao.impl.RequestDAO;
 import com.anastasiia.dto.ApplicationDTO;
 import com.anastasiia.dto.RequestDTO;
 import com.anastasiia.entity.Request;
 import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.exceptions.ServiceException;
+import com.anastasiia.services.IRequestService;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Status;
 import org.apache.log4j.Logger;
@@ -20,7 +21,7 @@ import java.util.List;
 /**
  * RequestService - class mediates communication between a controller and DAO/repository layer
  */
-public class RequestService {
+public class RequestService implements IRequestService {
     private static final Logger log = Logger.getLogger(RequestService.class);
     private final RequestDAO requestDAO = new RequestDAO(DBManager.getInstance());
     private final ApplicationDAO applicationDAO = new ApplicationDAO(DBManager.getInstance());

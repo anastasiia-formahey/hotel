@@ -6,10 +6,9 @@ import com.anastasiia.entity.Feature;
 import com.anastasiia.entity.Room;
 import com.anastasiia.exceptions.NoResultException;
 import com.anastasiia.exceptions.ServiceException;
+import com.anastasiia.services.impl.RoomService;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.Status;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 

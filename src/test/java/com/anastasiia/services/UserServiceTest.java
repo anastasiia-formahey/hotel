@@ -6,6 +6,7 @@ import com.anastasiia.dto.UserDTO;
 import com.anastasiia.entity.User;
 import com.anastasiia.exceptions.InvalidUserException;
 import com.anastasiia.exceptions.ServiceException;
+import com.anastasiia.services.impl.UserService;
 import com.anastasiia.utils.Role;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;

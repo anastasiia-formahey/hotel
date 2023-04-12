@@ -1,5 +1,8 @@
-package com.anastasiia.dao;
+package com.anastasiia.dao.impl;
 
+import com.anastasiia.dao.Fields;
+import com.anastasiia.dao.IRequestDAO;
+import com.anastasiia.dao.SqlQuery;
 import com.anastasiia.entity.Request;
 import com.anastasiia.entity.Room;
 import com.anastasiia.exceptions.DAOException;
@@ -16,7 +19,7 @@ import java.util.List;
 /**
  * <Code>RequestDAO</Code> - class implements data access object for <code>Request</code> entity
  */
-public class RequestDAO {
+public class RequestDAO implements IRequestDAO {
     private static final Logger log = Logger.getLogger(RequestDAO.class);
     private final DataSource dataSource;
     public RequestDAO(DataSource dataSource){
@@ -33,8 +36,8 @@ public class RequestDAO {
         ResultSet resultSet;
         Room room = null;
         try (Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatementCheckExist = connection.prepareStatement(SqlQuery.SQL_SELECT_ROOM_FROM_OCCUPANCY_OF_ROOM);
-        PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_REQUEST);
+             PreparedStatement preparedStatementCheckExist = connection.prepareStatement(SqlQuery.SQL_SELECT_ROOM_FROM_OCCUPANCY_OF_ROOM);
+             PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_INSERT_REQUEST);
         ){
             connection.setAutoCommit(false);
             connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);

@@ -2,7 +2,7 @@ package com.anastasiia.web.command.manager;
 
 import com.anastasiia.exceptions.ServiceException;
 import com.anastasiia.exceptions.ValidationException;
-import com.anastasiia.services.OccupancyOfRoomService;
+import com.anastasiia.services.impl.OccupancyOfRoomService;
 import com.anastasiia.services.Validation;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Pages;

@@ -2,8 +2,8 @@ package com.anastasiia.web.command.manager;
 
 import com.anastasiia.dto.RoomDTO;
 import com.anastasiia.exceptions.ValidationException;
-import com.anastasiia.services.FeatureService;
-import com.anastasiia.services.RoomService;
+import com.anastasiia.services.impl.FeatureService;
+import com.anastasiia.services.impl.RoomService;
 import com.anastasiia.services.Validation;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.JspAttributes;

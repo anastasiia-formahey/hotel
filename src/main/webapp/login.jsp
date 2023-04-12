@@ -29,8 +29,7 @@
                 <div class="locale">
                     <form action="${pageContext.request.contextPath}/locale/" method="get">
                         <input type="hidden" name="command" value="locale"/>
-                        <select class="form-select-sm" id="locale" name="locale" onchange="submit()"
-                                style="background-color: RGBA(33,37,41,var(--bs-bg-opacity,1))!important; color: white">
+                        <select class="form-select-sm" id="locale" name="locale" onchange="submit()" >
                             <option value="en" ${locale == 'en' ? 'selected' : ''}><fmt:message key="lang.en"/></option>
                             <option value="ua" ${locale == 'ua' ? 'selected' : ''}><fmt:message key="lang.ua"/></option>
                         </select>
