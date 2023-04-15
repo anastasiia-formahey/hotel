@@ -120,6 +120,7 @@
                 <c:forEach items="${sessionScope.bookings}" var="booking" varStatus="loop">
                     <form class="needs-validation" novalidate action="${pageContext.request.contextPath}/client/"  method="post">
                         <input type="hidden" name="command" value="payForBooking">
+                        <input type="hidden" name="totalPrice" value="${booking.getPrice()}">
                         <input type="hidden" name="booking" value="${booking.getId()}">
                         <input type="hidden" name="roomId" value="${booking.getRoomId()}">
                         <input type="hidden" name="checkIn" value="${booking.getCheckInDate()}">

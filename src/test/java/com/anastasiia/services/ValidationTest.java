@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Date;
+import java.util.Calendar;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -79,7 +80,9 @@ class ValidationTest {
 
     @Test
     void validDateToCheckIn() {
-        assertDoesNotThrow(()-> Validation.validDateToCheckIn(Date.valueOf("2023-03-24"),Date.valueOf("2023-03-25")));
+        assertDoesNotThrow(()-> Validation.validDateToCheckIn(
+                new Date(Calendar.getInstance().getTime().getTime()),
+                Date.valueOf(new Date(Calendar.getInstance().getTime().getTime()).toLocalDate().plusDays(2))));
         assertThrows(ValidationException.class, ()-> Validation.validDateToCheckIn(Date.valueOf("2023-03-07"),Date.valueOf("2023-03-08")));
         assertThrows(ValidationException.class, ()-> Validation.validDateToCheckIn(Date.valueOf("2023-03-07"),Date.valueOf("2023-03-08")));
 

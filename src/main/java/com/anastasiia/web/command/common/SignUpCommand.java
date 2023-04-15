@@ -3,6 +3,7 @@ package com.anastasiia.web.command.common;
 import com.anastasiia.entity.User;
 import com.anastasiia.exceptions.ServiceException;
 import com.anastasiia.exceptions.ValidationException;
+import com.anastasiia.services.EmailSender;
 import com.anastasiia.services.PasswordEncoder;
 import com.anastasiia.services.impl.UserService;
 import com.anastasiia.dao.Fields;
@@ -22,6 +23,7 @@ public class SignUpCommand implements Command {
 
     private static final Logger log = Logger.getLogger(SignUpCommand.class);
     UserService userService;
+    EmailSender emailSender = new EmailSender();
 
     public SignUpCommand(AppContext appContext) {
         userService = appContext.getUserService();
@@ -41,8 +43,10 @@ public class SignUpCommand implements Command {
                     Role.CLIENT
             );
                 userService.validateUserByEmail(email);
+                emailSender.sendWelcomeLetter(email);
                 boolean flag = userService.insertUser(user);
                 request.getSession().setAttribute(JspAttributes.IS_SUCCESS, flag);
+
                 return new CommandResult(Pages.LOGIN_COMMAND, true);
         }catch (ValidationException e){
             log.error("ValidationException was caught. Cause : " + e);
