@@ -22,7 +22,7 @@ public class DBManager {
 
     public static synchronized DataSource getInstance(){
         if(dataSource == null){
-            dataSource = new DBManager().getDataSource();
+            dataSource = DBManager.getDataSource();
         }
         return dataSource;
     }
@@ -32,7 +32,7 @@ public class DBManager {
      * <p>The settings for getting the datasource are taken in the file <code><b>context.xml</b></code></p>
      * @return a datasource
      * */
-    private DataSource getDataSource(){
+    private static DataSource getDataSource(){
         log.debug("Method starts");
         try {
             Context envContext = new InitialContext();

@@ -2,6 +2,8 @@ package com.anastasiia.services;
 
 import com.anastasiia.dao.DBManager;
 import com.anastasiia.dao.impl.OccupancyOfRoomDAO;
+import com.anastasiia.dto.OccupancyOfRoomDTO;
+import com.anastasiia.dto.UserDTO;
 import com.anastasiia.exceptions.ServiceException;
 import com.anastasiia.services.impl.OccupancyOfRoomService;
 import com.anastasiia.utils.Status;
@@ -55,11 +57,12 @@ class OccupancyOfRoomServiceTest {
     }
     @Test
     void insertOccupancyOfRoom() throws SQLException {
-        int roomId = 1;
-        int clientId = 1;
-        Date checkIn = Date.valueOf("2023-03-24");
-        Date checkOut = Date.valueOf("2023-03-26");
-        Status status = Status.BOOKED;
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(1);
+        userDTO.setFirstName("Test");
+        userDTO.setLastName("Test");
+        userDTO.setEmail("test@gmail.com");
+        OccupancyOfRoomDTO occupancyOfRoomDTO = new OccupancyOfRoomDTO(1, userDTO, Date.valueOf("2023-03-24"), Date.valueOf("2023-03-24"), Status.BOOKED);
         DataSource dataSource = mock(DataSource.class);
         try (MockedStatic<DBManager> dbManagerMockedStatic = mockStatic(DBManager.class)){
             dbManagerMockedStatic.when(DBManager::getInstance).thenReturn(dataSource);
@@ -69,14 +72,24 @@ class OccupancyOfRoomServiceTest {
                 when(preparedStatement.executeQuery()).thenReturn(resultSet);
                 resultSetMock(resultSet);
                 assertDoesNotThrow(()->
-                        occupancyOfRoomService.insertOccupancyOfRoom(roomId, clientId, checkIn, checkOut, status));
+                        occupancyOfRoomService.insertOccupancyOfRoom(
+                                occupancyOfRoomDTO.getRoomId(),
+                                userDTO.getId(),
+                                occupancyOfRoomDTO.getCheckInDate(),
+                                occupancyOfRoomDTO.getCheckOutDate(),
+                                occupancyOfRoomDTO.getStatus()));
             }
             try(PreparedStatement preparedStatement = prepareMockThrowException(dataSource)){
                 ResultSet resultSet = mock(ResultSet.class);
                 when(preparedStatement.executeQuery()).thenReturn(resultSet);
                 resultSetMock(resultSet);
                 assertDoesNotThrow(()->
-                        occupancyOfRoomService.insertOccupancyOfRoom(roomId, clientId, checkIn, checkOut, status));
+                        occupancyOfRoomService.insertOccupancyOfRoom(
+                                occupancyOfRoomDTO.getRoomId(),
+                                userDTO.getId(),
+                                occupancyOfRoomDTO.getCheckInDate(),
+                                occupancyOfRoomDTO.getCheckOutDate(),
+                                occupancyOfRoomDTO.getStatus()));
             }
         }
     }

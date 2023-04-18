@@ -7,6 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 
 public interface Command extends Serializable {
-    CommandResult execute(HttpServletRequest request, HttpServletResponse response) throws ServiceException;
+    CommandResult execute(HttpServletRequest request, HttpServletResponse response);
 
 }
