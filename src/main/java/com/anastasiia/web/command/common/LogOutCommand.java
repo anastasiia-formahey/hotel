@@ -15,9 +15,9 @@ public class LogOutCommand implements Command {
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         log.debug("Method starts");
-        HttpSession session = request.getSession();
-        session.removeAttribute(JspAttributes.USER);
-            session.invalidate();
-        return new CommandResult(Pages.INDEX, true);
+        request.getSession().removeAttribute(JspAttributes.USER);
+        request.getSession().removeAttribute(JspAttributes.ROLE);
+        request.getSession().invalidate();
+        return new CommandResult(Pages.INDEX, false);
     }
 }

@@ -30,7 +30,7 @@
             </div>
 
             <div class="text-end d-flex" style="padding-right: 10px">
-                <a href="${pageContext.request.contextPath}/?command=logout" class="btn btn-outline-warning me-2"><fmt:message key="header.logout"/></a>
+                <a href="${pageContext.request.contextPath}/logout/?command=logout" class="btn btn-outline-warning me-2"><fmt:message key="header.logout"/></a>
             </div>
 
             <div class="locale">

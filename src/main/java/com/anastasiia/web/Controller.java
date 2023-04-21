@@ -19,7 +19,7 @@ import java.io.IOException;
  * @author Anastasiia Formahei
  * */
 @WebServlet(name = "Controller",
-        urlPatterns = {"/locale/*", "/login/*", "/signUp/*", "/auth/*", "/manager/", "/client/", "/user/"})
+        urlPatterns = {"/locale/*", "/login/*", "/signUp/*", "/auth/*","/logout/", "/manager/", "/client/", "/user/"})
 public class Controller extends HttpServlet{
     private static final Logger log = Logger.getLogger(Controller.class);
 
