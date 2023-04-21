@@ -89,7 +89,6 @@ public class ApplicationDAO implements IApplicationDAO {
         PreparedStatement preparedStatement = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_APPLICATIONS_BY_USER_ID)
         ){
             preparedStatement.setInt(1, id);
-            log.debug(preparedStatement.executeQuery());
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
                listOfApplications.add(new ApplicationMapper().mapRow(resultSet));

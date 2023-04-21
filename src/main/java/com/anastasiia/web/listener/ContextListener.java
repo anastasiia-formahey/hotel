@@ -1,13 +1,19 @@
 package com.anastasiia.web.listener;
 
 import com.anastasiia.web.context.AppContext;
+import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -16,6 +22,22 @@ public class ContextListener implements ServletContextListener {
 
     public void contextDestroyed(ServletContextEvent event) {
         log("Servlet context destruction starts");
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        Enumeration<Driver> drivers = DriverManager.getDrivers();
+        while (drivers.hasMoreElements()) {
+            Driver driver = drivers.nextElement();
+            if (driver.getClass().getClassLoader() == cl) {
+                try {
+                    log.debug("Deregister JDBC driver { " + driver+" }");
+                    DriverManager.deregisterDriver(driver);
+                    AbandonedConnectionCleanupThread.checkedShutdown();
+                } catch (SQLException ex) {
+                    log.error("Error deregister JDBC driver { " + driver+" }", ex);
+                }
+            } else {
+                log.trace("Not deregister JDBC driver {"+driver+"} as it does not belong to this webapp's ClassLoader");
+            }
+        }
         log("Servlet context destruction finished");
     }
 
