@@ -142,6 +142,7 @@ public class RoomService implements IRoomService {
                 .withPrice(room.getPrice())
                 .withClassOfRoom(room.getClassOfRoom())
                 .withImage(room.getImage())
+                .withStatus(room.getStatus())
                 .build();
         roomDTO.setId(room.getId());
         return roomDTO;
@@ -160,6 +161,7 @@ public class RoomService implements IRoomService {
         room.setClassOfRoom(roomDTO.getClassOfRoom());
         room.setImage(roomDTO.getImage());
         room.setFeatures(roomDTO.getFeatures());
+        room.setStatus(roomDTO.getStatus());
         return room;
     }
 

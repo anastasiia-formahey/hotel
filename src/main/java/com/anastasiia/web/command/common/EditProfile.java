@@ -23,7 +23,7 @@ public class EditProfile implements Command {
     }
 
     @Override
-    public CommandResult execute(HttpServletRequest request, HttpServletResponse response) throws ServiceException {
+    public CommandResult execute(HttpServletRequest request, HttpServletResponse response){
         String page;
         UserDTO userDTO = (UserDTO) request.getSession().getAttribute(JspAttributes.USER);
         Role roleInSession = userDTO.getRole();

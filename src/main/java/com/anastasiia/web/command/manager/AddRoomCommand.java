@@ -10,6 +10,7 @@ import com.anastasiia.services.Validation;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Pages;
+import com.anastasiia.utils.Status;
 import com.anastasiia.web.command.Command;
 import com.anastasiia.web.command.CommandResult;
 import com.anastasiia.web.context.AppContext;
@@ -38,6 +39,7 @@ public class AddRoomCommand implements Command {
                room.setPrice(Validation.validIntField(request.getParameter(JspAttributes.PRICE)));
                room.setClassOfRoom(ClassOfRoom.valueOf(request.getParameter(JspAttributes.CLASS_OF_ROOM)));
                room.setImage(request.getParameter(JspAttributes.IMAGE));
+               room.setStatus(Status.AVAILABLE);
 
                List<Feature> features = featureService.getFeaturesForRoom(request.getParameterValues(JspAttributes.FEATURES));
                room.setId(roomService.insertRoom(room));

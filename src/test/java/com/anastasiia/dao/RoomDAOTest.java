@@ -4,6 +4,7 @@ import com.anastasiia.dao.impl.RoomDAO;
 import com.anastasiia.entity.Room;
 import com.anastasiia.exceptions.DAOException;
 import com.anastasiia.utils.ClassOfRoom;
+import com.anastasiia.utils.Status;
 import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
@@ -35,6 +36,7 @@ class RoomDAOTest {
         when(resultSet.getDouble("price")).thenReturn(1000.0);
         when(resultSet.getString("class_of_room")).thenReturn(ClassOfRoom.BUSINESS.name());
         when(resultSet.getString("image")).thenReturn("image.jsp");
+        when(resultSet.getString("status")).thenReturn(Status.AVAILABLE.name());
     }
     @Test
     void insertRoom() {
@@ -63,7 +65,7 @@ class RoomDAOTest {
             when(preparedStatement.executeQuery()).thenReturn(resultSet);
             resultSetMock(resultSet);
             Room room = roomDAO.findRoomById(1);
-            Room room1 = new Room(2,1000.0, ClassOfRoom.BUSINESS, "image.jsp");
+            Room room1 = new Room(2,1000.0, ClassOfRoom.BUSINESS, "image.jsp", Status.AVAILABLE);
             room1.setId(1);
             assertEquals(room1.toString(), room.toString());
         }
@@ -74,7 +76,7 @@ class RoomDAOTest {
         DataSource dataSource = mock(DataSource.class);
         RoomDAO roomDAO = new RoomDAO(dataSource);
         try(PreparedStatement preparedStatement = prepareMock(dataSource)){
-            Room room1 = new Room(2,1000.0, ClassOfRoom.BUSINESS, "image.jsp");
+            Room room1 = new Room(2,1000.0, ClassOfRoom.BUSINESS, "image.jsp", Status.AVAILABLE);
             room1.setId(1);
             assertDoesNotThrow(()-> roomDAO.updateRoom(room1));
         }

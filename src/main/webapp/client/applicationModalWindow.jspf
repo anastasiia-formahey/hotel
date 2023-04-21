@@ -31,10 +31,14 @@
                         <div class="form-floating mb-3">
                             <div class="input-group">
                                 <span class="input-group-text" id="basic-addon3"><fmt:message key="form.lengthOfStay"/></span>
-                                <input type="number" name="lengthOfStay" class="form-control" id="lengthOfStay" placeholder="1"required>
+                                <input type="number" name="lengthOfStay" class="form-control" id="lengthOfStay" placeholder="1" required>
                             </div>
                         </div>
-
+                        <div class="form-floating">
+                            <input type="text" class=" form-control" name="comment" id="comment" placeholder="Comment"
+                                   required>
+                            <label for="comment"><fmt:message key="form.comment"/></label>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><fmt:message key="close"/></button>

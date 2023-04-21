@@ -32,6 +32,7 @@ class RoomServiceTest {
         roomDTO.setPrice(1000);
         roomDTO.setNumberOfPerson(2);
         roomDTO.setImage("business.jpg");
+        roomDTO.setStatus(Status.AVAILABLE);
         ArrayList<Feature> features = new ArrayList<>();
         features.add(new Feature(1, "Free wi-fi"));
         roomDTO.setFeatures(features);
@@ -39,7 +40,7 @@ class RoomServiceTest {
         try (MockedStatic<DBManager> dbManagerMockedStatic = mockStatic(DBManager.class)) {
             dbManagerMockedStatic.when(DBManager::getInstance).thenReturn(dataSource);
             roomService = new RoomService();
-            assertEquals("Room{id=1, numberOfPerson=2, price=1000.0, classOfRoom=BUSINESS, image='business.jpg', features=[Feature{id=1, name='Free wi-fi', isChecked=false}]}",
+            assertEquals("Room{id=1, numberOfPerson=2, price=1000.0, classOfRoom=BUSINESS, image='business.jpg', features=[Feature{id=1, name='Free wi-fi', isChecked=false}], status=AVAILABLE}",
                     roomService.dtoToEntity(roomDTO).toString());
         }
     }
@@ -208,5 +209,6 @@ class RoomServiceTest {
         when(resultSet.getDouble("price")).thenReturn(1000.0);
         when(resultSet.getString("class_of_room")).thenReturn(ClassOfRoom.BUSINESS.name());
         when(resultSet.getString("image")).thenReturn("image.jsp");
+        when(resultSet.getString("status")).thenReturn(Status.AVAILABLE.name());
     }
 }

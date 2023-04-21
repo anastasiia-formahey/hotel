@@ -1,8 +1,6 @@
 package com.anastasiia.dto;
 
-import com.anastasiia.entity.Room;
 import com.anastasiia.utils.Status;
-import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -13,7 +11,7 @@ import java.util.List;
  */
 public class RequestDTO implements Serializable {
 
-    private static final Logger log = Logger.getLogger(RequestDTO.class);
+    private static final long serialVersionUID = -2901690973440243570L;
     private int applicationId;
     private List<RequestElement> requestElements = new ArrayList<>();
     private Status statusOfRequest;

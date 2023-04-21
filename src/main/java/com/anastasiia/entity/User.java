@@ -5,6 +5,7 @@ import com.anastasiia.utils.Role;
  * <code>User</code> - class entity for table 'user'
  */
 public class User extends Entity{
+    private static final long serialVersionUID = -4629731585846574625L;
     private int id;
     private String firstName;
     private String lastName;

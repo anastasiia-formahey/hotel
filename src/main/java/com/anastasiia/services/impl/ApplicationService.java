@@ -37,6 +37,7 @@ public class ApplicationService implements IApplicationService {
         application.setClassOfRoom(applicationDTO.getClassOfRoom());
         application.setLengthOfStay(applicationDTO.getLengthOfStay());
         application.setStatus(applicationDTO.getStatus());
+        application.setComment(applicationDTO.getComment());
         return application;
     }
 
@@ -57,6 +58,7 @@ public class ApplicationService implements IApplicationService {
         applicationDTO.setNumberOfGuests(application.getNumberOfGuests());
         applicationDTO.setLengthOfStay(application.getLengthOfStay());
         applicationDTO.setStatus(application.getStatus());
+        applicationDTO.setComment(application.getComment());
         return applicationDTO;
     }
 

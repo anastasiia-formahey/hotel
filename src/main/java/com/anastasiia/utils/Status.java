@@ -5,16 +5,17 @@ public enum Status {
     FREE(1),
     BOOKED(2),
     BUSY(3),
-    UNAVAILABLE(4),
+    AVAILABLE(4),
+    UNAVAILABLE(5),
     //Application
-    NEW(5),
-    REVIEWED(6),
+    NEW(6),
+    REVIEWED(7),
     //Request
-    NOT_CONFIRMED(7),
-    CONFIRMED(8),
+    NOT_CONFIRMED(8),
+    CONFIRMED(9),
     //Booking
-    PAID(9),
-    CANCELED(10);
+    PAID(10),
+    CANCELED(11);
 
     private final int id;
     Status(int id) {

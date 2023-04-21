@@ -40,6 +40,7 @@ public class ApplicationDAO implements IApplicationDAO {
             preparedStatement.setString(3, application.getClassOfRoom().name());
             preparedStatement.setInt(4, application.getLengthOfStay());
             preparedStatement.setInt(5, application.getStatus().getStatusId());
+            preparedStatement.setString(6, application.getComment());
 
             preparedStatement.executeUpdate();
             connection.commit();
@@ -243,6 +244,7 @@ public class ApplicationDAO implements IApplicationDAO {
                 application.setClassOfRoom(ClassOfRoom.valueOf(resultSet.getString(Fields.APPLICATION_APARTMENT_CLASS)));
                 application.setLengthOfStay(Integer.parseInt(resultSet.getString(Fields.APPLICATION_LENGTH_OF_STAY)));
                 application.setStatus(Status.valueOf(resultSet.getString(Fields.APPLICATION_STATUS)));
+                application.setComment(resultSet.getString(Fields.APPLICATION_COMMENT));
                 return application;
         }
 }

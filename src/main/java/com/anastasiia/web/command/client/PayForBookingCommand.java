@@ -32,7 +32,7 @@ public class PayForBookingCommand implements Command {
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         log.debug("Method starts");
         UserDTO userDTO = (UserDTO) request.getSession().getAttribute(JspAttributes.USER);
-        String price = request.getParameter("totalPrice");
+        String price = request.getParameter(JspAttributes.TOTAL_PRICE);
         try {
             int bookingId = Validation.validIntField(request.getParameter(JspAttributes.BOOKING));
             Date checkIn = Validation.validDate(request.getParameter(JspAttributes.CHECK_IN));

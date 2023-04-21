@@ -3,6 +3,7 @@ package com.anastasiia.entity;
  * <code>Feature</code> - class entity for table 'features'
  */
 public class Feature extends Entity{
+    private static final long serialVersionUID = -8649179320791110552L;
     private int id;
     private String name;
     private boolean isChecked = false;

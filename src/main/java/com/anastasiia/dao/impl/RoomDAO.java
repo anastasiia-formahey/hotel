@@ -163,7 +163,8 @@ public class RoomDAO implements IRoomDAO {
             preparedStatement.setDouble(2, room.getPrice());
             preparedStatement.setString(3, room.getClassOfRoom().name());
             preparedStatement.setString(4, room.getImage());
-            preparedStatement.setInt(5, room.getId());
+            preparedStatement.setInt(5, room.getStatus().getStatusId());
+            preparedStatement.setInt(6, room.getId());
 
             preparedStatement.executeUpdate();
             connection.commit();
@@ -274,6 +275,7 @@ public class RoomDAO implements IRoomDAO {
                 room.setPrice(resultSet.getDouble(Fields.ROOM_PRICE));
                 room.setClassOfRoom(ClassOfRoom.valueOf(resultSet.getString(Fields.ROOM_CLASS_OF_ROOM)));
                 room.setImage(resultSet.getString(Fields.ROOM_IMAGE));
+                room.setStatus(Status.valueOf(resultSet.getString(Fields.ROOM_STATUS)));
                 return room;
 
         }

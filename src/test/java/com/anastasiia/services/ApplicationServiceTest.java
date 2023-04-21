@@ -104,7 +104,7 @@ class ApplicationServiceTest {
     }
     @Test
     void entityToDTO() throws ServiceException {
-        Application application = new Application(1,1,2,ClassOfRoom.LUX, 2);
+        Application application = new Application(1,1,2,ClassOfRoom.LUX, 2, "comment");
         UserDTO userDTO = new UserDTO();
         userDTO.setId(1);
         userDTO.setFirstName("Test");

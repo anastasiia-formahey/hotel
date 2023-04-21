@@ -62,7 +62,6 @@ public class ViewRoomCommand implements Command {
                     page = Pages.INDEX;
                 }
             }
-            request.getSession().setAttribute(JspAttributes.ROOM, room);
         }catch (ValidationException e) {
             log.error("ValidationException was caught. Cause : " + e);
             request.getSession().setAttribute(JspAttributes.EXCEPTION_MESSAGE, e.getMessage());

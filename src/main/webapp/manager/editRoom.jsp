@@ -133,6 +133,15 @@
               <label class="form-check-label" for="${feature.getName()}">${feature.getName()}</label>
             </div>
           </c:forEach>
+          <div class="form-floating mb-3">
+            <div class="input-group">
+              <span class="input-group-text" id="forStatus"><fmt:message key="form.status"/></span>
+              <select name="status" class="form-select" id="status"  required>
+                <option <c:if test="${sessionScope.roomEdit.getStatus() == 'UNAVAILABLE'}" >selected </c:if>>UNAVAILABLE</option>
+                <option <c:if test="${sessionScope.roomEdit.getStatus() == 'AVAILABLE'}" >selected </c:if>>AVAILABLE</option>
+              </select>
+            </div>
+          </div>
           <div class="col-12">
             <button class="w-100 mb-2 btn btn-lg rounded-3 btn-warning" type="submit"><fmt:message key="form.edit"/></button>
           </div></form>

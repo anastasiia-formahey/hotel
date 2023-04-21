@@ -30,4 +30,10 @@
         <c:when test="${value == 'CANCELED'}">
                 class="badge bg-secondary"
         </c:when>
+        <c:when test="${value == 'AVAILABLE'}">
+                class="badge bg-primary"
+        </c:when>
+        <c:when test="${value == 'UNAVAILABLE'}">
+                class="badge bg-secondary"
+        </c:when>
 </c:choose>

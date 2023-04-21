@@ -40,12 +40,7 @@ public class Controller extends HttpServlet{
         Command command = CommandContainer.get(commandName);
         log.trace("Obtained command => " + command);
 
-        CommandResult commandResult = null;
-        try {
-            commandResult = command.execute(request, response);
-        } catch (ServiceException e) {
-            throw new RuntimeException(e);
-        }
+        CommandResult commandResult = command.execute(request, response);
 
         log.trace("Forward address => " + commandResult.getPage());
 

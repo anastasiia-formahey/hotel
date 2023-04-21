@@ -1,6 +1,7 @@
 package com.anastasiia.entity;
 
 import com.anastasiia.utils.ClassOfRoom;
+import com.anastasiia.utils.Status;
 
 import java.util.List;
 /**
@@ -8,20 +9,23 @@ import java.util.List;
  */
 public class Room extends Entity{
 
+    private static final long serialVersionUID = -1572642506920181578L;
     private int id;
     private int numberOfPerson;
     private double price;
     private ClassOfRoom classOfRoom;
     private String image;
     private List<Feature> features;
+    private Status status;
 
     public Room(){}
 
-    public Room(int numberOfPerson, double price, ClassOfRoom classOfRoom, String image) {
+    public Room(int numberOfPerson, double price, ClassOfRoom classOfRoom, String image, Status status) {
         this.numberOfPerson = numberOfPerson;
         this.price = price;
         this.classOfRoom = classOfRoom;
         this.image = image;
+        this.status = status;
     }
 
     @Override
@@ -74,6 +78,14 @@ public class Room extends Entity{
         this.features = features;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Room{" +
@@ -83,6 +95,7 @@ public class Room extends Entity{
                 ", classOfRoom=" + classOfRoom +
                 ", image='" + image + '\'' +
                 ", features=" + features +
+                ", status=" + status +
                 '}';
     }
 }

@@ -12,6 +12,7 @@ public interface Fields {
  String APPLICATION_APARTMENT_CLASS = "apartment_class";
  String APPLICATION_LENGTH_OF_STAY = "length_of_stay";
  String APPLICATION_STATUS = "status";
+ String APPLICATION_COMMENT = "comment";
 
  //BOOKING fields
  String BOOKING_ID = "id";
@@ -49,6 +50,7 @@ public interface Fields {
  String ROOM_PRICE = "price";
  String ROOM_CLASS_OF_ROOM = "class_of_room";
  String ROOM_IMAGE = "image";
+ String ROOM_STATUS = "status";
 
  //ROOM_FEATURES fields
  String ROOM_FEATURES_ROOM_ID = "room_id";

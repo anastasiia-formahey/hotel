@@ -2,11 +2,13 @@ package com.anastasiia.entity;
 
 import com.anastasiia.utils.Status;
 
+import java.io.Serializable;
 import java.sql.Date;
 /**
  * <code>OccupancyOfRoom</code> - class entity for table 'occupancy_of_room'
  */
-public class OccupancyOfRoom {
+public class OccupancyOfRoom implements Serializable {
+    private static final long serialVersionUID = -2477584056112270848L;
     private int roomId;
     private int clientId;
     private Date checkInDate;

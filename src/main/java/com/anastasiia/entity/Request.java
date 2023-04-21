@@ -2,11 +2,13 @@ package com.anastasiia.entity;
 
 import com.anastasiia.utils.Status;
 
+import java.io.Serializable;
 import java.sql.Date;
 /**
  * <code>Request</code> - class entity for table 'request'
  */
-public class Request {
+public class Request implements Serializable {
+    private static final long serialVersionUID = 3763685410794372270L;
     private int applicationId;
     private Date checkInDate;
     private Date checkOutDate;

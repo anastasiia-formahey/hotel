@@ -11,6 +11,7 @@ import java.util.List;
  * <code>RoomDTO</code> - class implements data transfer object for <code>Room entity</code>
  */
 public class RoomDTO implements Serializable {
+    private static final long serialVersionUID = -4232369129969329322L;
     private int id;
     private int numberOfPerson;
     private double price;

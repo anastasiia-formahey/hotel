@@ -3,6 +3,7 @@ package com.anastasiia.dto;
 import java.io.Serializable;
 
 public class FeaturesDTO implements Serializable {
+    private static final long serialVersionUID = 6211547566297188444L;
     private int id;
     private String name;
     private boolean isChecked;

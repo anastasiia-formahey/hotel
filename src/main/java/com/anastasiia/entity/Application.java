@@ -4,28 +4,30 @@ import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.Status;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.sql.Date;
 
 /**
  * <code>Application</code> - class entity for table 'application'
  */
 public class Application implements Serializable {
+
+    private static final long serialVersionUID = 5398286134931121061L;
     private int id;
     private int clientId;
     private int numberOfGuests;
     private ClassOfRoom classOfRoom;
     private int lengthOfStay;
     private Status status;
+    private String comment;
 
     public Application(){}
 
-    public Application(int id, int clientId, int numberOfGuests, ClassOfRoom classOfRoom, int lengthOfStay) {
+    public Application(int id, int clientId, int numberOfGuests, ClassOfRoom classOfRoom, int lengthOfStay, String comment) {
         this.id = id;
         this.clientId = clientId;
         this.numberOfGuests = numberOfGuests;
         this.classOfRoom = classOfRoom;
         this.lengthOfStay = lengthOfStay;
+        this.comment = comment;
     }
 
 
@@ -74,6 +76,14 @@ public class Application implements Serializable {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     @Override

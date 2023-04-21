@@ -8,6 +8,7 @@ import java.sql.Date;
  * <code>BookingDTO</code> - class implements data transfer object for <code>Booking entity</code>
  */
 public class BookingDTO implements Serializable {
+    private static final long serialVersionUID = 592725939422207750L;
     private int id;
     private int roomId;
     private RoomDTO room;

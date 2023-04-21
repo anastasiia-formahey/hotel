@@ -83,7 +83,6 @@ public class FeatureService implements IFeatureService {
                 for (Feature feature: featuresList) {
                     if(featureSelected.getId() == feature.getId()){
                         feature.setChecked(true);}
-                    log.debug(feature.toString());
                 }
 
             }

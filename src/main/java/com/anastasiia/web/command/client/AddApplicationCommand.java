@@ -38,6 +38,7 @@ public class AddApplicationCommand implements Command {
             applicationDTO.setLengthOfStay(
                     Validation.validIntField(request.getParameter(JspAttributes.LENGTH_OF_STAY)));
             applicationDTO.setStatus(Status.NEW);
+            applicationDTO.setComment(Validation.validField(request.getParameter(JspAttributes.COMMENT)));
 
             applicationService.insertApplication(applicationDTO);
             request.getSession().setAttribute(JspAttributes.SUCCESS_MESSAGE, JspAttributes.APPLICATION_ADDED);

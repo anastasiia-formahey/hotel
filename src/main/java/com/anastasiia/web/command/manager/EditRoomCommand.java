@@ -7,6 +7,7 @@ import com.anastasiia.services.impl.RoomService;
 import com.anastasiia.utils.ClassOfRoom;
 import com.anastasiia.utils.JspAttributes;
 import com.anastasiia.utils.Pages;
+import com.anastasiia.utils.Status;
 import com.anastasiia.web.command.Command;
 import com.anastasiia.web.command.CommandResult;
 import com.anastasiia.web.context.AppContext;
@@ -30,17 +31,18 @@ public class EditRoomCommand implements Command {
         log.debug("Method starts");
         try {
             RoomDTO room = new RoomDTO();
-            RoomDTO roomEdit = (RoomDTO) request.getSession().getAttribute("roomEdit");
-            room.setNumberOfPerson(Integer.parseInt(request.getParameter("numberOfPerson")));
-            room.setPrice(Double.parseDouble(request.getParameter("price")));
-            room.setClassOfRoom(ClassOfRoom.valueOf(request.getParameter("classOfRoom")));
-            String image = request.getParameter("image");
+            RoomDTO roomEdit = (RoomDTO) request.getSession().getAttribute(JspAttributes.ROOM_EDIT);
+            room.setNumberOfPerson(Integer.parseInt(request.getParameter(JspAttributes.NUMBER_OF_PERSON)));
+            room.setPrice(Double.parseDouble(request.getParameter(JspAttributes.PRICE)));
+            room.setClassOfRoom(ClassOfRoom.valueOf(request.getParameter(JspAttributes.CLASS_OF_ROOM)));
+            String image = request.getParameter(JspAttributes.IMAGE);
             if(image.isEmpty() || image.equals(" ")){
                 image = roomEdit.getImage();
             }
             room.setImage(image);
             room.setId(roomEdit.getId());
             room.setFeatures(featureService.getFeaturesForRoom(request.getParameterValues(JspAttributes.FEATURES)));
+            room.setStatus(Status.valueOf(request.getParameter(JspAttributes.STATUS)));
             roomService.editRoom(room);
             request.getSession().setAttribute(JspAttributes.SUCCESS_MESSAGE, JspAttributes.ROOM_EDIT_SUCCESS);
         } catch (ServiceException e) {

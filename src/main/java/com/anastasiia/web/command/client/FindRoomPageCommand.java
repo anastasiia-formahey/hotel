@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class FindRoomPageCommand implements Command {
     @Override
-    public CommandResult execute(HttpServletRequest request, HttpServletResponse response) throws ServiceException {
+    public CommandResult execute(HttpServletRequest request, HttpServletResponse response){
         request.setAttribute(JspAttributes.EXCEPTION_MESSAGE, request.getSession().getAttribute(JspAttributes.EXCEPTION_MESSAGE));
         request.getSession().removeAttribute(JspAttributes.EXCEPTION_MESSAGE);
 

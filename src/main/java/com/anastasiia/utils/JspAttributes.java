@@ -105,6 +105,7 @@ public interface JspAttributes {
     String LENGTH_OF_STAY = "lengthOfStay";
     String APP = "app";
     String APPLICATION_TO_REVIEW = "applicationToReview";
+    String COMMENT = "comment";
 
     //request
     String REQUEST_DTO = "requestDTO";
@@ -114,4 +115,6 @@ public interface JspAttributes {
     String OCCUPANCY_OF_ROOM = "occupancyOfRoom";
     String DATE_OF_OCCUPANCY = "dateOfOccupancy";
     String APPLICATION_ID = "applicationId";
+    String TOTAL_PRICE = "totalPrice";
+    String STATUS = "status";
 }

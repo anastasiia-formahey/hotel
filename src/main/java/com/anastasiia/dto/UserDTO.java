@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 public class UserDTO implements Serializable {
 
-    private static final Logger log = Logger.getLogger(UserDTO.class);
+    private static final long serialVersionUID = -8644500449422404998L;
     private int id;
     private String firstName;
     private String lastName;

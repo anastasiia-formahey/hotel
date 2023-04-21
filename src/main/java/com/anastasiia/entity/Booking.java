@@ -7,6 +7,7 @@ import java.sql.Date;
  * <code>Booking</code> - class entity for table 'booking'
  */
 public class Booking extends Entity{
+    private static final long serialVersionUID = -2008005129595429825L;
     private int id;
     private int roomId;
     private int clientId;

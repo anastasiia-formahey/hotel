@@ -119,6 +119,11 @@
             </svg>
           </button>
         </div>
+        <div class="form-floating">
+          <input type="text" name="comment" class="form-control" id="comment"
+                 value="${sessionScope.app.getComment()}" readonly>
+          <label for="comment"><fmt:message key="form.comment"/></label>
+        </div>
       </div>
     </form>
 
@@ -193,7 +198,13 @@
                            value="${sessionScope.app.getNumberOfGuests()}" readonly>
                     <label for="numberOfPersonModal"><fmt:message key="form.numberOfPerson"/></label>
                   </div>
-                </div></div>
+                </div>
+                <div class="form-floating">
+                  <input type="text" name="comment" class="form-control" id="comment1"
+                         value="${sessionScope.app.getComment()}" readonly>
+                  <label for="comment1"><fmt:message key="form.comment"/></label>
+                </div>
+              </div>
               <%--              request part--%>
               <div class="modal-header align-content-center">
                 <h1 class="modal-title fs-5" id="exampleModalLabel1"><fmt:message key="request"/>${sessionScope.app.getId()}</h1>
