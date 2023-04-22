@@ -283,7 +283,7 @@
 </c:if>
   </div></div>
 <c:if test="${sessionScope.roomsReview ne ''}">
-<div class="album py-5">
+<div class="album py-5" style="min-height: 300px">
   <div class="container">
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
       <c:forEach items="${sessionScope.rooms}" var="room" varStatus="loop">

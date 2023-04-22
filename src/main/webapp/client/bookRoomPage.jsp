@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang=${sessionScope.locale}>
 <head>
-  <title><fmt:message key="header.login"/></title>
+  <title><fmt:message key="header.booking"/></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 
@@ -60,7 +60,7 @@
           <input type="hidden" name="command" value="bookRoom">
           <c:forEach items="${sessionScope.bookingDTOS}" var="booking" varStatus="loop">
           <input type="hidden" name="roomId" value="${sessionScope.room.getId()}">
-          <h2 class="featurette-heading fw-normal lh-1"><fmt:message key="book.room"/>${sessionScope.room.getId()}</h2>
+          <h2 class="featurette-heading fw-normal lh-1"><fmt:message key="book.room"/> ${sessionScope.room.getId()}</h2>
 
           <div class="form-floating mb-3">
             <div class="input-group">
