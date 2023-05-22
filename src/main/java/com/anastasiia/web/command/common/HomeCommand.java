@@ -53,7 +53,6 @@ public class HomeCommand implements Command {
                 break;
             }
             case MANAGER: {
-                requestService.checkRequests();
                 homePage = Pages.MANAGER_HOME;
                 Date dateOfOccupancy = bookingService.getCurrentDate();
                 try{

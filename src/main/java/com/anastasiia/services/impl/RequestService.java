@@ -102,8 +102,9 @@ public class RequestService implements IRequestService {
     }
 
     /**
-     * Method updates Status to <b>CONFIRMED</b> by Application identity
+     * Method updates Status by Application identity
      * @param applicationId Application identity
+     * @param status status of application to update
      */
     public void updateStatus(int applicationId, Status status) throws ServiceException {
         try {
@@ -115,6 +116,10 @@ public class RequestService implements IRequestService {
         }
     }
 
+    /**
+     * Method was deprecated and created sql event 'checkRequest' instead of this to optimize
+     */
+    @Deprecated
     public void checkRequests(){
         try {
             List<Request> requestList = requestDAO.selectNotConfirmed();
