@@ -49,12 +49,10 @@ public class HomeCommand implements Command {
 
         switch (roleInSession){
             case CLIENT: {
-                bookingService.checkBooking();
                 homePage = Pages.CLIENT_HOME;
                 break;
             }
             case MANAGER: {
-                bookingService.checkBooking();
                 requestService.checkRequests();
                 homePage = Pages.MANAGER_HOME;
                 Date dateOfOccupancy = bookingService.getCurrentDate();

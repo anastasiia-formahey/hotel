@@ -64,7 +64,8 @@ public class BookingDAO implements IBookingDAO {
                     preparedStatement.setDate(4, booking.getCheckOutDate());
                     preparedStatement.setDouble(5, booking.getPrice());
                     preparedStatement.setDate(6, booking.getDateOfBooking());
-                    preparedStatement.setInt(7, booking.getStatusOfBooking().getStatusId());
+                    preparedStatement.setDate(7, booking.getBookingExpirationDate());
+                    preparedStatement.setInt(8, booking.getStatusOfBooking().getStatusId());
                     preparedStatement.executeUpdate();
                     isSuccess = true;
                     connection.commit();
@@ -103,7 +104,9 @@ public class BookingDAO implements IBookingDAO {
                     preparedStatement.setDate(4, booking.getCheckOutDate());
                     preparedStatement.setDouble(5, booking.getPrice());
                     preparedStatement.setDate(6, booking.getDateOfBooking());
-                    preparedStatement.setInt(7, booking.getStatusOfBooking().getStatusId());
+                    preparedStatement.setDate(7, booking.getBookingExpirationDate());
+                    preparedStatement.setInt(8, booking.getStatusOfBooking().getStatusId());
+
                     preparedStatement.executeUpdate();
             }
             isSuccess = true;

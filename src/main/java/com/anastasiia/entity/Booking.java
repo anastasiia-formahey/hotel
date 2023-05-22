@@ -82,7 +82,6 @@ public class Booking extends Entity{
     }
 
     public void setBookingExpirationDate() {
-        //todo move method to service
         Date date = this.getDateOfBooking();
         Date expirationDate = Date.valueOf(date.toLocalDate().plusDays(2));
         if(this.checkInDate.before(expirationDate)){

@@ -87,7 +87,10 @@ public class BookingService implements IBookingService {
      * Method checks Bookings by Status.
      * If Booking was not <code>PAID</code> within two days from creation,
      * Status changes to <code>CANCELED</code>
+     * <p>
+     * Method was deprecated and created sql event 'checkBooking' instead of this to optimize
      */
+    @Deprecated
     public void checkBooking(){
         List<Booking> bookings;
         try {
@@ -150,7 +153,6 @@ public class BookingService implements IBookingService {
      * @return list of BookingDTO objects with certain number of records
      */
     public List<BookingDTO> selectAllBooking(int currentPage, int recordsPerPage, String orderBy) throws ServiceException {
-        checkBooking();
         currentPage = currentPage * Pagination.RECORDS_PER_PAGE - recordsPerPage;
         List<Booking> listOfBooking = null;
         try {
@@ -173,7 +175,6 @@ public class BookingService implements IBookingService {
      * @return list of BookingDTO objects with certain number of records by specified User
      */
     public List<BookingDTO> selectAllBooking(int currentPage, int recordsPerPage, String orderBy,int userId) throws ServiceException {
-        checkBooking();
         currentPage = currentPage * Pagination.RECORDS_PER_PAGE - recordsPerPage;
         List<Booking> listOfBooking = null;
         try {

@@ -51,7 +51,7 @@ public interface SqlQuery {
 
     //booking
     String SQL_INSERT_BOOKING
-            = "INSERT INTO `hotel`.`booking` VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ? )";
+            = "INSERT INTO `hotel`.`booking` VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, ? )";
     String SQL_SELECT_ALL_BOOKINGS = "SELECT id, room_id, client_id, check_in_date, check_out_date, price, date_of_booking, booking.status_id, status\n" +
             "FROM hotel.booking join hotel.status on  booking.status_id =  status.status_id WHERE status!='CANCELED'";
     String SQL_SELECT_ALL_BOOKINGS_BY_USER_ID = "SELECT id, room_id, client_id, check_in_date, check_out_date, price, date_of_booking, booking.status_id, status\n" +
