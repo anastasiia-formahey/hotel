@@ -40,7 +40,7 @@ public class EmailSender {
             message.setFrom(new InternetAddress(user));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(sendTo));
             message.setSubject(subject);
-            message.setContent(messageToSend, "text/html");
+            message.setContent(messageToSend, "text/html; charset=utf-8");
             Transport.send(message);
         } catch (MessagingException e) {
             e.printStackTrace();
